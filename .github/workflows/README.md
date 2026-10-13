@@ -8,8 +8,9 @@ Fluxo: `validate` → `Edit Mode tests` → `build` (→ `publish` no release). 
 
 ### `version.yml`
 
-- dispara em push para `main`, `master` e `develop`
-- gera tags no formato `vX.Y.Z`
+- dispara em push para `main` e `master`
+- roda `.github/scripts/version.sh` (adaptado do cestou): bump pelos Conventional Commits desde a última tag — `feat` → minor, `tipo!:`/`BREAKING CHANGE` → major, resto → patch; só `docs`/`ci`/`chore`/`style`/`test`/`refactor`/`build` → sem versão nova
+- adiciona `## [X.Y.Z] - data` com os commits no `CHANGELOG.md` (logo abaixo de `[Unreleased]`, que passa a pertencer a ela), commita com `[skip ci]` e cria a tag `vX.Y.Z`
 - pode ser executado manualmente com `workflow_dispatch`
 
 ### `build-targets.yml`
