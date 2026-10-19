@@ -85,7 +85,8 @@ namespace Unice
             sfx = new Sfx(transform);
             var stage = new AppStage(this);
             perspective = new Perspective(game, () => myCharacter);
-            soundscape = new Soundscape(this); heartbeat = new Heartbeat(this);
+            soundscape = new Soundscape(game, () => myCharacter, perspective, stage, stage);
+            heartbeat = new Heartbeat(game, () => myCharacter, stage);
             eventFeed = new EventFeed(game, () => myCharacter, perspective, stage, stage);
             room = new RoomSession(this);
             player = new PlayerControl(this, new PlayerController(game, () => myCharacter, stage, () => paused, () => room.sync.PublishSoon()));

@@ -7,7 +7,7 @@ namespace Unice
     /// The Unity side of <see cref="IStage"/> and <see cref="IMatchContext"/>: the match rules in Unice.Gameplay ask for a banner, a
     /// ripple or a metric, and this routes them to the UI, the world view, the audio and analytics.
     /// </summary>
-    sealed class AppStage : IStage, IMatchContext
+    sealed class AppStage : IStage, IMatchContext, ISoundOutput
     {
         readonly App app;
 
@@ -31,7 +31,7 @@ namespace Unice
             app.ui.ShowWorldText(x, y, text, ColorOf(tone), size, seconds, alwaysVisible);
         public void Sound(string name) => app.sfx.Play(name);
         public void SoundFrom(float x, float y, float range, string label, StageColor tone, string sound, float minLoudness = 0) =>
-            app.soundscape.PlayFrom(x, y, range, label, ColorOf(tone), sound, minLoudness);
+            app.soundscape.PlayFrom(x, y, range, label, tone, sound, minLoudness);
         public void Ripple(float x, float y, RippleKind kind) => app.worldView.ShowRipple(x, y, kind);
         public void ShakeCamera(float magnitude) => app.cameraRig.Shake(magnitude);
         public void FlashScreen(float strength, float seconds) => app.ui.Flash(FlashColor(strength), seconds);
@@ -39,6 +39,11 @@ namespace Unice
         public void StopHeartbeat() => app.heartbeat.Stop();
         public void Log(string name, params (string key, object value)[] args) => Metrics.Log(name, args);
         public void Error(Exception error, string where) => Metrics.Error(error, where);
+
+        // ---------- ISoundOutput ----------
+        public void Play(string sound, float volume, float pan, bool muffled) => app.sfx.Play(sound, volume, pan, muffled);
+        public void ShowCue(float angle, float loudness, StageColor color) => app.ui.ShowSoundCue(angle, loudness, ColorOf(color));
+        public void Caption(string text) => app.ui.Caption(text);
 
         // ---------- IMatchContext ----------
         public bool IsOnline => app.IsOnline;

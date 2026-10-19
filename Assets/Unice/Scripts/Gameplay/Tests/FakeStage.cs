@@ -5,7 +5,7 @@ using System.Linq;
 namespace Unice
 {
     /// <summary>Records what the rules asked the UI, the audio and analytics to do, so tests can read it back.</summary>
-    sealed class FakeStage : IStage, IMatchContext
+    public sealed class FakeStage : IStage, IMatchContext
     {
         public readonly List<(string text, BannerStyle style, float seconds)> Banners = new List<(string, BannerStyle, float)>();
         public readonly List<string> Toasts = new List<string>();

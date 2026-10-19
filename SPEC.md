@@ -48,13 +48,23 @@ Assets/Unice/Scripts/Domain/  → regras puras, sem UnityEngine (assembly Unice.
   Online/   → portas de rede/voz (INetBackend, IVoiceChat), Presence/PeerInfo, PresenceCodec, HostElection
   Common/   → Point, Geometry, GameRandom, TextFormat
   Tests/    → testes Edit Mode do domínio
+Assets/Unice/Scripts/Gameplay/ → regras da partida do lado do jogador, sem UnityEngine (assembly Unice.Gameplay, testado em Edit Mode)
+                  Perspective (o que o jogador vê e sabe), PlayerController (movimento, barulho e ações E/Q/R),
+                  EventFeed (eventos → banners/sons/efeitos), HudModels (textos e medidores dos cartões do HUD),
+                  SoundMath (alcance, volume, pan e descrição de um som), Ports (IStage, IMatchContext: o que a UI,
+                  o áudio e a analítica implementam; BannerStyle, RippleKind, StageColor)
+  Tests/        → FakeStage (grava o que as regras pediram) e os testes do módulo
+Assets/Unice/Scripts/Audio/    → som sem UnityEngine (assembly Unice.Audio, testado em Edit Mode)
+                  ToneSynth (gera as amostras), SfxCatalog (os sons), SfxMix (ganho e voz), Soundscape (sons ouvidos no
+                  mundo, passos, relógio, contagem), Heartbeat; ISoundOutput é a porta para alto-falante, seta e legenda
 Assets/Unice/Scripts/Core/    → adapters Unity (assembly Unice.Core)
-  App/          → App (monta as peças e roda o loop), Perspective (o que o jogador vê), ProfileStore, SystemBars
-  Gameplay/     → PlayerControl (input e ações do jogador), EventFeed (eventos → banners/sons/efeitos)
+  App/          → App (monta as peças e roda o loop), ProfileStore, SystemBars
+  Gameplay/     → PlayerControl (lê teclado e joystick), AppStage (liga IStage/IMatchContext/ISoundOutput à UI, ao mundo, ao som e à analítica)
   Online/       → RoomSession (criar/entrar/sair, lobby), RoomSync (eleição de host, snapshots, presença)
   World/        → WorldView, MapScenery, CharacterView, KidSprites, RippleEffects, FogView, CameraRig, Art, ArtManifest
-  Audio/        → Sfx (tocar), ToneSynth (sintetizar), Soundscape (sons ouvidos), Heartbeat
-  Localization/ → Localization (lógica) e Localization.Strings (tabela pt/en/es)
+  Audio/        → Sfx (toca nos alto-falantes), ClipSynth (amostras → AudioClip)
+  Localization/ → módulo próprio (assembly Unice.Localization): Localization (lógica) e Localization.Strings (tabela pt/en/es);
+                  Tests/ confere chaves, idiomas, placeholders e textos de cada mapa
   Analytics/    → Metrics (Google Analytics + Crashlytics via Firebase)
   Ui/           → Ui (troca de telas), UiKit/UiPart (base), SettingToggles, KeyboardLift, CharacterPortrait
     Screens/    → HomeMenu, KidCustomizer, KitOptionPicker, LobbyScreen, MatchOptions, ResultScreen, PauseMenu
@@ -94,10 +104,11 @@ Convenções (o objetivo é que qualquer engenheiro entenda o código sem ajuda)
 - Mudou o formato de bytes do snapshot ou da presença? Suba `Game.SnapshotVersion` / `PresenceCodec.Version`.
 
 ## Testing Strategy
-- Testes Edit Mode (NUnit, Unity Test Framework) em `Domain/Tests` (regras, IA dos bots, snapshot, eleição de host, mapas) e `Core/Tests` (perfil).
+- Testes Edit Mode (NUnit, Unity Test Framework) em `Domain/Tests` (regras, IA dos bots, snapshot, eleição de host, mapas), `Gameplay/Tests` (eventos, ações, HUD, som), `Audio/Tests` (síntese, mixagem, soundscape, batimento), `Core/Localization/Tests` (textos) e `Core/Tests` (perfil).
+- Lógica nova de jogo vai para `Gameplay` ou `Audio` (sem Unity, atrás de `IStage`/`ISoundOutput`); o `Core` fica só com o que toca a Unity. É assim que ela ganha teste.
 - Rodar: `Unity -batchmode -projectPath . -runTests -testPlatform EditMode -testResults results.xml` (ou o Test Runner no Editor).
 - Os testes do `Game` são de caracterização: fixam o comportamento atual (paridade com a versão web). Se um falhar depois de uma mudança em `Game.cs`, a regra mudou — confirme se era a intenção.
-- Cobertura: o `tests.yml` falha se a cobertura de linhas do `Unice.Domain` ficar abaixo de 85% (o `Unice.Core` entra no relatório, mas não no gate).
+- Cobertura: o `tests.yml` falha se a cobertura de linhas do `Unice.Domain` ficar abaixo de 85% (o `Unice.Core` entra no relatório, mas não no gate). Medido localmente: `Unice.Domain` 95%, `Unice.Gameplay` 99%, `Unice.Audio` 100%, `Unice.Localization` 100%, `Unice.Core` <1% (UI Toolkit, mundo e `App`).
 - UI, rede e áudio não têm teste automatizado: verificar manualmente (Home→Lobby→Hide→Hunt→Result→Final; sala online com dois aparelhos).
 
 ## Boundaries

@@ -4,7 +4,7 @@ using System.Linq;
 namespace Unice
 {
     /// <summary>A small match for the gameplay tests: the house map, a fixed seed, one human ("h1") and some bots, host side.</summary>
-    static class MatchFixture
+    public static class MatchFixture
     {
         const int TestSeed = 1234;
 

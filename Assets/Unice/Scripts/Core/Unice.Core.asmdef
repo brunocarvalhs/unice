@@ -5,6 +5,7 @@
         "Unice.Domain",
         "Unice.Localization",
         "Unice.Gameplay",
+        "Unice.Audio",
         "Unity.InputSystem",
         "UnityEngine.UI"
     ],
