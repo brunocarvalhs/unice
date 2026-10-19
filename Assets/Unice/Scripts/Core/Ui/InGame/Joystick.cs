@@ -46,7 +46,7 @@ namespace Unice
 
         void Release(int releasedPointerId)
         {
-            if (releasedPointerId != pointerId) return;
+            if (pointerId < 0 || releasedPointerId != pointerId) return;   // no finger to let go of (also keeps -1 away from HasPointerCapture)
             if (zone.HasPointerCapture(releasedPointerId)) zone.ReleasePointer(releasedPointerId);
             pointerId = -1; Reset();
         }
