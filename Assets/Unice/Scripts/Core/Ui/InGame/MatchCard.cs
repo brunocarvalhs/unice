@@ -3,23 +3,24 @@ using static Unice.UiKit;
 
 namespace Unice
 {
-    /// <summary>HUD top-left card: round, clock, phase, which room the player is in, and the room code (or "solo").</summary>
+    /// <summary>HUD top-left card: the clock with the round and phase beside it, and which room the player is in.</summary>
     sealed class MatchCard : UiPart
     {
         /// <summary>The clock turns red in the last seconds of the hunt.</summary>
         const float LowTimeSeconds = 15;
 
-        readonly Label roundLabel, clockLabel, phaseLabel, whereLabel, roomLabel;
+        readonly Label roundLabel, clockLabel, phaseLabel, whereLabel;
 
         public MatchCard(Ui ui, VisualElement parent) : base(ui)
         {
             var card = IgnorePointer(AddElement(parent, "hud-card", "hud-tl"));
-            var roundRow = AddElement(card, "row");
+            var top = AddElement(card, "row");
+            clockLabel = AddLabel(top, "0:30", "clock");
+            var side = AddElement(top, "hud-side");
+            var roundRow = AddElement(side, "row");
             LocalizedLabel(roundRow, "hud.round", "hud-lbl"); roundLabel = AddLabel(roundRow, "", "hud-lbl");
-            clockLabel = AddLabel(card, "0:30", "clock");
-            phaseLabel = AddLabel(card, "", "phase");
+            phaseLabel = AddLabel(side, "", "phase");
             whereLabel = AddLabel(card, "", "where");
-            roomLabel = AddLabel(card, "", "roomline");
             foreach (var label in card.Query<Label>().ToList()) IgnorePointer(label);
         }
 
@@ -41,9 +42,7 @@ namespace Unice
 
             bool onTheMap = me != null && !me.outOfRound && me.x > 0 && live;
             SetText(whereLabel, onTheMap ? Localization.Get("hud.where", Localization.RoomPhrase(Map.RoomAt(me.x, me.y))) : "");
-            SetText(roomLabel, app.IsOnline
-                ? Localization.Get("hud.room_online", app.roomCode) + (game.isHost ? Localization.Get("hud.room_host_suffix") : "")
-                : Localization.Get("hud.room_solo"));
+            Show(whereLabel, onTheMap);
         }
     }
 }

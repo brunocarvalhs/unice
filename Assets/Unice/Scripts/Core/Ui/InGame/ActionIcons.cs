@@ -3,8 +3,8 @@ using UnityEngine.UIElements;
 
 namespace Unice
 {
-    /// <summary>The symbols on the round touch buttons and the menu's setting buttons, drawn as vectors (language-neutral, no art needed).</summary>
-    enum ActionIcon { Sneak, Laugh, Pass, Door, Eye, SoundOn, SoundOff, Globe }
+    /// <summary>The symbols on the round touch buttons, the menu's setting buttons and the HUD's map/menu buttons, drawn as vectors (language-neutral, no art needed).</summary>
+    enum ActionIcon { Sneak, Laugh, Pass, Door, Eye, SoundOn, SoundOff, Globe, Map, Menu }
 
     static class ActionIcons
     {
@@ -60,6 +60,14 @@ namespace Unice
                     painter.BeginPath(); painter.MoveTo(At(-.36f, 0)); painter.LineTo(At(.36f, 0)); painter.Stroke();
                     painter.BeginPath(); painter.MoveTo(At(0, -.36f)); painter.BezierCurveTo(At(.24f, -.18f), At(.24f, .18f), At(0, .36f)); painter.Stroke();
                     painter.BeginPath(); painter.MoveTo(At(0, -.36f)); painter.BezierCurveTo(At(-.24f, -.18f), At(-.24f, .18f), At(0, .36f)); painter.Stroke();
+                    break;
+                case ActionIcon.Map:     // a house plan: a frame split into rooms
+                    painter.BeginPath(); painter.MoveTo(At(-.3f, -.24f)); painter.LineTo(At(.3f, -.24f)); painter.LineTo(At(.3f, .24f)); painter.LineTo(At(-.3f, .24f)); painter.ClosePath(); painter.Stroke();
+                    painter.BeginPath(); painter.MoveTo(At(-.02f, -.24f)); painter.LineTo(At(-.02f, .04f)); painter.Stroke();
+                    painter.BeginPath(); painter.MoveTo(At(-.3f, .04f)); painter.LineTo(At(.3f, .04f)); painter.Stroke();
+                    break;
+                case ActionIcon.Menu:    // three bars
+                    for (int bar = -1; bar <= 1; bar++) { painter.BeginPath(); painter.MoveTo(At(-.24f, bar * .17f)); painter.LineTo(At(.24f, bar * .17f)); painter.Stroke(); }
                     break;
             }
         }

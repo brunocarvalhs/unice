@@ -166,13 +166,16 @@
 /* ---------- in-game HUD ---------- */
 .hud-card { background-color: var(--noite-2-86); border-width: 1px; border-color: var(--borda); border-radius: 6px; padding: 8px 12px; }
 .hud-tl { position: absolute; left: 14px; top: 12px; min-width: 200px; }
-.hud-tr { position: absolute; right: 14px; top: 12px; width: 300px; align-items: stretch; }
+/* below the 64 px icon buttons (12 + 64 + 8) */
+.hud-tr { position: absolute; right: 14px; top: 84px; width: 260px; align-items: stretch; }
+.hud-side { margin-left: 12px; }
 .hud-lbl { -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); font-size: 16px; letter-spacing: 1px; color: var(--cal-mudo); }
-.clock { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 44px; color: var(--cal); }
+.clock { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 38px; color: var(--cal); }
 .clock-low { color: var(--alerta); }
 .phase { font-size: 16px; color: var(--cal-mudo); }
 .where { font-size: 16px; color: var(--cal); }
 .roomline { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 16px; color: var(--sol); }
+.sheet .roomline { color: var(--tinta); margin-bottom: 8px; }
 .role-t { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 22px; }
 .role-unice .role-t { color: var(--chita-claro); }
 .role-holder .role-t { color: var(--sol); }
@@ -182,12 +185,15 @@
 .meter-fill { height: 100%; width: 0; background-color: var(--chita-claro); }
 .meter-noise .meter-fill { background-color: var(--sol); }
 .note { font-size: 16px; color: var(--cal-mudo); white-space: normal; margin-top: 3px; }
-.mini { height: 140px; margin-top: 6px; background-color: var(--noite-0); border-radius: 4px; }
+.mini { height: 120px; margin-top: 6px; background-color: var(--noite-0); border-radius: 4px; }
 .hud-btn { background-color: var(--noite-2-90); color: var(--cal); border-width: 1px; border-color: var(--borda); border-radius: 5px; font-size: 16px; letter-spacing: 1px; -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); padding: 6px 10px; min-height: var(--alvo); min-width: 64px; margin: 0 0 0 6px; }
-.hud-btns { position: absolute; right: 330px; top: 12px; flex-direction: row; }
-.plist { position: absolute; right: 330px; top: 84px; width: 270px; }
+.hud-btns { position: absolute; right: 14px; top: 12px; flex-direction: row; }
+.hud-icon { min-width: var(--alvo); padding: 0; align-items: center; justify-content: center; }
+.hud-glyph { width: 36px; height: 36px; }
+/* centered over the game, under the HUD buttons; it covers the role card on narrow screens, which is fine while it is open */
+.plist { position: absolute; left: 50%; margin-left: -150px; top: 84px; width: 300px; }
 /* the rows scroll so 8 players (64 px rows with mute buttons) stay above the bottom of a 540 px panel */
-.plist-rows { max-height: 230px; }
+.plist-rows { max-height: 200px; }
 .plrow { flex-direction: row; align-items: center; margin-bottom: 4px; padding: 2px 4px; border-radius: 4px; }
 .plrow-pick { background-color: var(--branco-6); min-height: var(--alvo); }
 .plrow-pick:hover { background-color: var(--branco-14); }

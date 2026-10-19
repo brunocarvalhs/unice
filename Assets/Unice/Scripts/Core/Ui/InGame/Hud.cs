@@ -4,11 +4,14 @@ using static Unice.UiKit;
 namespace Unice
 {
     /// <summary>
-    /// In-game HUD: the match card (top left), the role card (top right), the map/menu buttons and the panel with the
-    /// house plan and the player list. Refreshed a few times a second, not every frame.
+    /// In-game HUD: the match card (top left), the map/menu icon buttons (top right) with the role card under them, and the
+    /// centered panel with the house plan and the player list. Refreshed a few times a second, not every frame.
     /// </summary>
     sealed class Hud : UiPart
     {
+        /// <summary>Element names of the icon buttons (they have no text to find them by).</summary>
+        public const string MapButtonName = "hud-map", MenuButtonName = "hud-menu";
+
         public readonly VisualElement Root;
         readonly MatchCard matchCard;
         readonly RoleCard roleCard;
@@ -20,8 +23,8 @@ namespace Unice
             matchCard = new MatchCard(ui, Root);
             roleCard = new RoleCard(ui, Root);
             var buttons = IgnorePointer(AddElement(Root, "hud-btns"));
-            LocalizedButton(buttons, "hud.map_btn", () => playerList.Toggle(), "hud-btn");
-            LocalizedButton(buttons, "hud.menu_btn", () => app.TogglePause(), "hud-btn");
+            AddGlyphButton(buttons, ActionIcon.Map, () => playerList.Toggle(), "hud-btn", "hud-icon").name = MapButtonName;
+            AddGlyphButton(buttons, ActionIcon.Menu, () => app.TogglePause(), "hud-btn", "hud-icon").name = MenuButtonName;
             playerList = new PlayerListPanel(ui, Root);
         }
 

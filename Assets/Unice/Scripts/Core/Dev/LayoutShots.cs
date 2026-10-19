@@ -70,8 +70,8 @@ namespace Unice
             yield return Wait(2); yield return Shoot("hide");
             while (app.game.phase != Phase.Hunt) yield return null;
             yield return Wait(2); yield return Shoot("hunt");
-            Click("hud.map_btn"); yield return Wait(.5f); yield return Shoot("hunt-map");
-            Click("hud.map_btn");
+            ClickNamed(Hud.MapButtonName); yield return Wait(.5f); yield return Shoot("hunt-map");
+            ClickNamed(Hud.MapButtonName);
             app.TogglePause(); yield return Wait(.5f); yield return Shoot("pause"); app.TogglePause();
             while (app.game.phase != Phase.Result && app.game.phase != Phase.Final) yield return null;
             yield return Wait(2); yield return Shoot(app.game.phase == Phase.Final ? "final" : "result");
@@ -87,6 +87,14 @@ namespace Unice
             string text = Localization.Get(key);
             var button = app.ui.root.Query<Button>().Where(each => each.text == text && !float.IsNaN(each.worldBound.width) && each.worldBound.width > 0).First();
             if (button == null) { Debug.LogWarning("[LayoutShots] no visible button: " + key); return; }
+            using (var submit = NavigationSubmitEvent.GetPooled()) { submit.target = button; button.SendEvent(submit); }
+        }
+
+        /// <summary>Same as <see cref="Click"/> for a button that has an element name instead of text (icon buttons).</summary>
+        void ClickNamed(string elementName)
+        {
+            var button = app.ui.root.Q<Button>(elementName);
+            if (button == null) { Debug.LogWarning("[LayoutShots] no button named: " + elementName); return; }
             using (var submit = NavigationSubmitEvent.GetPooled()) { submit.target = button; button.SendEvent(submit); }
         }
 

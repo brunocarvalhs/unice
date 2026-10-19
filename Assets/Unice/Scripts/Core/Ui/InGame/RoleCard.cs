@@ -5,11 +5,14 @@ using static Unice.UiKit;
 namespace Unice
 {
     /// <summary>
-    /// HUD top-right card: your role and goal, who has the doll (if your team can know), when it giggles next,
-    /// and how much noise you are making.
+    /// HUD card under the map/menu buttons: your role and goal, who has the doll (if your team can know), when it giggles next,
+    /// and how much noise you are making (only while you are making some).
     /// </summary>
     sealed class RoleCard : UiPart
     {
+        /// <summary>Below this the noise meter stays hidden (0..1, same scale as <see cref="Character.noiseLevel"/>).</summary>
+        const float MinNoiseShown = .05f;
+
         static readonly string[] RoleClasses = { "role-unice", "role-out", "role-holder" };
 
         readonly VisualElement card, giggleMeter, giggleMeterFill, noiseBox, noiseMeterFill;
@@ -59,10 +62,10 @@ namespace Unice
             {
                 SetText(dollHolderLabel, holder == me ? Localization.Get("hud.doll_with_you") : Localization.Get("hud.doll_with", holder.name.ToUpperInvariant()));
                 giggleProgress = game.phase == Phase.Hunt ? 1 - doll.giggleTimer / game.giggleInterval : 0;
-                if (game.phase == Phase.Hide) note = Localization.Get("hud.giggle_wait_enter");
-                else if (holder.hidingSpot != null) note = Localization.Get("hud.giggle_in", Localization.SpotPhrase(holder.hidingSpot), Mathf.CeilToInt(doll.giggleTimer));
-                else note = Localization.Get("hud.giggle_quiet");
+                // the standing rules ("it stays quiet out of hiding") are in the how-to, not here: only the countdown and the pass cooldown are news
+                note = game.phase == Phase.Hunt && holder.hidingSpot != null ? Localization.Get("hud.giggle_in", Localization.SpotPhrase(holder.hidingSpot), Mathf.CeilToInt(doll.giggleTimer)) : "";
                 if (holder == me && me.passCooldown > 0) note += Localization.Get("hud.repass_in", Mathf.CeilToInt(me.passCooldown));
+                note = note.TrimStart();
                 Show(giggleMeter, true);
             }
             else
@@ -74,16 +77,18 @@ namespace Unice
                     int secondsAgo = Mathf.Max(0, Mathf.FloorToInt(game.roundClock - doll.lastGiggleTime));
                     note = Localization.Get("hud.giggle_last", Localization.RoomPhrase(room), secondsAgo);
                 }
-                else note = Localization.Get("hud.giggle_every", game.giggleInterval.ToString("0"));
+                else note = "";
                 Show(giggleMeter, false);
             }
             giggleMeterFill.style.width = Length.Percent(Mathf.Clamp01(giggleProgress) * 100);
             SetText(dollNoteLabel, note);
+            Show(dollNoteLabel, note.Length > 0);
         }
 
         void RefreshNoise(Character me)
         {
-            Show(noiseBox, me != null && !me.outOfRound && !me.IsUnice);
+            // hidden or standing still there is nothing to watch; the meter only appears while you are making noise
+            Show(noiseBox, me != null && !me.outOfRound && !me.IsUnice && me.hidingSpot == null && (me.moving || me.noiseLevel > MinNoiseShown));
             if (me == null) return;
             noiseMeterFill.style.width = Length.Percent(Mathf.Clamp01(me.noiseLevel) * 100);
             string noiseKey = me.hidingSpot != null ? "hud.noise_hidden" : me.noiseLevel > .5f ? "hud.noise_loud" : me.moving ? "hud.noise_quiet" : "hud.noise_stopped";
