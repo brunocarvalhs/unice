@@ -354,11 +354,11 @@
 /* ---------- the story: a full-screen animation (StoryScreen) ---------- */
 .story { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: var(--noite-0); }
 .story-stage { position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; }
-.story-backdrop { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-size: cover; background-position: center; unity-background-image-tint-color: rgb(190, 175, 160); }
+.story-backdrop { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-size: cover; background-position: center; -unity-background-image-tint-color: rgb(190, 175, 160); }
 .story-world { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
 .story-prop { position: absolute; }
 .story-sepia { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: var(--papel); opacity: 0; }
-.story-vignette { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-image: resource("Art/vignette"); background-size: 100% 100%; unity-background-image-tint-color: var(--noite-0-88); }
+.story-vignette { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-image: resource("Art/vignette"); background-size: 100% 100%; -unity-background-image-tint-color: var(--noite-0-88); }
 .story-flash { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: var(--branco); opacity: 0; }
 .story-title { position: absolute; left: 0; right: 0; top: 10px; -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 40px; color: var(--cal); -unity-text-align: middle-center; text-shadow: 0px 0px 14px var(--noite-0-95); }
 .story-dots { position: absolute; left: 0; right: 0; top: 62px; flex-direction: row; justify-content: center; }
