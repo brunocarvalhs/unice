@@ -11,12 +11,13 @@ namespace Unice
 
         /// <summary>A typed room code needs at least this many characters.</summary>
         const int MinRoomCodeLength = 4;
-        /// <summary>Sections of the cordel in Localization ("story.N.t" / "story.N.b").</summary>
-        const int StoryParts = 5;
 
         public readonly VisualElement Root;
         readonly VisualElement mainPage, onlinePage, myKidPage, kidCustomizerSlot;
-        VisualElement howToPlayPage, storyPage;   // set by BuildHowToPlay / BuildStory
+        VisualElement howToPlayPage;   // set by BuildHowToPlay
+        readonly StoryScreen story;
+        /// <summary>Version label, settings pills and quit button: hidden while the story plays full screen.</summary>
+        readonly VisualElement[] chrome;
         readonly TextField roomCodeField;
         readonly Label netStatusLabel;
         readonly Button createRoomButton, joinRoomButton, soloButton, onlineButton;
@@ -25,7 +26,7 @@ namespace Unice
         public HomeMenu(Ui ui) : base(ui)
         {
             Root = AddElement(ui.root, "menu");
-            AddLabel(Root, "v" + Application.version, "menu-version");
+            var versionLabel = AddLabel(Root, "v" + Application.version, "menu-version");
 
             // main page
             mainPage = AddElement(Root, "menu-page");
@@ -56,7 +57,6 @@ namespace Unice
             LocalizedButton(online, "menu.back", () => ShowPage(Page.Main), "mbtn", "mbtn-back");
 
             BuildHowToPlay();
-            BuildStory();
 
             // my child: the same customization as in the waiting room
             var myKid = AddPanelPage(out myKidPage, "menu.mykid_title");
@@ -68,8 +68,14 @@ namespace Unice
             ui.settings.AddSoundButton(footer, "mpill"); ui.settings.AddMicButton(footer, "mpill");
             ui.settings.AddWhisperButton(footer, "mpill"); ui.settings.AddLanguageButton(footer, "mpill");
 #if !UNITY_WEBGL
-            LocalizedButton(Root, "menu.quit", () => Application.Quit(), "mbtn", "mexit");   // a browser tab can't quit itself
+            var quit = LocalizedButton(Root, "menu.quit", () => Application.Quit(), "mbtn", "mexit");   // a browser tab can't quit itself
 #endif
+            chrome = new[] { versionLabel, footer
+#if !UNITY_WEBGL
+                , quit
+#endif
+            };
+            story = new StoryScreen(ui, Root, () => ShowPage(Page.Main));   // last: drawn over everything else on the menu
             ShowPage(Page.Main);
         }
 
@@ -96,22 +102,6 @@ namespace Unice
             LocalizedButton(panel, "menu.back", () => ShowPage(Page.Main), "mbtn", "mbtn-back");
         }
 
-        /// <summary>The story of the game, told in cordel (five sections of verses); shown once on the first run and from the main menu.</summary>
-        void BuildStory()
-        {
-            var panel = AddPanelPage(out storyPage, "menu.story_title");
-            LocalizedLabel(panel, "menu.story_sub", "mrule-t", "mrule-rose");
-            var scroll = new ScrollView(ScrollViewMode.Vertical); scroll.AddToClassList("mscroll"); panel.Add(scroll);
-            for (int part = 1; part <= StoryParts; part++)
-            {
-                var section = AddElement(scroll, "mrule");
-                LocalizedLabel(section, "story." + part + ".t", "mrule-t");
-                LocalizedLabel(section, "story." + part + ".b", "mnote");
-            }
-            LocalizedLabel(scroll, "menu.story_by", "mnote", "mrule-moss");
-            LocalizedButton(panel, "menu.story_done", () => ShowPage(Page.Main), "mbtn", "mbtn-back");
-        }
-
         /// <summary>Each time home appears: back to the main page, or to "online" if there's a connection error to read.</summary>
         public void OnShow()
         {
@@ -132,7 +122,11 @@ namespace Unice
         }
 
         /// <summary>Per frame while showing.</summary>
-        public void Frame() { if (currentPage == Page.MyKid) ui.kidCustomizer.AnimatePreview(); }
+        public void Frame()
+        {
+            if (currentPage == Page.MyKid) ui.kidCustomizer.AnimatePreview();
+            if (currentPage == Page.Story) story.Frame(Time.unscaledDeltaTime);
+        }
 
         /// <summary>A sub-page: a framed panel with a title. Returns the panel to fill.</summary>
         VisualElement AddPanelPage(out VisualElement page, string titleKey)
@@ -154,7 +148,9 @@ namespace Unice
             if (page != currentPage) Metrics.Screen(ScreenName(page));
             currentPage = page;
             Show(mainPage, page == Page.Main); Show(onlinePage, page == Page.Online);
-            Show(howToPlayPage, page == Page.HowToPlay); Show(myKidPage, page == Page.MyKid); Show(storyPage, page == Page.Story);
+            Show(howToPlayPage, page == Page.HowToPlay); Show(myKidPage, page == Page.MyKid); Show(story.Root, page == Page.Story);
+            foreach (var element in chrome) Show(element, page != Page.Story);
+            if (page == Page.Story) story.Begin();
             if (page == Page.MyKid) ui.kidCustomizer.ShowIn(kidCustomizerSlot);
         }
 
