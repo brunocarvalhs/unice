@@ -22,7 +22,7 @@ namespace Unice
         static readonly string[] Backdrops = { "floor_kitchen", "floor_master", "floor_living", "floor_dining", "floor_dining" };
 
         // the cousins of the cordel: skin, hair, hair color, outfit, outfit color, hat, accessory
-        static readonly int[][] Cousins =
+        internal static readonly int[][] Cousins =
         {
             new[] { 2, 0, 0, 2, 0, 3, 1 },   // Márcio: straw hat and satchel
             new[] { 1, 2, 1, 3, 3, 0, 3 },   // pigtails and a rag doll

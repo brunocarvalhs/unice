@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Unice
 {
     /// <summary>
-    /// Data for one playable map (house, quintal, praça, …): what <see cref="Map.Load"/> turns into rooms, doors,
+    /// Data for one playable map (the house, …): what <see cref="Map.Load"/> turns into rooms, doors,
     /// furniture, hiding spots and the navigation graph. Display text (room names, hiding-spot phrases, the map's
     /// own name) is never stored here — it lives in Core's Localization table, keyed by id/type.
     /// </summary>
@@ -46,16 +47,14 @@ namespace Unice
         { this.type = type; this.x = x; this.y = y; this.w = w; this.h = h; this.hideSide = hideSide; }
     }
 
-    /// <summary>Registry of every playable map, by id.</summary>
+    /// <summary>Registry of every playable map, by id. To add a map, add its <c>Build()</c> to <see cref="InOrder"/> (the one place).</summary>
     public static class Maps
     {
-        public static readonly Dictionary<string, MapDefinition> All = new Dictionary<string, MapDefinition>
-        {
-            { MapHouse.Id, MapHouse.Build() },
-            { MapQuintal.Id, MapQuintal.Build() },
-            { MapPraca.Id, MapPraca.Build() },
-        };
-        public static readonly string[] AllIds = { MapHouse.Id, MapQuintal.Id, MapPraca.Id };
+        /// <summary>Every map, in the order the waiting room's map stepper cycles through them.</summary>
+        static readonly MapDefinition[] InOrder = { MapHouse.Build() };
+
+        public static readonly Dictionary<string, MapDefinition> All = InOrder.ToDictionary(definition => definition.id);
+        public static readonly string[] AllIds = InOrder.Select(definition => definition.id).ToArray();
         public static MapDefinition ById(string id) => All.TryGetValue(id, out var definition) ? definition : All[MapHouse.Id];
     }
 }

@@ -115,6 +115,22 @@ namespace Unice
             ["story.4.b"] = new[] { "Foi primo pra todo canto:\ndebaixo da cama, um,\ndentro do guarda-roupa, outro,\nlá na cozinha, zum-zum,\nsob a mesa, mais um par,\ne no baú… mais algum!\n\nNo esconderijo, quietinho,\nsó se ouvia a gritaria:\nquando a tia pegava um,\nera grito e correria,\ncada um trocava de canto\nrindo de tanta alegria.", "Cousins went everywhere:\none under the bed,\nanother inside the wardrobe,\nsome in the kitchen, buzzing,\na couple under the table,\nand a few more in the chest!\n\nHidden and quiet,\nall you could hear was the shouting:\nwhen auntie caught one,\nthere were screams and a stampede,\nand everyone swapped corners,\nlaughing with joy.", "Los primos se fueron a todos lados:\nuno debajo de la cama,\notro dentro del ropero,\nlos de la cocina, zum-zum,\nun par bajo la mesa,\n¡y otros más en el baúl!\n\nEscondidos, quietitos,\nsolo se oía la gritería:\ncuando la tía atrapaba a uno,\nera grito y carrera,\ny cada cual cambiaba de rincón\nriendo de alegría." },
             ["story.5.t"] = new[] { "Menino, almoçar!", "Kids, lunch is ready!", "¡Niños, a almorzar!" },
             ["story.5.b"] = new[] { "E no fim da brincadeira,\nboneca no seu lugar,\ntia Unice abraçava ela,\ne a casa ia gargalhar\naté a vó, lá da cozinha,\ngritar: — Menino, almoçar!\n\nO tempo passou ligeiro,\ncada qual foi pra um lugar,\nmas a lembrança ficou\nfeito retrato no lar:\na casa da vó, a boneca,\ne a vontade de voltar.\n\nPor isso eu fiz este jogo\npra reviver a jornada:\npega a boneca e se esconde,\nque a tia vem arretada!\nAguenta até que a vovó\nchame pra mesa arrumada!", "At the end of the game,\nthe doll back in its place,\naunt Unice hugging it,\nthe whole house burst out laughing\nuntil grandma, from the kitchen,\nshouted: — Kids, lunch is ready!\n\nTime flew by,\neveryone went their own way,\nbut the memory stayed\nlike a photo on the wall:\ngrandma's house, the doll,\nand the wish to go back.\n\nThat's why I made this game\nto relive the journey:\ngrab the doll and hide,\nbecause auntie is coming, furious!\nHold on until grandma\ncalls everyone to the table!", "Al final del juego,\nla muñeca en su lugar,\nla tía Unice la abrazaba\ny toda la casa reía\nhasta que la abuela, desde la cocina,\ngritaba: — ¡Niños, a almorzar!\n\nEl tiempo pasó volando,\ncada cual siguió su camino,\npero el recuerdo quedó\ncomo un retrato en el hogar:\nla casa de la abuela, la muñeca\ny las ganas de volver.\n\nPor eso hice este juego\npara revivir la jornada:\n¡agarra la muñeca y escóndete,\nque la tía viene furiosa!\n¡Aguanta hasta que la abuela\nte llame a la mesa servida!" },
+
+            // ---------- StoryPicker.cs: choosing the story (= the map) ----------
+            ["menu.stories_title"] = new[] { "ESCOLHA A HISTÓRIA", "CHOOSE THE STORY", "ELIGE LA HISTORIA" },
+            ["menu.stories_desc"] = new[] { "Cada história acontece em um lugar diferente.", "Each story takes place somewhere different.", "Cada historia ocurre en un lugar distinto." },
+            ["stories.doll.name"] = new[] { "A Boneca", "The Doll", "La Muñeca" },
+            ["stories.doll.blurb"] = new[] { "Na casa da vó, a boneca da tia Unice sumiu. Esconde, que ela vem!", "At grandma's house, aunt Unice's doll is gone. Hide, she's coming!", "En la casa de la abuela, la muñeca de la tía Unice desapareció. ¡Escóndete, que viene!" },
+            ["stories.soon"] = new[] { "Em breve", "Coming soon", "Próximamente" },
+
+            // ---------- HideComicView.cs: the intro comic the Unice reads while the others hide ----------
+            ["comic.countdown"] = new[] { "Você abre os olhos em {0} s", "You open your eyes in {0}s", "Abres los ojos en {0}s" },
+            ["comic.skip"] = new[] { "toque para pular", "tap to skip", "toca para saltar" },
+            ["comic.doll.1"] = new[] { "Na casa da vó tinha mais menino que um quartel.", "Grandma's house had more kids than a barracks.", "En la casa de la abuela había más niños que en un cuartel." },
+            ["comic.doll.2"] = new[] { "No quarto da tia Unice morava uma boneca: o tesouro dela.", "In aunt Unice's room lived a doll: her treasure.", "En el cuarto de la tía Unice vivía una muñeca: su tesoro." },
+            ["comic.doll.3"] = new[] { "Márcio desafiou: quem pega a boneca sem a tia ver?", "Márcio dared them: who can grab the doll without auntie seeing?", "Márcio retó: ¿quién agarra la muñeca sin que la tía lo vea?" },
+            ["comic.doll.4"] = new[] { "Quando a tia deu por falta… foi primo pra todo canto!", "When auntie noticed… cousins ran everywhere!", "Cuando la tía lo notó… ¡los primos corrieron a todos lados!" },
+            ["comic.doll.5"] = new[] { "Agora é com você, tia: conte até zero e ache a boneca!", "Now it's up to you, auntie: count to zero and find the doll!", "Ahora te toca a ti, tía: cuenta hasta cero y encuentra la muñeca." },
             ["lbl.name"] = new[] { "SEU NOME", "YOUR NAME", "TU NOMBRE" },
             ["lbl.kid"] = new[] { "SUA CRIANÇA", "YOUR KID", "TU NIÑO" },
             ["menu.randomize"] = new[] { "Sortear visual", "Randomize look", "Sortear apariencia" },
@@ -343,40 +359,6 @@ namespace Unice
             ["room.storage.name"] = new[] { "Depósito", "Storage Room", "Depósito" },
             ["room.storage.in"] = new[] { "no Depósito", "in the Storage Room", "en el Depósito" },
 
-            // ---------- MapQuintal.cs: the backyard map ----------
-            ["map.quintal.name"] = new[] { "O Quintal", "The Backyard", "El Patio Trasero" },
-            ["room.front.name"] = new[] { "Entrada do Quintal", "Garden Entrance", "Entrada del Jardín" },
-            ["room.front.in"] = new[] { "na entrada do quintal", "at the garden entrance", "en la entrada del jardín" },
-            ["room.patio.name"] = new[] { "Varanda", "Patio", "Patio" },
-            ["room.patio.in"] = new[] { "na varanda", "on the patio", "en el patio" },
-            ["room.side.name"] = new[] { "Lateral da Casa", "Side Yard", "Lateral de la Casa" },
-            ["room.side.in"] = new[] { "na lateral da casa", "in the side yard", "en el lateral de la casa" },
-            ["room.path.name"] = new[] { "Caminho do Quintal", "Garden Path", "Camino del Jardín" },
-            ["room.path.in"] = new[] { "no caminho do quintal", "on the garden path", "en el camino del jardín" },
-            ["room.garden.name"] = new[] { "Horta", "Vegetable Garden", "Huerto" },
-            ["room.garden.in"] = new[] { "na horta", "in the vegetable garden", "en el huerto" },
-            ["room.yard.name"] = new[] { "Quintal Principal", "Main Yard", "Patio Principal" },
-            ["room.yard.in"] = new[] { "no meio do quintal", "in the main yard", "en el patio principal" },
-            ["room.shed.name"] = new[] { "Fundo do Quintal", "Back of the Yard", "Fondo del Patio" },
-            ["room.shed.in"] = new[] { "no fundo do quintal", "at the back of the yard", "en el fondo del patio" },
-
-            // ---------- MapPraca.cs: the town-square map ----------
-            ["map.praca.name"] = new[] { "A Praça", "The Town Square", "La Plaza" },
-            ["room.market.name"] = new[] { "Feira Coberta", "Covered Market", "Mercado Cubierto" },
-            ["room.market.in"] = new[] { "na feira coberta", "at the covered market", "en el mercado cubierto" },
-            ["room.church.name"] = new[] { "Adro da Igreja", "Church Courtyard", "Atrio de la Iglesia" },
-            ["room.church.in"] = new[] { "no adro da igreja", "at the church courtyard", "en el atrio de la iglesia" },
-            ["room.cafes.name"] = new[] { "Varanda dos Cafés", "Café Terrace", "Terraza de los Cafés" },
-            ["room.cafes.in"] = new[] { "na varanda dos cafés", "at the café terrace", "en la terraza de los cafés" },
-            ["room.walk.name"] = new[] { "Calçadão", "Promenade", "Paseo" },
-            ["room.walk.in"] = new[] { "no calçadão", "on the promenade", "en el paseo" },
-            ["room.square.name"] = new[] { "Jardim da Praça", "Plaza Garden", "Jardín de la Plaza" },
-            ["room.square.in"] = new[] { "no jardim da praça", "in the plaza garden", "en el jardín de la plaza" },
-            ["room.fountain.name"] = new[] { "Praça da Fonte", "Fountain Square", "Plaza de la Fuente" },
-            ["room.fountain.in"] = new[] { "perto da fonte", "by the fountain", "cerca de la fuente" },
-            ["room.park.name"] = new[] { "Parquinho", "Playground", "Parque Infantil" },
-            ["room.park.in"] = new[] { "no parquinho", "at the playground", "en el parque infantil" },
-
             // ---------- map names (the house itself) ----------
             ["map.house.name"] = new[] { "A Casa", "The House", "La Casa" },
 
@@ -415,42 +397,6 @@ namespace Unice
             ["spot.oldtrunk"] = new[] { "dentro do baú velho", "inside the old trunk", "dentro del baúl viejo" },
             ["spot.boxes"] = new[] { "atrás da pilha de caixas", "behind the stack of boxes", "detrás de la pila de cajas" },
 
-            // ---------- MapQuintal.cs: hiding spot flavor text ----------
-            ["spot.hedge"] = new[] { "atrás da cerca viva", "behind the hedge", "detrás del seto" },
-            ["spot.bush"] = new[] { "atrás do arbusto grande", "behind the big bush", "detrás del arbusto grande" },
-            ["spot.gatebush"] = new[] { "atrás do arbusto do portão", "behind the bush by the gate", "detrás del arbusto de la puerta" },
-            ["spot.basket"] = new[] { "atrás do cesto de roupas", "behind the laundry basket", "detrás del cesto de ropa" },
-            ["spot.deck"] = new[] { "debaixo da varanda", "under the deck", "debajo del porche" },
-            ["spot.swing"] = new[] { "atrás do balanço", "behind the swing", "detrás del columpio" },
-            ["spot.compost"] = new[] { "atrás da composteira", "behind the compost bin", "detrás de la composta" },
-            ["spot.pots"] = new[] { "atrás da pilha de vasos", "behind the stack of pots", "detrás de la pila de macetas" },
-            ["spot.wheelbarrow"] = new[] { "atrás do carrinho de mão", "behind the wheelbarrow", "detrás de la carretilla" },
-            ["spot.treehouse"] = new[] { "em cima da casa da árvore", "up in the treehouse", "arriba en la casa del árbol" },
-            ["spot.doghouse"] = new[] { "dentro da casinha do cachorro", "inside the doghouse", "dentro de la caseta del perro" },
-            ["spot.bigbush"] = new[] { "atrás da moita alta", "behind the tall bush", "detrás del matorral alto" },
-            ["spot.shed"] = new[] { "dentro do galpão de ferramentas", "inside the tool shed", "dentro del cobertizo" },
-            ["spot.woodpile"] = new[] { "atrás da pilha de lenha", "behind the woodpile", "detrás de la pila de leña" },
-            ["spot.tarpcar"] = new[] { "debaixo da lona do carro velho", "under the old car's tarp", "debajo de la lona del auto viejo" },
-            ["spot.hammock"] = new[] { "atrás da rede", "behind the hammock", "detrás de la hamaca" },
-            ["spot.rosebush"] = new[] { "atrás da roseira", "behind the rosebush", "detrás del rosal" },
-
-            // ---------- MapPraca.cs: hiding spot flavor text ----------
-            ["spot.kiosk"] = new[] { "dentro da banca de jornal fechada", "inside the closed newsstand", "dentro del quiosco cerrado" },
-            ["spot.fruitstall"] = new[] { "atrás da barraca de frutas", "behind the fruit stall", "detrás del puesto de frutas" },
-            ["spot.hotdogcart"] = new[] { "atrás do carrinho de cachorro-quente", "behind the hot dog cart", "detrás del carrito de perritos calientes" },
-            ["spot.phonebooth"] = new[] { "dentro da cabine telefônica", "inside the phone booth", "dentro de la cabina telefónica" },
-            ["spot.churchbush"] = new[] { "atrás do arbusto da igreja", "behind the church's bush", "detrás del arbusto de la iglesia" },
-            ["spot.belldoor"] = new[] { "atrás da porta do sino", "behind the bell tower door", "detrás de la puerta del campanario" },
-            ["spot.cratestack"] = new[] { "atrás das caixas do café", "behind the café's crates", "detrás de las cajas del café" },
-            ["spot.umbrellas"] = new[] { "embaixo da pilha de guarda-sóis", "under the stack of umbrellas", "debajo de la pila de sombrillas" },
-            ["spot.fountainrim"] = new[] { "atrás da borda da fonte", "behind the fountain's rim", "detrás del borde de la fuente" },
-            ["spot.statue"] = new[] { "atrás do pedestal da estátua", "behind the statue's pedestal", "detrás del pedestal de la estatua" },
-            ["spot.gazebo"] = new[] { "dentro do coreto", "inside the gazebo", "dentro del quiosco de música" },
-            ["spot.benchbush"] = new[] { "atrás do banco com arbustos", "behind the bench's bushes", "detrás del banco con arbustos" },
-            ["spot.slide"] = new[] { "debaixo do escorregador", "under the slide", "debajo del tobogán" },
-            ["spot.sandbox"] = new[] { "atrás da caixa de areia", "behind the sandbox", "detrás del cajón de arena" },
-            ["spot.playbush"] = new[] { "atrás do arbusto do parquinho", "behind the playground's bush", "detrás del arbusto del parque" },
-            ["spot.clocktower"] = new[] { "atrás da base da torre do relógio", "behind the clock tower's base", "detrás de la base de la torre del reloj" },
         };
     }
 }

@@ -231,6 +231,8 @@ namespace Unice
         internal int AddOnlineWin() => profile.AddOnlineWin();
         internal bool MarkFirstMatchEnd() => profile.MarkFirstMatchEnd();
         internal bool MarkStorySeen() => profile.MarkStorySeen();
+        internal bool ComicSeen(string storyId) => profile.ComicSeen(storyId);
+        internal void MarkComicSeen(string storyId) => profile.MarkComicSeen(storyId);
         public void SetKit(int[] newKit) { profile.SetKit(newKit); room.sync.PublishSoon(); }
 
         public bool MicOn { get => voice != null && voice.MicOn; set { if (voice != null) voice.MicOn = value; } }

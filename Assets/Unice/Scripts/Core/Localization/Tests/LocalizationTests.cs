@@ -108,7 +108,7 @@ namespace Unice
             Assert.AreEqual("3º", Localization.Ordinal(3));
         }
 
-        static IEnumerable<MapDefinition> AllMaps() { yield return MapHouse.Build(); yield return MapQuintal.Build(); yield return MapPraca.Build(); }
+        static IEnumerable<MapDefinition> AllMaps() => Maps.AllIds.Select(Maps.ById);
 
         [TestCaseSource(nameof(AllMaps))]
         public void MapContent_EveryRoomAndSpot_HasText(MapDefinition definition)

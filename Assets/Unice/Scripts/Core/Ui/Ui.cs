@@ -44,6 +44,8 @@ namespace Unice
         Rect lastSafeRect;
 
         internal readonly Messages messages;
+        /// <summary>The intro comic on the Unice's screen while the others hide; <see cref="Messages"/> hides its black screen while it plays.</summary>
+        internal readonly HideComicView comic;
         internal readonly KidCustomizer kidCustomizer;
         internal readonly SettingToggles settings;
         readonly ScreenEffects screenEffects;
@@ -80,6 +82,7 @@ namespace Unice
             safeArea = IgnorePointer(AddElement(root, "layer"));
             hud = new Hud(this);
             controls = new TouchControls(this);
+            comic = new HideComicView(this);   // before Messages: banners and toasts stay on top of the comic
             messages = new Messages(this);
             settings = new SettingToggles(this, Relocalize);
             kidCustomizer = new KidCustomizer(this);
@@ -194,6 +197,7 @@ namespace Unice
             worldLabels.Frame(dt, camera);
             soundCues.Frame(dt, camera);
             screenEffects.Frame(dt);
+            comic.Frame(dt);
             if (currentScreen == UiScreen.Home) homeMenu.Frame();
         }
 

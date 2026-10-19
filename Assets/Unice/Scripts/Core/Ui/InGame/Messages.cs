@@ -98,7 +98,7 @@ namespace Unice
 
             // hiding phase: the Unice waits with eyes closed, the others see a countdown
             bool hiding = game.phase == Phase.Hide; int secondsLeft = Mathf.CeilToInt(game.timeLeft);
-            Show(blackout, hiding && me != null && me.IsUnice);
+            Show(blackout, hiding && me != null && me.IsUnice && !ui.comic.Playing);
             Show(countdownPill, hiding && (me == null || !me.IsUnice));
             if (hiding) { SetText(countdownNumber, secondsLeft.ToString()); SetText(countdownPillText, Localization.Get("game.unice_enters_in", secondsLeft)); }
         }

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static Unice.UiKit;
@@ -7,13 +8,13 @@ namespace Unice
     /// <summary>The main menu over the house map: the main page and its sub-pages (online, how to play, my child).</summary>
     sealed class HomeMenu : UiPart
     {
-        enum Page { Main, Online, HowToPlay, MyKid, Story }
+        enum Page { Main, Online, HowToPlay, MyKid, Story, Stories }
 
         /// <summary>A typed room code needs at least this many characters.</summary>
         const int MinRoomCodeLength = 4;
 
         public readonly VisualElement Root;
-        readonly VisualElement mainPage, onlinePage, myKidPage, kidCustomizerSlot;
+        readonly VisualElement mainPage, onlinePage, myKidPage, storiesPage, kidCustomizerSlot;
         VisualElement howToPlayPage;   // set by BuildHowToPlay
         readonly StoryScreen story;
         /// <summary>Version label, settings pills and quit button: hidden while the story plays full screen.</summary>
@@ -22,6 +23,9 @@ namespace Unice
         readonly Label netStatusLabel;
         readonly Button createRoomButton, joinRoomButton, soloButton, onlineButton;
         Page currentPage = Page.Main;
+        /// <summary>What the story picker does once a story is chosen (start solo, create the room), and the page to show meanwhile.</summary>
+        Action startWithChosenStory;
+        Page pageAfterPick = Page.Main;
 
         public HomeMenu(Ui ui) : base(ui)
         {
@@ -33,7 +37,7 @@ namespace Unice
             AddLabel(mainPage, "Unice", "menu-title");
             LocalizedLabel(mainPage, "menu.sub", "menu-sub");
             var grid = AddElement(mainPage, "menu-grid");
-            soloButton = LocalizedButton(grid, "menu.local", () => app.PlaySolo(), "mbtn");
+            soloButton = LocalizedButton(grid, "menu.local", () => ChooseStory(app.PlaySolo, Page.Main), "mbtn");
             onlineButton = LocalizedButton(grid, "menu.online", () => { app.SetNetStatus(""); ShowPage(Page.Online); }, "mbtn");
             LocalizedButton(grid, "menu.howto", () => ShowPage(Page.HowToPlay), "mbtn", "mbtn-sm");
             LocalizedButton(grid, "menu.mykid", () => ShowPage(Page.MyKid), "mbtn", "mbtn-sm");
@@ -42,7 +46,7 @@ namespace Unice
             // online: create a room (the code is generated for you) or join one with a code
             var online = AddPanelPage(out onlinePage, "menu.online_title");
             LocalizedLabel(online, "menu.online_desc", "mnote");
-            createRoomButton = LocalizedButton(online, "menu.create_room", () => app.EnterRoom(true, null), "mbtn", "mbtn-wide");
+            createRoomButton = LocalizedButton(online, "menu.create_room", () => ChooseStory(() => app.EnterRoom(true, null), Page.Online), "mbtn", "mbtn-wide");
             LocalizedLabel(online, "menu.or_join", "menu-or");
             var joinRow = AddElement(online, "row");
             roomCodeField = Add(joinRow, new TextField { maxLength = 10 }, new[] { "mfield", "grow" });
@@ -55,6 +59,11 @@ namespace Unice
             joinRoomButton = LocalizedButton(joinRow, "menu.join", JoinTypedRoom, "mbtn", "mbtn-join");
             netStatusLabel = AddLabel(online, "", "mnote", "mnet");
             LocalizedButton(online, "menu.back", () => ShowPage(Page.Main), "mbtn", "mbtn-back");
+
+            // story picker: solo and "create room" come here first; the story decides the map
+            var stories = AddPanelPage(out storiesPage, "menu.stories_title");
+            LocalizedLabel(stories, "menu.stories_desc", "mnote");
+            new StoryPicker(ui, stories, PickStory, () => ShowPage(Page.Main));
 
             BuildHowToPlay();
 
@@ -75,6 +84,22 @@ namespace Unice
             chrome = new[] { versionLabel, topRight, footer };
             story = new StoryScreen(ui, Root, () => ShowPage(Page.Main));   // last: drawn over everything else on the menu
             ShowPage(Page.Main);
+        }
+
+        /// <summary>Opens the story picker; <paramref name="start"/> runs once a story is chosen, with <paramref name="pageWhileStarting"/> showing meanwhile (where a connection error can be read).</summary>
+        void ChooseStory(Action start, Page pageWhileStarting)
+        {
+            startWithChosenStory = start; pageAfterPick = pageWhileStarting;
+            ShowPage(Page.Stories);
+        }
+
+        /// <summary>The player chose a story: its map is set and the pending start (solo or room) goes ahead.</summary>
+        void PickStory(Story story)
+        {
+            game.mapId = story.mapId;
+            Metrics.Log("story_pick", ("story", story.id), ("map", story.mapId));
+            ShowPage(pageAfterPick);
+            startWithChosenStory?.Invoke();
         }
 
         void BuildHowToPlay()
@@ -138,7 +163,7 @@ namespace Unice
         /// <summary>Analytics screen name of each page; the main page is the phase's own "home".</summary>
         static string ScreenName(Page page) => page switch
         {
-            Page.Online => "home_online", Page.HowToPlay => "home_how_to_play", Page.MyKid => "home_my_kid", Page.Story => "home_story", _ => "home",
+            Page.Online => "home_online", Page.HowToPlay => "home_how_to_play", Page.MyKid => "home_my_kid", Page.Story => "home_story", Page.Stories => "home_stories", _ => "home",
         };
 
         void ShowPage(Page page)
@@ -146,7 +171,7 @@ namespace Unice
             if (page != currentPage) Metrics.Screen(ScreenName(page));
             currentPage = page;
             Show(mainPage, page == Page.Main); Show(onlinePage, page == Page.Online);
-            Show(howToPlayPage, page == Page.HowToPlay); Show(myKidPage, page == Page.MyKid); Show(story.Root, page == Page.Story);
+            Show(howToPlayPage, page == Page.HowToPlay); Show(myKidPage, page == Page.MyKid); Show(storiesPage, page == Page.Stories); Show(story.Root, page == Page.Story);
             foreach (var element in chrome) Show(element, page != Page.Story);
             if (page == Page.Story) story.Begin();
             if (page == Page.MyKid) ui.kidCustomizer.ShowIn(kidCustomizerSlot);

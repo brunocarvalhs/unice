@@ -6,7 +6,7 @@ namespace Unice
     /// <summary>
     /// The current map: rooms, doors, furniture, collision and line of sight (distances in house pixels).
     /// Built from a <see cref="MapDefinition"/> by <see cref="Load"/> — the house loads by default, and <see cref="Load"/>
-    /// can swap in another map (quintal, praça) before a match starts. Path finding is in <see cref="Navigation"/>.
+    /// can swap in another map (one per story) before a match starts. Path finding is in <see cref="Navigation"/>.
     /// </summary>
     public static class Map
     {

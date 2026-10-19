@@ -135,15 +135,6 @@ namespace Unice
             Assert.AreEqual(182f, Map.Clock.CenterY, "y");
         }
 
-        [TestCase("quintal")]
-        [TestCase("praca")]
-        public void Clock_MapWithoutClock_IsNull(string mapId)
-        {
-            Map.Load(Maps.ById(mapId));
-
-            Assert.IsNull(Map.Clock);
-        }
-
         [Test]
         public void WorldSize_House_CenterIs860_590()
         {
