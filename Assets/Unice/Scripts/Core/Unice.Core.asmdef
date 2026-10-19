@@ -4,6 +4,7 @@
     "references": [
         "Unice.Domain",
         "Unice.Localization",
+        "Unice.Gameplay",
         "Unity.InputSystem",
         "UnityEngine.UI"
     ],

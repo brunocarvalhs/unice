@@ -5,6 +5,7 @@
         "Unice.Core",
         "Unice.Domain",
         "Unice.Localization",
+        "Unice.Gameplay",
         "Unity.Netcode.Runtime",
         "Unity.Services.Core",
         "Unity.Services.Authentication",

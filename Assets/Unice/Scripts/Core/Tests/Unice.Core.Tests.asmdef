@@ -5,6 +5,7 @@
         "Unice.Core",
         "Unice.Domain",
         "Unice.Localization",
+        "Unice.Gameplay",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],

@@ -5,9 +5,6 @@ using static Unice.UiKit;
 
 namespace Unice
 {
-    /// <summary>Colors of a banner (USS classes "banner-info", "banner-rose", …).</summary>
-    public enum BannerStyle { Info, Rose, Blood, Moss, Candle }
-
     /// <summary>
     /// Text messages over the game: the big banner, the toast stack, the caption for sounds heard but not seen,
     /// the key-hints prompt, and the hiding-phase countdown (black screen for the Unice, a pill for everyone else).

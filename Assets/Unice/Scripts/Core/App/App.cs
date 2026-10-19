@@ -83,9 +83,12 @@ namespace Unice
             }
             worldView = new WorldView(transform);
             sfx = new Sfx(transform);
-            perspective = new Perspective(this);
-            soundscape = new Soundscape(this); heartbeat = new Heartbeat(this); eventFeed = new EventFeed(this);
-            room = new RoomSession(this); player = new PlayerControl(this);
+            var stage = new AppStage(this);
+            perspective = new Perspective(game, () => myCharacter);
+            soundscape = new Soundscape(this); heartbeat = new Heartbeat(this);
+            eventFeed = new EventFeed(game, () => myCharacter, perspective, stage, stage);
+            room = new RoomSession(this);
+            player = new PlayerControl(this, new PlayerController(game, () => myCharacter, stage, () => paused, () => room.sync.PublishSoon()));
             voice = VoiceRegistry.Factory?.Invoke();   // before the UI: its settings buttons only show voice controls with voice
             ui = new Ui(this);
             moveMyCharacter = stepDt => { if (myCharacter != null) player.Move(stepDt); };

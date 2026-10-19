@@ -12,8 +12,6 @@ namespace Unice
     {
         /// <summary>Seconds between two footstep sounds of a runner, and between two taps of the Unice's cane.</summary>
         const float StepInterval = .42f, CaneInterval = .45f;
-        /// <summary>Panning: a sound this far to one side (house pixels) plays fully in that ear.</summary>
-        const float FullPanDistance = 300;
         /// <summary>How far the tick of the map's clock (<see cref="Map.Clock"/>) carries.</summary>
         const float ClockRange = 260;
         /// <summary>The last seconds of a round tick.</summary>
@@ -40,33 +38,18 @@ namespace Unice
             var perspective = app.perspective;
             if (!perspective.hasView) return 0;
             var me = app.myCharacter; var listener = perspective.view; bool hidden = me != null && me.hidingSpot != null;
-            float reach = range * (hidden ? 1.3f : 1), distance = Geometry.Distance(x, y, listener.x, listener.y);
-            float loudness = Mathf.Max(distance >= reach ? 0 : Mathf.Pow(1 - distance / reach, 2), minLoudness);
-            if (loudness <= .01f) return 0;
+            float reach = SoundMath.Reach(range, hidden), distance = Geometry.Distance(x, y, listener.x, listener.y);
+            float loudness = SoundMath.Loudness(distance, reach, minLoudness);
+            if (loudness <= SoundMath.AudibleLoudness) return 0;
 
-            bool throughWall = distance > 40 && !Map.HasLineOfSight(listener.x, listener.y, x, y);
-            app.sfx.Play(sound, loudness, Mathf.Clamp((x - listener.x) / FullPanDistance, -1, 1), throughWall);
+            bool throughWall = SoundMath.IsMuffled(distance, Map.HasLineOfSight(listener.x, listener.y, x, y));
+            app.sfx.Play(sound, loudness, SoundMath.Pan(x - listener.x), throughWall);
             if (label != null && me != null && !me.outOfRound && !perspective.CanSee(x, y))
             {
                 app.ui.ShowSoundCue(Mathf.Atan2(y - listener.y, x - listener.x), loudness, cueColor);
-                app.ui.Caption($"{label} · {DescribeDistance(loudness)} · {DescribeSide(x - listener.x, y - listener.y)}");
+                app.ui.Caption($"{label} · {SoundMath.DescribeDistance(loudness)} · {SoundMath.DescribeSide(x - listener.x, y - listener.y)}");
             }
             return loudness;
-        }
-
-        static string DescribeDistance(float loudness) =>
-            Localization.Get(loudness > .45f ? "app.close.near" : loudness > .15f ? "app.close.mid" : "app.close.far");
-
-        /// <summary>"left", "above, right", "near"…: where a sound is, relative to the player.</summary>
-        static string DescribeSide(float dx, float dy)
-        {
-            float horizontalDistance = Mathf.Abs(dx), verticalDistance = Mathf.Abs(dy);
-            if (horizontalDistance < 60 && verticalDistance < 60) return Localization.Get("app.side.near");
-            string horizontal = Localization.Get(dx < 0 ? "app.side.left" : "app.side.right");
-            string vertical = Localization.Get(dy < 0 ? "app.side.above" : "app.side.below");
-            if (horizontalDistance > verticalDistance * 1.6f) return horizontal;
-            if (verticalDistance > horizontalDistance * 1.6f) return vertical;
-            return vertical + ", " + horizontal;
         }
 
         /// <summary>Per step while a round is live and not paused.</summary>

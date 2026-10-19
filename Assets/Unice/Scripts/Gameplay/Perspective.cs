@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 
 namespace Unice
@@ -15,11 +16,11 @@ namespace Unice
     /// This device's point of view: where it looks from and how far it sees (its own character, or whoever it spectates),
     /// what is visible from there, and how to call each character to this player ("você" vs. their name).
     /// </summary>
-    sealed class Perspective
+    public sealed class Perspective
     {
-        readonly App app;
-        Game game => app.game;
-        Character me => app.myCharacter;
+        readonly Game game;
+        readonly Func<Character> myCharacter;
+        Character me => myCharacter();
 
         public ViewInfo view;
         /// <summary>The character the view is on (this player's, or the spectated one), or null (the middle of the map).</summary>
@@ -29,7 +30,7 @@ namespace Unice
         /// <summary>While spectating, who to follow (their playerId) — null means auto (the doll holder). A stale id just falls back.</summary>
         public string spectateTargetId;
 
-        public Perspective(App app) { this.app = app; }
+        public Perspective(Game game, Func<Character> myCharacter) { this.game = game; this.myCharacter = myCharacter; }
 
         /// <summary>Per step: follows the player (or the spectated one) once there's something to look at.</summary>
         public void Update()
