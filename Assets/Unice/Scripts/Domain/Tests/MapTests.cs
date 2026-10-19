@@ -135,6 +135,47 @@ namespace Unice
             Assert.AreEqual(182f, Map.Clock.CenterY, "y");
         }
 
+        // ---------- the werewolf yard: the house is a hole you can neither enter nor see through ----------
+
+        [Test]
+        public void Lobisomem_InsideTheHouse_IsNotWalkable()
+        {
+            Map.Load(Maps.ById(MapLobisomem.Id));
+
+            Assert.IsFalse(Map.IsWalkable(880, 430, 0));
+        }
+
+        [Test]
+        public void Lobisomem_TheLitBalconyBelowTheHouse_IsWalkable()
+        {
+            Map.Load(Maps.ById(MapLobisomem.Id));
+
+            Assert.IsTrue(Map.CanStand(880, 600));
+            Assert.AreEqual("sacada", Map.RoomAt(880, 600).id);
+        }
+
+        [Test]
+        public void Lobisomem_TheHouseBlocksSight_ButTheYardAroundItDoesNot()
+        {
+            Map.Load(Maps.ById(MapLobisomem.Id));
+
+            Assert.IsFalse(Map.HasLineOfSight(880, 250, 880, 600), "north yard to the balcony, straight through the house");
+            Assert.IsTrue(Map.HasLineOfSight(300, 600, 1400, 600), "along the balcony and the yard beside it");
+        }
+
+        [Test]
+        public void Lobisomem_TheHouseHoleIsNotCoveredByAnyArea()
+        {
+            Map.Load(Maps.ById(MapLobisomem.Id));
+            var house = MapLobisomem.House;
+
+            foreach (var room in Map.Rooms)
+            {
+                bool overlaps = room.x < house.x + house.w && room.x + room.w > house.x && room.y < house.y + house.h && room.y + room.h > house.y;
+                Assert.IsFalse(overlaps, room.id + " covers the house");
+            }
+        }
+
         [Test]
         public void WorldSize_House_CenterIs860_590()
         {

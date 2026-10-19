@@ -24,6 +24,8 @@ namespace Unice
         // doorways must read at a glance: a warm lit floor across the opening, a faint glow on both approaches, and a bright post at each end
         const string DoorFloorColor = "#e8b46a", DoorPostColor = "#f2b632";
         const float DoorGlowAlpha = .38f, DoorPostThickness = 9, DoorPostOverhang = 4;
+        /// <summary>Flat floors, with those that have their own tint above them where areas overlap (both under the door strips).</summary>
+        const int FlatFloorOrder = -20001, TintedFloorOrder = -20000;
         const int DoorGlowOrder = -19999, DoorFloorOrder = -19998, DoorPostOrder = -19997;
 
         /// <summary>Something you can walk behind: its sprite and its footprint plus height.</summary>
@@ -80,7 +82,9 @@ namespace Unice
             foreach (var room in Map.Rooms)
             {
                 if (paintedFloors.Contains(room.id)) continue;
-                var sprite = Art.CreateSpriteRenderer("floor_" + room.id, root, Art.WhiteSprite, -20000); sprite.color = groundTint;
+                // a room with its own tint is drawn over the overlapping neighbours, so the lit balcony stays lit
+                var sprite = Art.CreateSpriteRenderer("floor_" + room.id, root, Art.WhiteSprite, room.tint != null ? TintedFloorOrder : FlatFloorOrder);
+                sprite.color = room.tint != null ? Art.HexColor(room.tint) : groundTint;
                 sprite.transform.localPosition = Art.ToWorld(room.x, room.y);
                 sprite.transform.localScale = new Vector3(room.w / Art.PxPerUnit, room.h / Art.PxPerUnit, 1);
             }

@@ -2,57 +2,47 @@
 
 ## 1. Brief
 - **Quem conta / de onde vem:** o autor, uma lembrança do ano passado.
-- **Lugar e época:** uma casa do interior, no quintal, de noite, no escuro.
+- **Lugar e época:** o quintal da casa da tia, no interior da Bahia, de noite, no escuro. Terra árida; coqueiros e árvores do interior.
 - **Pessoas:** o tio (conta histórias de terror), as primas e o autor, a tia Unice (grita de medo, corre para casa e tranca a porta).
-- **O que aconteceu:** o tio contava a história do lobisomem no meio da noite. De repente, um uivo de lobo na escuridão. A tia Unice gritou "lobisomem!", correu para casa e trancou todo mundo do lado de fora. A turma saiu correndo, o "lobisomem" vindo atrás, e cada um se escondeu.
+- **O que aconteceu:** a turma ouvia o tio contar a história do lobisomem, na sacada. A única luz era a da sacada; o resto era escuridão. De repente, um uivo de lobo. A tia Unice gritou "lobisomem!", correu para dentro de casa e trancou todo mundo do lado de fora. A turma saiu correndo e cada um se escondeu pelo quintal.
+- **A casa por dentro:** ninguém tinha acesso (a tia trancou). Por isso a casa **não faz parte do mapa**: é um buraco que não se pode entrar nem enxergar através.
 - **Tom:** arrepio de brincadeira, risada nervosa; nada de violência.
-- **Como vira esconde-esconde:** a turma está trancada fora de casa, no escuro, e se esconde pelo quintal e pela casa. Quem procura (a "Unice") faz o papel do lobisomem da história: a tia Unice é o nome da caçadora do jogo, então a que gritou de medo "vira" o lobisomem na brincadeira. *(Suposição minha: a história não diz quem faz o lobisomem.)*
+- **Como vira esconde-esconde:** a turma começa na sacada (iluminada) e se esconde pelo quintal escuro. Quem procura (a "Unice") faz o papel do lobisomem. *(Suposição: a história não diz quem faz o lobisomem; usei a Unice, que é a caçadora do jogo.)*
 
 ## 2. Lugar → mapa (`lobisomem`)
-Mundo 1720 × 1180, 7 áreas em 3 faixas, paredes de 24 px. Chão `#2f4a3a` (terra/mato à noite).
+Planta desenhada pelo autor, reduzida para o mundo de 1720 × 1180. O quintal é **aberto**: áreas que se sobrepõem em 60 px ou mais, sem paredes nem portas. Chão `#2a2018` (terra seca à noite).
 
-| Id da sala | Nome (pt) | x | y | w | h | O que tem |
-|---|---|---|---|---|---|---|
-| `sala` | Sala da Casa | 40 | 40 | 520 | 340 | sofá, poltrona, rede |
-| `cozinha` | Cozinha da Casa | 584 | 40 | 480 | 340 | fogão (decoração), mesa, armário da pia |
-| `quarto` | Quarto de Hóspedes | 1088 | 40 | 592 | 340 | cama, guarda-roupa, baú |
-| `varanda` | Varanda | 40 | 404 | 1640 | 120 | barril, vasos, samambaias (liga a casa ao quintal) |
-| `terreiro` | Terreiro | 40 | 548 | 520 | 592 | lenha, tanque, casinha do cachorro, poço e varal (decoração) |
-| `pomar` | Pomar | 584 | 548 | 480 | 592 | duas árvores grandes, monte de palha, carroça |
-| `curral` | Curral | 1088 | 548 | 592 | 592 | galinheiro, cocho, galpão, lenha, tanque |
+| Cor na planta | O que é | No mapa |
+|---|---|---|
+| lilás com X + roxo | a casa por dentro (sem acesso) | buraco `MapLobisomem.House` (557, 322, 648 × 230): nada o cobre |
+| rosa | sacada (única luz) | sala `sacada` (557, 552, 648 × 96), chão quente `#b97a35`; é onde a turma começa (`spawn` 880, 600) |
+| marrom | casa de ferramentas do tio | esconderijo `toolhouse` (40, 40, 323 × 168) |
+| laranja | galinheiro, ao lado da casa de ferramentas | esconderijo `coop` (40, 208, 248 × 242) |
+| amarelo | jardim da tia, cheio de flores | sala `jardim` (40, 733, 390 × 407), chão verde-escuro `#223a26`, 3 canteiros `flowerbed` |
+| verdes | coqueiros, árvore grande, moita | `coconut` ×2, `bigtree`, `bush` |
+| azul | caixa d'água | esconderijo `watertank` (1443, 83, 220 × 237), por trás |
+| vermelho | carro trancado | esconderijo `car` (1415, 687, 98 × 172), por baixo |
 
-- **Portas (verticais, entre faixas):** x = 440, 824, 1384 em y = 380 (casa → varanda) e em y = 524 (varanda → quintal).
-- **Portas (horizontais, laterais):** (560, 210) e (1064, 210) na casa; (560, 850) e (1064, 850) no quintal.
-- **Entrada da Unice (`entry`):** 1620, 1090 — o fundo do curral, de onde vem o uivo.
-- **Spawn dos escondidos:** 300, 740 — o terreiro, onde a turma ficou trancada do lado de fora, longe da entrada.
+Áreas (6): `sacada`, `fundos` (40, 40, 1640 × 280), `oeste` (40, 200, 495 × 580), `leste` (1227, 200, 453 × 740), `terreiro` (330, 588, 1350 × 552), `jardim`.
+- **Entrada da Unice (`entry`):** 320, 1090 — o fundo escuro do jardim, de onde vem o uivo; longe da sacada.
+- **Luz:** só a sacada tem cor quente (`Room.tint`); o resto é escuro. O jogo ainda não tem iluminação dinâmica por mapa; a sacada "acesa" é só a cor do chão.
 
-## 3. Esconderijos (23)
-| Tipo | Sala | Lado | Frase (pt) |
+## 3. Esconderijos (14)
+| Tipo | Onde | Lado | Frase (pt) |
 |---|---|---|---|
-| `sofa` | sala | n | atrás do sofá |
-| `armchair` | sala | s | atrás da poltrona |
-| `hammock` | sala | s | atrás da rede |
-| `ktable` | cozinha | s | debaixo da mesa da cozinha |
-| `sinkcab` | cozinha | s | no armário da pia |
-| `bed` | quarto | s | debaixo da cama |
-| `wardrobe` | quarto | e | no guarda-roupa |
-| `chest` | quarto | s | no baú |
-| `barrel` | varanda | e | dentro do barril |
-| `planters` | varanda | n | atrás dos vasos de plantas |
-| `ferns` | varanda | e | atrás das samambaias |
-| `woodpile` | terreiro | e | atrás da pilha de lenha |
-| `tank` | terreiro | e | atrás do tanque de água |
+| `toolhouse` | fundos | e | atrás da casa de ferramentas |
+| `coop` | oeste | e | atrás do galinheiro |
+| `coconut` (×2) | fundos / terreiro | s / n | atrás do coqueiro |
+| `bigtree` | oeste | e | atrás da árvore grande |
+| `bush` | terreiro | n | atrás da moita |
+| `watertank` | leste | s | atrás da caixa d'água |
+| `car` | leste | w | debaixo do carro |
+| `flowerbed` (×3) | jardim | s / e / n | atrás do canteiro de flores |
+| `woodpile` | terreiro | n | atrás da pilha de lenha |
+| `barrel` | terreiro | w | dentro do barril |
 | `doghouse` | terreiro | w | dentro da casinha do cachorro |
-| `bigtree` (×2) | pomar | n | atrás da árvore grande |
-| `haystack` | pomar | w | dentro do monte de palha |
-| `cart` | pomar | n | debaixo da carroça |
-| `coop` | curral | s | no galinheiro |
-| `trough` | curral | n | atrás do cocho |
-| `shed` | curral | s | dentro do galpão |
-| `woodpile` | curral | e | atrás da pilha de lenha |
-| `tank` | curral | w | atrás do tanque de água |
 
-Decorativos: `stove` (cozinha), `well` (terreiro), `clothesline` (terreiro).
+Decorativo: `clothesline` (varal). *(Suposições: lenha, barril, casinha do cachorro e varal não estavam na planta; acrescentei para o mapa ter esconderijos suficientes no meio.)*
 
 ## 4. Cordel
 Não há (só a história `doll` tem a tela do cordel).
@@ -70,16 +60,18 @@ Não há (só a história `doll` tem a tela do cordel).
 - `map.lobisomem.name`: O Quintal da Noite / The Night Yard / El Patio de la Noche
 - `stories.lobisomem.name`: O Lobisomem / The Werewolf / El Hombre Lobo
 - `stories.lobisomem.blurb`: No quintal, um uivo na escuridão… e a porta trancada! Esconde, que o lobisomem vem!
-- en e es de salas, esconderijos e legendas: em `Localization.Strings.cs`.
+- Salas, esconderijos e legendas em pt/en/es: em `Localization.Strings.cs`.
 
 ## 7. Tarefas
-- [x] `Domain/Maps/MapLobisomem.cs` e registro em `Maps.InOrder`
+- [x] `Domain/Maps/MapLobisomem.cs` (a partir da planta) e registro em `Maps.InOrder`
 - [x] Entrada em `Stories.All` (`released: false`)
 - [x] Textos pt/en/es
-- [x] Testes Edit Mode verdes
+- [x] `Room.tint` (cor de chão por sala) para a sacada iluminada
+- [x] Testes do buraco da casa em `MapTests`
+- [ ] Testes Edit Mode rodados no Unity (o Editor estava aberto; ver o resumo)
 - [x] `CHANGELOG.md` e tabela de histórias
 
 ## 8. Critérios de aceite
-- [x] Testes verdes (`MapDefinitionsTests`, `LocalizationTests`, `StoryContentTests`)
-- [ ] Rodada solo jogável no mapa (checagem manual)
+- [ ] Testes verdes (`MapDefinitionsTests`, `LocalizationTests`, `StoryContentTests`, `MapTests`)
+- [ ] Rodada solo jogável no mapa (checagem manual): a casa não deixa entrar nem enxergar; a sacada é a única área quente
 - [ ] HQ aparece para a Unice na rodada 1 e some com um toque

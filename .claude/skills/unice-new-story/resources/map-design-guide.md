@@ -23,6 +23,17 @@ y=924  [estufa 520×216][entrance 480×216][pantry 300×216][laundry 268×216]
 A **corridor/yard/street room** that every band opens onto keeps routes short and gives the Unice a place to patrol.
 Do not make the map a single long chain: every room should be reachable in ≤ 3–4 door crossings from the spawn.
 
+## Open yards and places you cannot enter (a story told from a floor plan)
+When the story happens outdoors, or the user draws a plan, do not force a house of rooms and doors:
+- Make the open ground out of **overlapping areas** (`Room`s) with **no doors**: neighbours overlap by **60 px or more**, and cover the walkable ground. Name them by what is there
+  ("lado do galinheiro", "terreiro"); the game names the first area in the list that contains a point, so list the most specific one first.
+- A place nobody can enter (a locked house) is a **hole**: leave it uncovered by every area, with ≥ 22 px between it and the areas around it. It blocks walking *and* sight.
+  Keep its rectangle in a `public static readonly RectF House`-style constant and cover it with a test (see `MapTests.Lobisomem_*`).
+- Buildings you can hide behind (tool house, hen house, water tank) are props with `hideSide`; the plan's shapes become `MapProp` rectangles (scale plan pixels to the world: `x' = 40 + x·1640/planWidth`, `y' = 40 + y·1100/planHeight`).
+- `new Room(id, x, y, w, h, tint: "#rrggbb")` gives one area its own floor colour (a lit balcony in a dark yard); tinted areas are drawn over plain ones where they overlap.
+- Prop colours are not customisable: props are dark silhouettes of the ground colour. Say so when the plan used colours for props.
+- Nodes: the path-finding grid is 46 px, so a very large open map has ~600–900 nodes; that is fine, but keep the world at 1720×1180.
+
 ## Doors
 A door is a `MapDoor(x, y)` listed in one of two arrays; the gap is always 24 px and the opening is 64 px wide:
 - `verticalDoors` — in a **horizontal** wall (a stacked pair; you walk up/down). `x` = door centre along the wall, `y` = bottom edge of the upper room.

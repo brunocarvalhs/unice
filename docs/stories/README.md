@@ -58,4 +58,4 @@ feito pelo time de arte. A HQ usa os sprites que já existem (catálogo em `.cla
 | Id | Mapa | Estado | Spec |
 |---|---|---|---|
 | `doll` | `house` | lançada, com HQ e cordel | [doll.md](doll.md) |
-| `lobisomem` | `lobisomem` | pronta, "Em breve" (arte lisa) | [lobisomem.md](lobisomem.md) |
+| `lobisomem` | `lobisomem` | pronta (a partir da planta do autor), "Em breve" (arte lisa) | [lobisomem.md](lobisomem.md) |
