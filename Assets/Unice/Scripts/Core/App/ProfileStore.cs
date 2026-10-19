@@ -8,7 +8,7 @@ namespace Unice
     /// </summary>
     public sealed class ProfileStore
     {
-        const string NameKey = "unice.name", KitKey = "unice.kit", OnlineWinsKey = "unice.online_wins", FirstMatchEndKey = "unice.first_match_end";
+        const string NameKey = "unice.name", KitKey = "unice.kit", OnlineWinsKey = "unice.online_wins", FirstMatchEndKey = "unice.first_match_end", StorySeenKey = "unice.story_seen";
 
         public string Name;
         public int[] Kit;
@@ -56,6 +56,15 @@ namespace Unice
         {
             if (PlayerPrefs.HasKey(FirstMatchEndKey)) return false;
             PlayerPrefs.SetInt(FirstMatchEndKey, 1);
+            PlayerPrefs.Save();
+            return true;
+        }
+
+        /// <summary>True only the first time on this install: the menu then opens on the story (the cordel) once.</summary>
+        public bool MarkStorySeen()
+        {
+            if (PlayerPrefs.HasKey(StorySeenKey)) return false;
+            PlayerPrefs.SetInt(StorySeenKey, 1);
             PlayerPrefs.Save();
             return true;
         }

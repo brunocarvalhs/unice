@@ -7,14 +7,16 @@ namespace Unice
     /// <summary>The main menu over the house map: the main page and its sub-pages (online, how to play, my child).</summary>
     sealed class HomeMenu : UiPart
     {
-        enum Page { Main, Online, HowToPlay, MyKid }
+        enum Page { Main, Online, HowToPlay, MyKid, Story }
 
         /// <summary>A typed room code needs at least this many characters.</summary>
         const int MinRoomCodeLength = 4;
+        /// <summary>Sections of the cordel in Localization ("story.N.t" / "story.N.b").</summary>
+        const int StoryParts = 5;
 
         public readonly VisualElement Root;
         readonly VisualElement mainPage, onlinePage, myKidPage, kidCustomizerSlot;
-        VisualElement howToPlayPage;   // set by BuildHowToPlay
+        VisualElement howToPlayPage, storyPage;   // set by BuildHowToPlay / BuildStory
         readonly TextField roomCodeField;
         readonly Label netStatusLabel;
         readonly Button createRoomButton, joinRoomButton, soloButton, onlineButton;
@@ -34,6 +36,7 @@ namespace Unice
             onlineButton = LocalizedButton(grid, "menu.online", () => { app.SetNetStatus(""); ShowPage(Page.Online); }, "mbtn");
             LocalizedButton(grid, "menu.howto", () => ShowPage(Page.HowToPlay), "mbtn", "mbtn-sm");
             LocalizedButton(grid, "menu.mykid", () => ShowPage(Page.MyKid), "mbtn", "mbtn-sm");
+            LocalizedButton(grid, "menu.story", () => ShowPage(Page.Story), "mbtn", "mbtn-sm");
 
             // online: create a room (the code is generated for you) or join one with a code
             var online = AddPanelPage(out onlinePage, "menu.online_title");
@@ -53,6 +56,7 @@ namespace Unice
             LocalizedButton(online, "menu.back", () => ShowPage(Page.Main), "mbtn", "mbtn-back");
 
             BuildHowToPlay();
+            BuildStory();
 
             // my child: the same customization as in the waiting room
             var myKid = AddPanelPage(out myKidPage, "menu.mykid_title");
@@ -92,10 +96,27 @@ namespace Unice
             LocalizedButton(panel, "menu.back", () => ShowPage(Page.Main), "mbtn", "mbtn-back");
         }
 
+        /// <summary>The story of the game, told in cordel (five sections of verses); shown once on the first run and from the main menu.</summary>
+        void BuildStory()
+        {
+            var panel = AddPanelPage(out storyPage, "menu.story_title");
+            LocalizedLabel(panel, "menu.story_sub", "mrule-t", "mrule-rose");
+            var scroll = new ScrollView(ScrollViewMode.Vertical); scroll.AddToClassList("mscroll"); panel.Add(scroll);
+            for (int part = 1; part <= StoryParts; part++)
+            {
+                var section = AddElement(scroll, "mrule");
+                LocalizedLabel(section, "story." + part + ".t", "mrule-t");
+                LocalizedLabel(section, "story." + part + ".b", "mnote");
+            }
+            LocalizedLabel(scroll, "menu.story_by", "mnote", "mrule-moss");
+            LocalizedButton(panel, "menu.story_done", () => ShowPage(Page.Main), "mbtn", "mbtn-back");
+        }
+
         /// <summary>Each time home appears: back to the main page, or to "online" if there's a connection error to read.</summary>
         public void OnShow()
         {
             currentPage = Page.Main;   // the phase's screen_view ("home") already counted the main page
+            if (app.MarkStorySeen()) { ShowPage(Page.Story); return; }   // first run: the story first
             ShowPage(app.netStatusIsError && app.netStatusText.Length > 0 ? Page.Online : Page.Main);
         }
 
@@ -125,7 +146,7 @@ namespace Unice
         /// <summary>Analytics screen name of each page; the main page is the phase's own "home".</summary>
         static string ScreenName(Page page) => page switch
         {
-            Page.Online => "home_online", Page.HowToPlay => "home_how_to_play", Page.MyKid => "home_my_kid", _ => "home",
+            Page.Online => "home_online", Page.HowToPlay => "home_how_to_play", Page.MyKid => "home_my_kid", Page.Story => "home_story", _ => "home",
         };
 
         void ShowPage(Page page)
@@ -133,7 +154,7 @@ namespace Unice
             if (page != currentPage) Metrics.Screen(ScreenName(page));
             currentPage = page;
             Show(mainPage, page == Page.Main); Show(onlinePage, page == Page.Online);
-            Show(howToPlayPage, page == Page.HowToPlay); Show(myKidPage, page == Page.MyKid);
+            Show(howToPlayPage, page == Page.HowToPlay); Show(myKidPage, page == Page.MyKid); Show(storyPage, page == Page.Story);
             if (page == Page.MyKid) ui.kidCustomizer.ShowIn(kidCustomizerSlot);
         }
 
