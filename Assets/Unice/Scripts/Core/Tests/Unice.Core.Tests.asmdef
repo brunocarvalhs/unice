@@ -4,6 +4,7 @@
     "references": [
         "Unice.Core",
         "Unice.Domain",
+        "Unice.Localization",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],

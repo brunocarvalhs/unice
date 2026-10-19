@@ -5,7 +5,7 @@ namespace Unice
     /// <summary>Every player-facing text: key → { pt, en, es }. Every language must be present for every key.</summary>
     public static partial class Localization
     {
-        static readonly Dictionary<string, string[]> Strings = new Dictionary<string, string[]>
+        internal static readonly Dictionary<string, string[]> Strings = new Dictionary<string, string[]>
         {
             // ---------- App.cs: directions, closeness, names ----------
             ["app.side.near"] = new[] { "bem do lado", "right next to you", "justo al lado" },

@@ -3,6 +3,7 @@
     "rootNamespace": "Unice",
     "references": [
         "Unice.Domain",
+        "Unice.Localization",
         "Unity.InputSystem",
         "UnityEngine.UI"
     ],

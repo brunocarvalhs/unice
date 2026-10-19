@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,6 +15,9 @@ namespace Unice
     {
         public static Language Current { get; private set; } = Load();
 
+        /// <summary>Raised after <see cref="Set"/> (the analytics layer listens, so this module does not depend on it).</summary>
+        public static event Action LanguageChanged;
+
         const string LanguagePrefKey = "unice.lang";
 
         /// <summary>Switches the language and remembers it on this device.</summary>
@@ -22,7 +26,7 @@ namespace Unice
             Current = language;
             PlayerPrefs.SetInt(LanguagePrefKey, (int)language);
             PlayerPrefs.Save();
-            Metrics.SetLanguageProperty();
+            LanguageChanged?.Invoke();
         }
 
         static Language Load() => Initial(

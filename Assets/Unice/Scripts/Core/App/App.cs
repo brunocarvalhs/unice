@@ -72,6 +72,7 @@ namespace Unice
             Instance = this; DontDestroyOnLoad(gameObject);
             Application.targetFrameRate = 60; Screen.sleepTimeout = SleepTimeout.NeverSleep;
             Metrics.Init();
+            Localization.LanguageChanged += Metrics.SetLanguageProperty;
             profile = new ProfileStore();
             UsePlayGamesName();
             cameraRig = new CameraRig();
