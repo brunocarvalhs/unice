@@ -1,0 +1,95 @@
+name: Build platform
+
+# One Unity build for iOS or a desktop OS, uploaded as an artifact. Called once per enabled target by debug.yml and
+# release.yml (a matrix over the "platforms" output of build-targets.yml). Android and WebGL have their own jobs.
+# Windows, macOS and Linux build on a Linux runner (Mono); iOS exports an Xcode project that is signed and published by hand.
+"on":
+  workflow_call:
+    inputs:
+      name:
+        description: "windows, macos, linux or ios (artifact name)"
+        required: true
+        type: string
+      target:
+        description: "Unity build target: StandaloneWindows64, StandaloneOSX, StandaloneLinux64 or iOS"
+        required: true
+        type: string
+      release:
+        description: "true for a release build (semantic version), false for a debug build"
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  build:
+    name: Build ${{ inputs.name }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: read
+    env:
+      FLAVOR: ${{ inputs.release && 'Release' || 'Debug' }}
+
+    steps:
+      # The Unity images are large and the hosted runner runs out of disk pulling them.
+      - name: Free disk space
+        shell: bash
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /usr/local/share/boost \
+                      /opt/hostedtoolcache /usr/local/share/powershell /usr/share/swift
+          sudo docker image prune --all --force > /dev/null
+          df -h /
+
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          lfs: true
+
+      - name: Cache Unity Library
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: |
+            Library
+            Temp
+            obj
+          key: unity-${{ env.FLAVOR }}-${{ inputs.target }}-${{ hashFiles('Packages/manifest.json', 'ProjectSettings/ProjectVersion.txt') }}
+          restore-keys: |
+            unity-${{ env.FLAVOR }}-${{ inputs.target }}-
+
+      - name: Build ${{ inputs.target }}
+        uses: game-ci/unity-builder@4423ee75828dff56037d1d1cfdac6b68e3a6ba00 # v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          unityVersion: 6000.6.3f1
+          targetPlatform: ${{ inputs.target }}
+          buildName: Unice
+          buildsPath: build/${{ env.FLAVOR }}
+          versioning: ${{ inputs.release && 'Semantic' || 'None' }}
+          allowDirtyBuild: true
+
+      # A zip drops the executable bit, which the macOS app and the Linux player need: pack those two as tar.gz.
+      - name: Pack with permissions
+        if: inputs.name == 'macos' || inputs.name == 'linux'
+        shell: bash
+        run: tar -czf "Unice-${{ inputs.name }}.tar.gz" -C "build/${{ env.FLAVOR }}/${{ inputs.target }}" .
+
+      - name: Upload packed build
+        if: inputs.name == 'macos' || inputs.name == 'linux'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: Unice-${{ env.FLAVOR }}-${{ inputs.name }}
+          path: Unice-${{ inputs.name }}.tar.gz
+          if-no-files-found: error
+
+      - name: Upload build
+        if: inputs.name == 'windows' || inputs.name == 'ios'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: Unice-${{ env.FLAVOR }}-${{ inputs.name }}
+          path: build/${{ env.FLAVOR }}/${{ inputs.target }}
+          if-no-files-found: error

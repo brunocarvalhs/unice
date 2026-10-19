@@ -21,7 +21,11 @@ Sucesso = paridade de regras com a versão web, build Android estável via CI, e
 - Vivox (Unity Services) para voz por proximidade — opcional, o jogo funciona sem
 - Google Play Games plugin for Unity 2.3.0 (`Assets/GooglePlayGames`): login automático no Android, com login anônimo de reserva
 - Unity Input System 1.20.0
-- Plataforma alvo: Android (prioridade); demais plataformas não configuradas no CI hoje
+- Plataformas alvo: Android (prioridade, publicado no Google Play), iOS, Windows, macOS e Linux, mais WebGL. Ligadas em `.github/build-targets.yml`.
+  - Play Games e as barras do sistema são só do Android (`#if UNITY_ANDROID`); fora dele o login é anônimo.
+  - Crashlytics só existe no Android e no iOS; no desktop o Firebase faz só Analytics (`Core/Analytics/Metrics.cs`).
+  - Entrada por toque ou teclado/mouse, conforme o último dispositivo usado (`Core/Ui/InputMode.cs`).
+  - Windows, macOS e Linux são gerados no runner Linux (Mono), sem assinatura; o iOS sai como projeto Xcode, assinado e publicado à mão.
 
 ## Commands
 Não há CLI local de build/test (projeto Unity puro, sem Node/Make). Fluxos reais:
