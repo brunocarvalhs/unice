@@ -102,6 +102,29 @@ namespace Unice
                 new ComicPanel("floor_dining",
                     ComicFigure.Unice(.5f, .9f), ComicFigure.Sprite("doll", 30, .78f, .6f, bob: true), ComicFigure.Sprite("furn_17", 110, .22f, .8f)),
             }),
+            new Story("lobisomem", MapLobisomem.Id, released: false, comic: new[]
+            {
+                // the night yard: the uncle (the cousin in a cape) tells werewolf stories to the kids sitting around
+                new ComicPanel(null,
+                    ComicFigure.Sprite("furn_26", 45, .5f, .78f),
+                    ComicFigure.Kid(4, .5f, .62f), ComicFigure.Kid(0, .25f, .9f), ComicFigure.Kid(1, .4f, .92f), ComicFigure.Kid(2, .62f, .92f, flip: true), ComicFigure.Kid(3, .77f, .9f, flip: true)),
+                // the howl: the moon and startled kids
+                new ComicPanel(null,
+                    ComicFigure.Sprite("dot", 60, .8f, .55f),
+                    ComicFigure.Kid(0, .25f, .9f), ComicFigure.Kid(1, .42f, .85f), ComicFigure.Kid(2, .58f, .9f, flip: true), ComicFigure.Sprite("ring", 90, .8f, .6f)),
+                // the aunt runs for the house
+                new ComicPanel("floor_living",
+                    ComicFigure.Sprite("furn_14", 130, .3f, .62f),
+                    ComicFigure.Unice(.7f, .9f, flip: true), ComicFigure.Kid(1, .3f, .92f), ComicFigure.Kid(3, .5f, .88f)),
+                // locked out: the kids knock at the door (the wardrobe)
+                new ComicPanel(null,
+                    ComicFigure.Sprite("furn_1", 75, .82f, .85f),
+                    ComicFigure.Kid(0, .25f, .9f), ComicFigure.Kid(2, .42f, .85f), ComicFigure.Kid(3, .6f, .9f)),
+                // your turn: the werewolf is you
+                new ComicPanel(null,
+                    ComicFigure.Sprite("furn_22", 80, .25f, .8f), ComicFigure.Sprite("furn_26", 45, .78f, .8f),
+                    ComicFigure.Sprite("dot", 60, .5f, .55f), ComicFigure.Unice(.5f, .92f), ComicFigure.Kid(1, .2f, .86f)),
+            }),
         };
 
         /// <summary>The story told on <paramref name="mapId"/>, or null for an unknown map.</summary>

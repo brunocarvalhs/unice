@@ -51,7 +51,7 @@ namespace Unice
     public static class Maps
     {
         /// <summary>Every map, in the order the waiting room's map stepper cycles through them.</summary>
-        static readonly MapDefinition[] InOrder = { MapHouse.Build() };
+        static readonly MapDefinition[] InOrder = { MapHouse.Build(), MapLobisomem.Build() };
 
         public static readonly Dictionary<string, MapDefinition> All = InOrder.ToDictionary(definition => definition.id);
         public static readonly string[] AllIds = InOrder.Select(definition => definition.id).ToArray();

@@ -121,6 +121,8 @@ namespace Unice
             ["menu.stories_desc"] = new[] { "Cada história acontece em um lugar diferente.", "Each story takes place somewhere different.", "Cada historia ocurre en un lugar distinto." },
             ["stories.doll.name"] = new[] { "A Boneca", "The Doll", "La Muñeca" },
             ["stories.doll.blurb"] = new[] { "Na casa da vó, a boneca da tia Unice sumiu. Esconde, que ela vem!", "At grandma's house, aunt Unice's doll is gone. Hide, she's coming!", "En la casa de la abuela, la muñeca de la tía Unice desapareció. ¡Escóndete, que viene!" },
+            ["stories.lobisomem.name"] = new[] { "O Lobisomem", "The Werewolf", "El Hombre Lobo" },
+            ["stories.lobisomem.blurb"] = new[] { "No quintal, um uivo na escuridão… e a porta trancada! Esconde, que o lobisomem vem!", "In the yard, a howl in the dark… and the door is locked! Hide, the werewolf is coming!", "En el patio, un aullido en la oscuridad… ¡y la puerta cerrada! ¡Escóndete, que viene el hombre lobo!" },
             ["stories.soon"] = new[] { "Em breve", "Coming soon", "Próximamente" },
 
             // ---------- HideComicView.cs: the intro comic the Unice reads while the others hide ----------
@@ -131,6 +133,11 @@ namespace Unice
             ["comic.doll.3"] = new[] { "Márcio desafiou: quem pega a boneca sem a tia ver?", "Márcio dared them: who can grab the doll without auntie seeing?", "Márcio retó: ¿quién agarra la muñeca sin que la tía lo vea?" },
             ["comic.doll.4"] = new[] { "Quando a tia deu por falta… foi primo pra todo canto!", "When auntie noticed… cousins ran everywhere!", "Cuando la tía lo notó… ¡los primos corrieron a todos lados!" },
             ["comic.doll.5"] = new[] { "Agora é com você, tia: conte até zero e ache a boneca!", "Now it's up to you, auntie: count to zero and find the doll!", "Ahora te toca a ti, tía: cuenta hasta cero y encuentra la muñeca." },
+            ["comic.lobisomem.1"] = new[] { "Noite no interior: o tio contava histórias de lobisomem no quintal.", "Night in the countryside: uncle told werewolf stories in the yard.", "Noche en el campo: el tío contaba historias de hombre lobo en el patio." },
+            ["comic.lobisomem.2"] = new[] { "De repente, no meio da escuridão, um uivo de lobo!", "Suddenly, in the middle of the dark, a wolf's howl!", "¡De repente, en medio de la oscuridad, un aullido de lobo!" },
+            ["comic.lobisomem.3"] = new[] { "A tia Unice gritou \"lobisomem!\" e correu pra casa.", "Aunt Unice screamed \"werewolf!\" and ran for the house.", "La tía Unice gritó \"¡hombre lobo!\" y corrió a la casa." },
+            ["comic.lobisomem.4"] = new[] { "Ela trancou a porta e deixou a gente lá fora!", "She locked the door and left us outside!", "¡Cerró la puerta y nos dejó afuera!" },
+            ["comic.lobisomem.5"] = new[] { "Foi todo mundo correr e se esconder. Agora o lobisomem é você!", "Everyone ran and hid. Now you are the werewolf!", "Todos corrimos a escondernos. ¡Ahora el hombre lobo eres tú!" },
             ["lbl.name"] = new[] { "SEU NOME", "YOUR NAME", "TU NOMBRE" },
             ["lbl.kid"] = new[] { "SUA CRIANÇA", "YOUR KID", "TU NIÑO" },
             ["menu.randomize"] = new[] { "Sortear visual", "Randomize look", "Sortear apariencia" },
@@ -396,6 +403,34 @@ namespace Unice
             ["spot.toolchest"] = new[] { "dentro da caixa de ferramentas", "inside the toolchest", "dentro de la caja de herramientas" },
             ["spot.oldtrunk"] = new[] { "dentro do baú velho", "inside the old trunk", "dentro del baúl viejo" },
             ["spot.boxes"] = new[] { "atrás da pilha de caixas", "behind the stack of boxes", "detrás de la pila de cajas" },
+
+            // ---------- MapLobisomem.cs: the night yard of the werewolf story ----------
+            ["map.lobisomem.name"] = new[] { "O Quintal da Noite", "The Night Yard", "El Patio de la Noche" },
+            ["room.sala.name"] = new[] { "Sala da Casa", "Farmhouse Living Room", "Sala de la Casa" },
+            ["room.sala.in"] = new[] { "na sala da casa", "in the farmhouse living room", "en la sala de la casa" },
+            ["room.cozinha.name"] = new[] { "Cozinha da Casa", "Farmhouse Kitchen", "Cocina de la Casa" },
+            ["room.cozinha.in"] = new[] { "na cozinha da casa", "in the farmhouse kitchen", "en la cocina de la casa" },
+            ["room.quarto.name"] = new[] { "Quarto de Hóspedes", "Guest Room", "Cuarto de Huéspedes" },
+            ["room.quarto.in"] = new[] { "no quarto de hóspedes", "in the guest room", "en el cuarto de huéspedes" },
+            ["room.varanda.name"] = new[] { "Varanda", "Porch", "Porche" },
+            ["room.varanda.in"] = new[] { "na varanda", "on the porch", "en el porche" },
+            ["room.terreiro.name"] = new[] { "Terreiro", "Back Yard", "Patio Trasero" },
+            ["room.terreiro.in"] = new[] { "no terreiro", "in the back yard", "en el patio trasero" },
+            ["room.pomar.name"] = new[] { "Pomar", "Orchard", "Huerto" },
+            ["room.pomar.in"] = new[] { "no pomar", "in the orchard", "en el huerto" },
+            ["room.curral.name"] = new[] { "Curral", "Corral", "Corral" },
+            ["room.curral.in"] = new[] { "no curral", "in the corral", "en el corral" },
+
+            // ---------- MapLobisomem.cs: hiding spot flavor text ----------
+            ["spot.hammock"] = new[] { "atrás da rede", "behind the hammock", "detrás de la hamaca" },
+            ["spot.woodpile"] = new[] { "atrás da pilha de lenha", "behind the woodpile", "detrás de la pila de leña" },
+            ["spot.doghouse"] = new[] { "dentro da casinha do cachorro", "inside the doghouse", "dentro de la casita del perro" },
+            ["spot.bigtree"] = new[] { "atrás da árvore grande", "behind the big tree", "detrás del árbol grande" },
+            ["spot.haystack"] = new[] { "dentro do monte de palha", "in the haystack", "en el montón de paja" },
+            ["spot.cart"] = new[] { "debaixo da carroça", "under the cart", "debajo del carro" },
+            ["spot.coop"] = new[] { "no galinheiro", "in the henhouse", "en el gallinero" },
+            ["spot.trough"] = new[] { "atrás do cocho", "behind the trough", "detrás del comedero" },
+            ["spot.shed"] = new[] { "dentro do galpão", "inside the shed", "dentro del cobertizo" },
 
         };
     }
