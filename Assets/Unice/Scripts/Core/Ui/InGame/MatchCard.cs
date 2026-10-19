@@ -6,9 +6,6 @@ namespace Unice
     /// <summary>HUD top-left card: the clock with the round and phase beside it.</summary>
     sealed class MatchCard : UiPart
     {
-        /// <summary>The clock turns red in the last seconds of the hunt.</summary>
-        const float LowTimeSeconds = 15;
-
         readonly Label roundLabel, clockLabel, phaseLabel;
 
         public MatchCard(Ui ui, VisualElement parent) : base(ui)
@@ -25,19 +22,11 @@ namespace Unice
 
         public void Refresh()
         {
-            var me = app.myCharacter; bool live = game.IsLive;
-            SetText(roundLabel, $"{game.round}/{game.totalRounds}");
-            SetText(clockLabel, TextFormat.FormatMinutesSeconds(live ? game.timeLeft : 0));
-            clockLabel.EnableInClassList("clock-low", game.phase == Phase.Hunt && game.timeLeft <= LowTimeSeconds);
-
-            string phaseKey = game.phase switch
-            {
-                Phase.Hide => "hud.phase_hide",
-                Phase.Hunt => game.unice == me ? "hud.phase_hunt_you" : "hud.phase_hunt_other",
-                Phase.Result => "hud.phase_result",
-                _ => null,
-            };
-            SetText(phaseLabel, phaseKey != null ? Localization.Get(phaseKey) : "");
+            var data = HudModels.MatchCard(game, app.myCharacter);
+            SetText(roundLabel, data.round);
+            SetText(clockLabel, data.clock);
+            clockLabel.EnableInClassList("clock-low", data.clockLow);
+            SetText(phaseLabel, data.phase);
         }
     }
 }

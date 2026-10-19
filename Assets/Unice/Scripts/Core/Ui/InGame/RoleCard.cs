@@ -10,9 +10,6 @@ namespace Unice
     /// </summary>
     sealed class RoleCard : UiPart
     {
-        /// <summary>Below this the noise meter stays hidden (0..1, same scale as <see cref="Character.noiseLevel"/>).</summary>
-        const float MinNoiseShown = .05f;
-
         /// <summary>The goal line is shown this long (real seconds) each time your role or the phase changes, then it folds away.</summary>
         const float GoalShownSeconds = 10;
 
@@ -39,67 +36,24 @@ namespace Unice
 
         public void Refresh()
         {
-            var me = app.myCharacter;
-            RefreshRole(me);
-            RefreshDoll(me);
-            RefreshNoise(me);
-        }
+            var data = HudModels.RoleCard(game, app.myCharacter, app.perspective);
 
-        void RefreshRole(Character me)
-        {
-            string role, goal, roleClass = "";
-            if (me == null) { role = Localization.Get("hud.role.watch"); goal = Localization.Get("hud.goal.watch"); }
-            else if (me.IsUnice) { role = Localization.Get("hud.role.unice"); roleClass = "role-unice"; goal = Localization.Get(game.phase == Phase.Hide ? "hud.goal.unice_hide" : "hud.goal.unice_hunt"); }
-            else if (me.outOfRound) { role = Localization.Get("hud.role.caught"); roleClass = "role-out"; goal = Localization.Get("hud.goal.caught"); }
-            else if (game.doll.holder == me) { role = Localization.Get("hud.role.holder"); roleClass = "role-holder"; goal = Localization.Get("hud.goal.holder", game.giggleInterval.ToString("0")); }
-            else { role = Localization.Get("hud.role.hiding"); goal = Localization.Get(me.hidingSpot != null ? "hud.goal.hiding_spot" : "hud.goal.hiding_out"); }
-            SetText(roleLabel, role); SetText(goalLabel, goal);
-            string key = role + goal;
+            SetText(roleLabel, data.role); SetText(goalLabel, data.goal);
+            string key = data.role + data.goal;
             if (key != goalKey) { goalKey = key; goalSince = Time.unscaledTime; }
             Show(goalLabel, Time.unscaledTime - goalSince < GoalShownSeconds);
+            string roleClass = data.style switch { RoleStyle.Unice => "role-unice", RoleStyle.Out => "role-out", RoleStyle.Holder => "role-holder", _ => "" };
             foreach (var cssClass in RoleClasses) card.EnableInClassList(cssClass, cssClass == roleClass);
-        }
 
-        /// <summary>The team sees who has the doll and a meter until the next giggle; the Unice only sees where it last giggled.</summary>
-        void RefreshDoll(Character me)
-        {
-            var doll = game.doll; var holder = doll.holder;
-            float giggleProgress = 0; string note;
-            if (holder != null && app.perspective.ShowsTeamInfo)
-            {
-                SetText(dollHolderLabel, holder == me ? Localization.Get("hud.doll_with_you") : Localization.Get("hud.doll_with", holder.name.ToUpperInvariant()));
-                giggleProgress = game.phase == Phase.Hunt ? 1 - doll.giggleTimer / game.giggleInterval : 0;
-                // the standing rules ("it stays quiet out of hiding") are in the how-to, not here: only the countdown and the pass cooldown are news
-                note = game.phase == Phase.Hunt && holder.hidingSpot != null ? Localization.Get("hud.giggle_in", Localization.SpotPhrase(holder.hidingSpot), Mathf.CeilToInt(doll.giggleTimer)) : "";
-                if (holder == me && me.passCooldown > 0) note += Localization.Get("hud.repass_in", Mathf.CeilToInt(me.passCooldown));
-                note = note.TrimStart();
-                Show(giggleMeter, true);
-            }
-            else
-            {
-                SetText(dollHolderLabel, holder != null ? Localization.Get("hud.doll_hidden") : "");
-                if (doll.hasLastGiggle)
-                {
-                    var room = Map.RoomAt(doll.lastGiggleX, doll.lastGiggleY);
-                    int secondsAgo = Mathf.Max(0, Mathf.FloorToInt(game.roundClock - doll.lastGiggleTime));
-                    note = Localization.Get("hud.giggle_last", Localization.RoomPhrase(room), secondsAgo);
-                }
-                else note = "";
-                Show(giggleMeter, false);
-            }
-            giggleMeterFill.style.width = Length.Percent(Mathf.Clamp01(giggleProgress) * 100);
-            SetText(dollNoteLabel, note);
-            Show(dollNoteLabel, note.Length > 0);
-        }
+            SetText(dollHolderLabel, data.dollHolder);
+            Show(giggleMeter, data.showGiggleMeter);
+            giggleMeterFill.style.width = Length.Percent(data.giggleProgress * 100);
+            SetText(dollNoteLabel, data.note);
+            Show(dollNoteLabel, data.note.Length > 0);
 
-        void RefreshNoise(Character me)
-        {
-            // hidden or standing still there is nothing to watch; the meter only appears while you are making noise
-            Show(noiseBox, me != null && !me.outOfRound && !me.IsUnice && me.hidingSpot == null && (me.moving || me.noiseLevel > MinNoiseShown));
-            if (me == null) return;
-            noiseMeterFill.style.width = Length.Percent(Mathf.Clamp01(me.noiseLevel) * 100);
-            string noiseKey = me.hidingSpot != null ? "hud.noise_hidden" : me.noiseLevel > .5f ? "hud.noise_loud" : me.moving ? "hud.noise_quiet" : "hud.noise_stopped";
-            SetText(noiseLabel, Localization.Get(noiseKey));
+            Show(noiseBox, data.showNoise);
+            noiseMeterFill.style.width = Length.Percent(data.noiseProgress * 100);
+            SetText(noiseLabel, data.noiseText ?? "");
         }
     }
 }
