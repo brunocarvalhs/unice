@@ -3,8 +3,8 @@ using UnityEngine.UIElements;
 
 namespace Unice
 {
-    /// <summary>The symbols on the round touch buttons, drawn as vectors (language-neutral, no art needed).</summary>
-    enum ActionIcon { Sneak, Laugh, Pass, Door, Eye }
+    /// <summary>The symbols on the round touch buttons and the menu's setting buttons, drawn as vectors (language-neutral, no art needed).</summary>
+    enum ActionIcon { Sneak, Laugh, Pass, Door, Eye, SoundOn, SoundOff, Globe }
 
     static class ActionIcons
     {
@@ -39,6 +39,27 @@ namespace Unice
                     painter.BeginPath(); painter.MoveTo(At(-.24f, 0)); painter.BezierCurveTo(At(-.1f, -.18f), At(.1f, -.18f), At(.24f, 0)); painter.Stroke();
                     painter.BeginPath(); painter.MoveTo(At(-.24f, 0)); painter.BezierCurveTo(At(-.1f, .18f), At(.1f, .18f), At(.24f, 0)); painter.Stroke();
                     Dot(At(0, 0), .07f);
+                    break;
+                case ActionIcon.SoundOn:   // a speaker with two sound waves
+                case ActionIcon.SoundOff:  // the same speaker, crossed out
+                    painter.BeginPath(); painter.MoveTo(At(-.3f, -.1f)); painter.LineTo(At(-.18f, -.1f)); painter.LineTo(At(-.02f, -.25f));
+                    painter.LineTo(At(-.02f, .25f)); painter.LineTo(At(-.18f, .1f)); painter.LineTo(At(-.3f, .1f)); painter.ClosePath(); painter.Fill();
+                    if (icon == ActionIcon.SoundOn)
+                    {
+                        painter.BeginPath(); painter.Arc(At(-.02f, 0), size * .2f, Angle.Degrees(-45), Angle.Degrees(45)); painter.Stroke();
+                        painter.BeginPath(); painter.Arc(At(-.02f, 0), size * .34f, Angle.Degrees(-45), Angle.Degrees(45)); painter.Stroke();
+                    }
+                    else
+                    {
+                        painter.BeginPath(); painter.MoveTo(At(.1f, -.14f)); painter.LineTo(At(.32f, .14f)); painter.Stroke();
+                        painter.BeginPath(); painter.MoveTo(At(.32f, -.14f)); painter.LineTo(At(.1f, .14f)); painter.Stroke();
+                    }
+                    break;
+                case ActionIcon.Globe:   // a globe: outline, equator and meridian
+                    painter.BeginPath(); painter.Arc(At(0, 0), size * .36f, Angle.Degrees(0), Angle.Degrees(360)); painter.Stroke();
+                    painter.BeginPath(); painter.MoveTo(At(-.36f, 0)); painter.LineTo(At(.36f, 0)); painter.Stroke();
+                    painter.BeginPath(); painter.MoveTo(At(0, -.36f)); painter.BezierCurveTo(At(.24f, -.18f), At(.24f, .18f), At(0, .36f)); painter.Stroke();
+                    painter.BeginPath(); painter.MoveTo(At(0, -.36f)); painter.BezierCurveTo(At(-.24f, -.18f), At(-.24f, .18f), At(0, .36f)); painter.Stroke();
                     break;
             }
         }

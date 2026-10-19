@@ -245,8 +245,14 @@
 .mbtn-wide { width: auto; height: 90px; margin: 14px 0 6px 0; font-size: 48px; }
 .mbtn-join { width: 190px; height: 70px; margin: 0 0 0 12px; font-size: 36px; }
 .mbtn-back { width: 200px; height: 64px; margin: 16px 0 0 0; font-size: 28px; align-self: center; border-width: 2px; }
-/* top right: at 4:3 the bottom-left corner is taken by the settings pills and the menu grid */
+/* the story's skip button: top right, over the story */
 .mexit { position: absolute; right: 18px; top: 12px; width: 130px; height: 64px; margin: 0; font-size: 30px; border-width: 2px; }
+.menu-top { position: absolute; right: 18px; top: 12px; flex-direction: row; align-items: center; }
+/* settings as icons: a round 64 px pill (the language one grows to fit its code) */
+.mpill-icon { min-width: var(--alvo); padding: 0 14px; align-items: center; justify-content: center; }
+.mpill-glyph { width: 40px; height: 40px; }
+.mpill-code { -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); font-size: 20px; margin-left: 6px; }
+.mbtn-quit { width: 130px; height: 64px; margin: 0 0 0 6px; font-size: 30px; border-width: 2px; }
 .menu-foot { position: absolute; left: 0; right: 0; bottom: 22px; flex-direction: row; justify-content: center; }
 .mpill { background-color: var(--noite-80); border-width: 2px; border-color: var(--cal-60); border-radius: 24px; color: var(--cal); font-size: 17px; -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); padding: 8px 20px; min-height: var(--alvo); margin: 0 6px; }
 .mpill:hover { border-color: var(--sol); color: var(--sol); }

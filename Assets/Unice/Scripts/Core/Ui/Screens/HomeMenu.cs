@@ -64,17 +64,15 @@ namespace Unice
             kidCustomizerSlot = AddElement(scroll, "mkid");
             LocalizedButton(myKid, "menu.ready", () => ShowPage(Page.Main), "mbtn", "mbtn-back");
 
+            // top right: sound and language next to quit; the voice toggles stay at the bottom
+            var topRight = AddElement(Root, "menu-top");
+            ui.settings.AddSoundIconButton(topRight, "mpill"); ui.settings.AddLanguageIconButton(topRight, "mpill");
+#if !UNITY_WEBGL
+            LocalizedButton(topRight, "menu.quit", () => Application.Quit(), "mbtn", "mbtn-quit");   // a browser tab can't quit itself
+#endif
             var footer = AddElement(Root, "menu-foot");
-            ui.settings.AddSoundButton(footer, "mpill"); ui.settings.AddMicButton(footer, "mpill");
-            ui.settings.AddWhisperButton(footer, "mpill"); ui.settings.AddLanguageButton(footer, "mpill");
-#if !UNITY_WEBGL
-            var quit = LocalizedButton(Root, "menu.quit", () => Application.Quit(), "mbtn", "mexit");   // a browser tab can't quit itself
-#endif
-            chrome = new[] { versionLabel, footer
-#if !UNITY_WEBGL
-                , quit
-#endif
-            };
+            ui.settings.AddMicButton(footer, "mpill"); ui.settings.AddWhisperButton(footer, "mpill");
+            chrome = new[] { versionLabel, topRight, footer };
             story = new StoryScreen(ui, Root, () => ShowPage(Page.Main));   // last: drawn over everything else on the menu
             ShowPage(Page.Main);
         }
