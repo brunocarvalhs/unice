@@ -197,6 +197,9 @@ namespace Unice
             if (currentScreen == UiScreen.Home) homeMenu.Frame();
         }
 
+        /// <summary>Pretends the player uses touch or keyboard/mouse (layout screenshots).</summary>
+        internal void ForceTouch(bool touch) { inputMode.Force(touch); ApplyInputMode(); }
+
         /// <summary>The player switched between touch and keyboard/mouse: shows the matching controls and spacing.</summary>
         void ApplyInputMode()
         {

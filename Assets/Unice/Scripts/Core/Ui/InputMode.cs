@@ -17,6 +17,9 @@ namespace Unice
 
         public InputMode(bool startWithTouch) { Touch = startWithTouch; }
 
+        /// <summary>Sets the mode by hand (layout screenshots); the next real input can change it again.</summary>
+        public void Force(bool touch) { Touch = touch; }
+
         /// <summary>Per frame: looks at what was used this frame. Returns true when the mode changed.</summary>
         public bool Update()
         {
