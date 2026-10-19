@@ -22,8 +22,8 @@ namespace Unice
         const float SeeThroughAlpha = .4f;
 
         // doorways must read at a glance: a warm lit floor across the opening, a faint glow on both approaches, and a bright post at each end
-        const string DoorFloorColor = "#c98a4b", DoorPostColor = "#f2b632";
-        const float DoorGlowAlpha = .22f, DoorPostThickness = 6, DoorPostOverhang = 3;
+        const string DoorFloorColor = "#e8b46a", DoorPostColor = "#f2b632";
+        const float DoorGlowAlpha = .38f, DoorPostThickness = 9, DoorPostOverhang = 4;
         const int DoorGlowOrder = -19999, DoorFloorOrder = -19998, DoorPostOrder = -19997;
 
         /// <summary>Something you can walk behind: its sprite and its footprint plus height.</summary>

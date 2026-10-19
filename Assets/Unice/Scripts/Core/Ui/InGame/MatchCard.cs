@@ -3,13 +3,13 @@ using static Unice.UiKit;
 
 namespace Unice
 {
-    /// <summary>HUD top-left card: the clock with the round and phase beside it, and which room the player is in.</summary>
+    /// <summary>HUD top-left card: the clock with the round and phase beside it.</summary>
     sealed class MatchCard : UiPart
     {
         /// <summary>The clock turns red in the last seconds of the hunt.</summary>
         const float LowTimeSeconds = 15;
 
-        readonly Label roundLabel, clockLabel, phaseLabel, whereLabel;
+        readonly Label roundLabel, clockLabel, phaseLabel;
 
         public MatchCard(Ui ui, VisualElement parent) : base(ui)
         {
@@ -20,7 +20,6 @@ namespace Unice
             var roundRow = AddElement(side, "row");
             LocalizedLabel(roundRow, "hud.round", "hud-lbl"); roundLabel = AddLabel(roundRow, "", "hud-lbl");
             phaseLabel = AddLabel(side, "", "phase");
-            whereLabel = AddLabel(card, "", "where");
             foreach (var label in card.Query<Label>().ToList()) IgnorePointer(label);
         }
 
@@ -39,10 +38,6 @@ namespace Unice
                 _ => null,
             };
             SetText(phaseLabel, phaseKey != null ? Localization.Get(phaseKey) : "");
-
-            bool onTheMap = me != null && !me.outOfRound && me.x > 0 && live;
-            SetText(whereLabel, onTheMap ? Localization.Get("hud.where", Localization.RoomPhrase(Map.RoomAt(me.x, me.y))) : "");
-            Show(whereLabel, onTheMap);
         }
     }
 }

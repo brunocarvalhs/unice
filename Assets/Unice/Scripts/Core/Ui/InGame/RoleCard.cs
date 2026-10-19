@@ -13,9 +13,13 @@ namespace Unice
         /// <summary>Below this the noise meter stays hidden (0..1, same scale as <see cref="Character.noiseLevel"/>).</summary>
         const float MinNoiseShown = .05f;
 
+        /// <summary>The goal line is shown this long (real seconds) each time your role or the phase changes, then it folds away.</summary>
+        const float GoalShownSeconds = 10;
+
         static readonly string[] RoleClasses = { "role-unice", "role-out", "role-holder" };
 
         readonly VisualElement card, giggleMeter, giggleMeterFill, noiseBox, noiseMeterFill;
+        string goalKey; float goalSince;
         readonly Label roleLabel, goalLabel, dollHolderLabel, dollNoteLabel, noiseLabel;
 
         public RoleCard(Ui ui, VisualElement parent) : base(ui)
@@ -50,6 +54,9 @@ namespace Unice
             else if (game.doll.holder == me) { role = Localization.Get("hud.role.holder"); roleClass = "role-holder"; goal = Localization.Get("hud.goal.holder", game.giggleInterval.ToString("0")); }
             else { role = Localization.Get("hud.role.hiding"); goal = Localization.Get(me.hidingSpot != null ? "hud.goal.hiding_spot" : "hud.goal.hiding_out"); }
             SetText(roleLabel, role); SetText(goalLabel, goal);
+            string key = role + goal;
+            if (key != goalKey) { goalKey = key; goalSince = Time.unscaledTime; }
+            Show(goalLabel, Time.unscaledTime - goalSince < GoalShownSeconds);
             foreach (var cssClass in RoleClasses) card.EnableInClassList(cssClass, cssClass == roleClass);
         }
 
