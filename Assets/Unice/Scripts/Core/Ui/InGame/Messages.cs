@@ -36,10 +36,17 @@ namespace Unice
             caption = (Label)IgnorePointer(AddLabel(captionBox, "", "caption-in"));
             promptBox = IgnorePointer(AddElement(safeArea, "prompt"));
             prompt = (Label)IgnorePointer(AddLabel(promptBox, "", "prompt-in"));
-            if (ui.isMobile) { promptBox.style.bottom = MobilePromptBottom; captionBox.style.bottom = MobileCaptionBottom; }
+            SetTouchLayout(ui.isTouch);
             toasts = IgnorePointer(AddElement(safeArea, "toasts"));
             banner = (Label)IgnorePointer(AddLabel(safeArea, "", "banner"));
             Show(banner, false); Show(blackout, false); Show(countdownPill, false); Show(captionBox, false); Show(promptBox, false);
+        }
+
+        /// <summary>On touch the prompt and the caption move up above the action buttons; with keyboard and mouse they go back to the USS position.</summary>
+        public void SetTouchLayout(bool touch)
+        {
+            promptBox.style.bottom = touch ? MobilePromptBottom : StyleKeyword.Null;
+            captionBox.style.bottom = touch ? MobileCaptionBottom : StyleKeyword.Null;
         }
 
         public void Banner(string text, BannerStyle style, float seconds)

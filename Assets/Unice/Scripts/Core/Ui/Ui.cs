@@ -36,7 +36,9 @@ namespace Unice
         internal readonly VisualElement root;
         /// <summary>The part of the screen not covered by notches and system bars; HUD and messages live inside it.</summary>
         internal readonly VisualElement safeArea;
-        internal readonly bool isMobile = Application.isMobilePlatform;
+        /// <summary>Touch input (on-screen controls) or keyboard and mouse (key hints); follows the last device used, see <see cref="InputMode"/>.</summary>
+        internal bool isTouch = Application.isMobilePlatform;
+        readonly InputMode inputMode;
         internal UiScreen currentScreen = UiScreen.None;
         float hudRefreshTimer;
         Rect lastSafeRect;
@@ -58,6 +60,7 @@ namespace Unice
         public Ui(App app)
         {
             this.app = app;
+            inputMode = new InputMode(isTouch);
             // The panel asset made by Unice > Configurar projeto keeps the UI shaders in the build; the fallback is for the editor.
             var panelSettings = Resources.Load<PanelSettings>("UI/UnicePanel");
             if (panelSettings == null) panelSettings = ScriptableObject.CreateInstance<PanelSettings>();
@@ -142,9 +145,9 @@ namespace Unice
             SyncScreens();
             hudRefreshTimer -= dt;
             if (hudRefreshTimer <= 0 && currentScreen == UiScreen.Game) { hudRefreshTimer = HudRefreshSeconds; hud.Tick(); }
-            var hints = ActionHints.For(game, app.myCharacter, showKeys: !isMobile);
+            var hints = ActionHints.For(game, app.myCharacter, showKeys: !isTouch);
             messages.SetPrompt(hints.text);
-            if (isMobile) controls.ShowAvailable(hints);
+            if (isTouch) controls.ShowAvailable(hints);
         }
 
         static UiScreen ScreenFor(Phase phase) => phase switch
@@ -165,7 +168,7 @@ namespace Unice
             {
                 var previous = currentScreen; currentScreen = wanted;
                 Show(homeMenu.Root, wanted == UiScreen.Home); Show(lobbyScreen.Root, wanted == UiScreen.Lobby); Show(resultScreen.Root, resultLike);
-                Show(hud.Root, wanted == UiScreen.Game); Show(controls.Root, wanted == UiScreen.Game && isMobile);
+                Show(hud.Root, wanted == UiScreen.Game); Show(controls.Root, wanted == UiScreen.Game && isTouch);
                 if (wanted == UiScreen.Home) homeMenu.OnShow();
                 if (wanted == UiScreen.Lobby) lobbyScreen.OnShow(cameFromFinal: previous == UiScreen.Final);
                 if (resultLike) resultScreen.Render(wanted == UiScreen.Final);
@@ -183,6 +186,7 @@ namespace Unice
         public void Frame(float dt, Camera camera)
         {
             if (root.panel == null) return;
+            if (inputMode.Update()) ApplyInputMode();
             ApplySafeArea(); homeKeyboardLift.Update(); lobbyKeyboardLift.Update();
             float panelHeight = root.layout.height;
             if (float.IsNaN(panelHeight) || panelHeight < 1) return;   // no layout yet
@@ -191,6 +195,15 @@ namespace Unice
             soundCues.Frame(dt, camera);
             screenEffects.Frame(dt);
             if (currentScreen == UiScreen.Home) homeMenu.Frame();
+        }
+
+        /// <summary>The player switched between touch and keyboard/mouse: shows the matching controls and spacing.</summary>
+        void ApplyInputMode()
+        {
+            isTouch = inputMode.Touch;
+            Show(controls.Root, currentScreen == UiScreen.Game && isTouch);
+            messages.SetTouchLayout(isTouch);
+            if (!isTouch) controls.Release();   // a held joystick or the sneak toggle must not keep driving the character
         }
 
         /// <summary>Keeps the HUD and the full screens inside Screen.safeArea (notches, rounded corners, system bars).</summary>
