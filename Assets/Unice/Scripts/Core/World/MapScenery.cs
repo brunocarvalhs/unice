@@ -21,6 +21,11 @@ namespace Unice
         const float DefaultFurnitureHeight = 28;
         const float SeeThroughAlpha = .4f;
 
+        // doorways must read at a glance: a warm lit floor across the opening, a faint glow on both approaches, and a bright post at each end
+        const string DoorFloorColor = "#c98a4b", DoorPostColor = "#f2b632";
+        const float DoorGlowAlpha = .22f, DoorPostThickness = 6, DoorPostOverhang = 3;
+        const int DoorGlowOrder = -19999, DoorFloorOrder = -19998, DoorPostOrder = -19997;
+
         /// <summary>Something you can walk behind: its sprite and its footprint plus height.</summary>
         struct Occluder { public SpriteRenderer renderer; public float x, y, w, h, height; }
 
@@ -81,18 +86,39 @@ namespace Unice
             }
         }
 
-        /// <summary>A darker strip on the floor across each doorway.</summary>
+        /// <summary>Each doorway: a lit strip across the wall gap, a glow over the area leading into it and a post at each end.</summary>
         void BuildThresholds()
         {
             foreach (var door in Map.Doors)
             {
-                var sprite = Art.CreateSpriteRenderer("threshold", root, Art.WhiteSprite, -19999); sprite.color = Art.HexColor("#3e2a1e");
-                var strip = door.vertical
+                var gap = door.vertical
                     ? new RectF(door.rect.x, door.rect.y + Map.DoorOverlap - 1, door.rect.w, Map.DoorGap + 2)
                     : new RectF(door.rect.x + Map.DoorOverlap - 1, door.rect.y, Map.DoorGap + 2, door.rect.h);
-                sprite.transform.localPosition = Art.ToWorld(strip.x, strip.y);
-                sprite.transform.localScale = new Vector3(strip.w / Art.PxPerUnit, strip.h / Art.PxPerUnit, 1);
+                var glow = Art.HexColor(DoorPostColor); glow.a = DoorGlowAlpha;
+                AddFlat("threshold_glow", door.rect, glow, DoorGlowOrder);
+                AddFlat("threshold", gap, Art.HexColor(DoorFloorColor), DoorFloorOrder);
+
+                // the posts sit on the wall line, at both ends of the opening
+                var postColor = Art.HexColor(DoorPostColor);
+                if (door.vertical)
+                {
+                    AddFlat("door_post", new RectF(gap.x - DoorPostThickness / 2, gap.y - DoorPostOverhang, DoorPostThickness, gap.h + 2 * DoorPostOverhang), postColor, DoorPostOrder);
+                    AddFlat("door_post", new RectF(gap.x + gap.w - DoorPostThickness / 2, gap.y - DoorPostOverhang, DoorPostThickness, gap.h + 2 * DoorPostOverhang), postColor, DoorPostOrder);
+                }
+                else
+                {
+                    AddFlat("door_post", new RectF(gap.x - DoorPostOverhang, gap.y - DoorPostThickness / 2, gap.w + 2 * DoorPostOverhang, DoorPostThickness), postColor, DoorPostOrder);
+                    AddFlat("door_post", new RectF(gap.x - DoorPostOverhang, gap.y + gap.h - DoorPostThickness / 2, gap.w + 2 * DoorPostOverhang, DoorPostThickness), postColor, DoorPostOrder);
+                }
             }
+        }
+
+        /// <summary>A flat colored rectangle in house pixels.</summary>
+        void AddFlat(string name, RectF rect, Color color, int sortingOrder)
+        {
+            var sprite = Art.CreateSpriteRenderer(name, root, Art.WhiteSprite, sortingOrder); sprite.color = color;
+            sprite.transform.localPosition = Art.ToWorld(rect.x, rect.y);
+            sprite.transform.localScale = new Vector3(rect.w / Art.PxPerUnit, rect.h / Art.PxPerUnit, 1);
         }
 
         void BuildHouseWalls()
