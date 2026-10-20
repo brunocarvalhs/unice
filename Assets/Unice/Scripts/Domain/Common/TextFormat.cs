@@ -10,9 +10,6 @@ namespace Unice
         const string FallbackName = "Alguém";
         /// <summary>A new profile's name when there's no Play Games name to use.</summary>
         const string DefaultName = "Nova";
-        /// <summary>Room code letters: no 0/O, 1/I/L, so codes are easy to read aloud and type.</summary>
-        const string CodeAlphabet = "23456789ABCDEFGHJKMNPQRSTUVWXYZ";
-        const int RoomCodeLength = 5;
 
         /// <summary>Names come from other players: drop control and invisible characters, trim, cap the length.</summary>
         public static string CleanName(string name)
@@ -46,13 +43,6 @@ namespace Unice
             var clean = new StringBuilder();
             foreach (char c in code.ToUpperInvariant()) if ((c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')) clean.Append(c);
             return clean.ToString();
-        }
-
-        public static string RandomRoomCode()
-        {
-            var code = new StringBuilder();
-            for (int i = 0; i < RoomCodeLength; i++) code.Append(CodeAlphabet[GameRandom.Index(CodeAlphabet.Length)]);
-            return code.ToString();
         }
 
         /// <summary>Seconds left as "m:ss", rounding up (so it shows 0:00 only at the end).</summary>

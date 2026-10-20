@@ -20,7 +20,7 @@ namespace Unice
 
         public ResultScreen(Ui ui) : base(ui)
         {
-            Root = AddElement(ui.root, "lobby", "result");
+            Root = AddElement(ui.root, "lobby", "result", "cordel");
             header = AddElement(Root, "res-head");
             var body = AddElement(Root, "lobby-body");
             scoreCards = AddScroll(body, "lobby-players", "lobby-cards");

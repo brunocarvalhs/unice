@@ -20,6 +20,17 @@ namespace Unice
         public static Label AddLabel(VisualElement parent, string text, params string[] classes) => Add(parent, new Label(text), classes);
         public static Button AddButton(VisualElement parent, string text, Action onClick, params string[] classes) => Add(parent, new Button(onClick) { text = text }, classes);
 
+        /// <summary>A button that shows only a vector icon, drawn in the button's own text color (so hover and focus tint it).</summary>
+        public static Button AddGlyphButton(VisualElement parent, ActionIcon icon, Action onClick, params string[] classes)
+        {
+            var button = AddButton(parent, "", onClick, classes);
+            var glyph = IgnorePointer(AddElement(button, "hud-glyph"));
+            glyph.generateVisualContent += context => ActionIcons.Draw(context, icon, button.resolvedStyle.color);
+            button.RegisterCallback<PointerEnterEvent>(e => glyph.MarkDirtyRepaint()); button.RegisterCallback<PointerLeaveEvent>(e => glyph.MarkDirtyRepaint());
+            button.RegisterCallback<FocusInEvent>(e => glyph.MarkDirtyRepaint()); button.RegisterCallback<FocusOutEvent>(e => glyph.MarkDirtyRepaint());
+            return button;
+        }
+
         public static TextField AddTextField(VisualElement parent, string value, int maxLength, params string[] classes)
         {
             var field = new TextField { value = value, maxLength = maxLength };

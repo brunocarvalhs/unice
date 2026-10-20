@@ -3,47 +3,38 @@ using static Unice.UiKit;
 
 namespace Unice
 {
-    /// <summary>HUD top-left card: round, clock, phase, which room the player is in, and the room code (or "solo").</summary>
+    /// <summary>HUD top-left card: the clock with the round and phase beside it, and under it how close the doll is to giggling.</summary>
     sealed class MatchCard : UiPart
     {
-        /// <summary>The clock turns red in the last seconds of the hunt.</summary>
-        const float LowTimeSeconds = 15;
-
-        readonly Label roundLabel, clockLabel, phaseLabel, whereLabel, roomLabel;
+        readonly Label roundLabel, clockLabel, phaseLabel, giggleNoteLabel;
+        readonly VisualElement giggleMeter, giggleMeterFill;
 
         public MatchCard(Ui ui, VisualElement parent) : base(ui)
         {
             var card = IgnorePointer(AddElement(parent, "hud-card", "hud-tl"));
-            var roundRow = AddElement(card, "row");
+            var top = AddElement(card, "row");
+            clockLabel = AddLabel(top, "0:30", "clock");
+            var side = AddElement(top, "hud-side");
+            var roundRow = AddElement(side, "row");
             LocalizedLabel(roundRow, "hud.round", "hud-lbl"); roundLabel = AddLabel(roundRow, "", "hud-lbl");
-            clockLabel = AddLabel(card, "0:30", "clock");
-            phaseLabel = AddLabel(card, "", "phase");
-            whereLabel = AddLabel(card, "", "where");
-            roomLabel = AddLabel(card, "", "roomline");
+            phaseLabel = AddLabel(side, "", "phase");
+            giggleMeter = AddElement(card, "meter"); giggleMeterFill = AddElement(giggleMeter, "meter-fill");
+            giggleNoteLabel = AddLabel(card, "", "note");
             foreach (var label in card.Query<Label>().ToList()) IgnorePointer(label);
         }
 
-        public void Refresh()
+        /// <param name="giggle">The giggle meter and note come from the same data as the role card.</param>
+        public void Refresh(RoleCardData giggle)
         {
-            var me = app.myCharacter; bool live = game.IsLive;
-            SetText(roundLabel, $"{game.round}/{game.totalRounds}");
-            SetText(clockLabel, TextFormat.FormatMinutesSeconds(live ? game.timeLeft : 0));
-            clockLabel.EnableInClassList("clock-low", game.phase == Phase.Hunt && game.timeLeft <= LowTimeSeconds);
-
-            string phaseKey = game.phase switch
-            {
-                Phase.Hide => "hud.phase_hide",
-                Phase.Hunt => game.unice == me ? "hud.phase_hunt_you" : "hud.phase_hunt_other",
-                Phase.Result => "hud.phase_result",
-                _ => null,
-            };
-            SetText(phaseLabel, phaseKey != null ? Localization.Get(phaseKey) : "");
-
-            bool onTheMap = me != null && !me.outOfRound && me.x > 0 && live;
-            SetText(whereLabel, onTheMap ? Localization.Get("hud.where", Localization.RoomPhrase(Map.RoomAt(me.x, me.y))) : "");
-            SetText(roomLabel, app.IsOnline
-                ? Localization.Get("hud.room_online", app.roomCode) + (game.isHost ? Localization.Get("hud.room_host_suffix") : "")
-                : Localization.Get("hud.room_solo"));
+            var data = HudModels.MatchCard(game, app.myCharacter);
+            SetText(roundLabel, data.round);
+            SetText(clockLabel, data.clock);
+            clockLabel.EnableInClassList("clock-low", data.clockLow);
+            SetText(phaseLabel, data.phase);
+            Show(giggleMeter, giggle.showGiggleMeter);
+            giggleMeterFill.style.width = Length.Percent(giggle.giggleProgress * 100);
+            SetText(giggleNoteLabel, giggle.note);
+            Show(giggleNoteLabel, giggle.note.Length > 0);
         }
     }
 }

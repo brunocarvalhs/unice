@@ -399,6 +399,60 @@ namespace Unice
             Assert.AreEqual(2, caught.score, "caught hider still gets the team's +2 (current behavior)");
         }
 
+        // ---------- the opening video ----------
+
+        [Test]
+        public void StartRound_FirstRoundOfAStoryWithAVideo_AddsTheVideoTimeToTheHidingTime()
+        {
+            var g = NewGameAfterMatch(2, Humans(("h1", "Ana")));
+
+            Assert.AreEqual(1, g.round);
+            Assert.AreEqual(g.hideTime + Stories.ForMap(g.mapId).introSeconds, g.timeLeft, 0.001f);
+            Assert.IsTrue(g.InIntro);
+            Assert.AreEqual(Stories.ForMap(g.mapId).introSeconds, g.IntroTimeLeft, 0.001f);
+        }
+
+        [Test]
+        public void StartRound_LaterRound_HasNoOpeningVideo()
+        {
+            var g = NewGameAfterMatch(2, Humans(("h1", "Ana")));
+
+            g.StartRound(Humans(("h1", "Ana")));
+
+            Assert.AreEqual(Rules.HideTime, g.timeLeft);
+            Assert.IsFalse(g.InIntro);
+            Assert.AreEqual(0, g.IntroTimeLeft);
+        }
+
+        [Test]
+        public void Simulate_DuringTheOpeningVideo_OnlyTheVideoClockRuns()
+        {
+            var g = NewGameAfterMatch(2, Humans(("h1", "Ana")));
+            var bot = g.characters.Find(e => e.isBot && !e.IsUnice);
+            float x = bot.x, y = bot.y, introBefore = g.IntroTimeLeft;
+
+            for (int i = 0; i < 10; i++) g.Simulate(0.1f);
+
+            Assert.AreEqual(introBefore - 1, g.IntroTimeLeft, 0.01f);
+            Assert.AreEqual(0, g.roundClock, "the round clock starts when the video ends");
+            Assert.AreEqual((x, y), (bot.x, bot.y), "bots wait too");
+            Assert.AreEqual(Phase.Hide, g.phase);
+        }
+
+        [Test]
+        public void Simulate_TheVideoEnds_TheHidingTimeStartsFull()
+        {
+            var g = NewGameAfterMatch(2, Humans(("h1", "Ana")));
+            g.timeLeft = g.hideTime + 0.05f;
+
+            g.Simulate(0.1f);
+            g.Simulate(0.1f);
+
+            Assert.IsFalse(g.InIntro);
+            Assert.Greater(g.timeLeft, g.hideTime - 0.2f);
+            Assert.Greater(g.roundClock, 0);
+        }
+
         // ---------- Simulate: Hide -> Hunt transition ----------
 
         [Test]

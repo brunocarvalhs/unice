@@ -28,7 +28,7 @@ namespace Unice
 
         public LobbyScreen(Ui ui) : base(ui)
         {
-            Root = AddElement(ui.root, "lobby");
+            Root = AddElement(ui.root, "lobby", "cordel");
 
             // top bar: leave, room code, voice buttons, player count
             var top = AddElement(Root, "lobby-top");

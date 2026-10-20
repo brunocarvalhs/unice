@@ -10,7 +10,7 @@ namespace Unice
     /// </summary>
     sealed class MiniMap : UiPart
     {
-        static readonly Color Background = new Color32(42, 28, 36, 255), Floor = new Color32(74, 53, 39, 255), FurnitureColor = new Color32(109, 74, 51, 255);
+        static readonly Color Background = new Color32(42, 28, 36, 255), Floor = new Color32(74, 53, 39, 255), FurnitureColor = new Color32(109, 74, 51, 255), DoorColor = new Color32(242, 182, 50, 255);
         static readonly Color UniceDot = new Color32(221, 214, 223, 255);
         /// <summary>A giggle stays on the Unice's map for this many seconds.</summary>
         const float GiggleMarkerSeconds = 14;
@@ -49,7 +49,7 @@ namespace Unice
 
             Box(14, 14, Map.WorldW - 28, Map.WorldH - 28, Background);
             foreach (var room in Map.Rooms) Box(room.x, room.y, room.w, room.h, Floor);
-            foreach (var door in Map.Doors) Box(door.rect.x, door.rect.y, door.rect.w, door.rect.h, Floor);
+            foreach (var door in Map.Doors) Box(door.rect.x, door.rect.y, door.rect.w, door.rect.h, DoorColor);   // bright, so the way between rooms reads on the plan
             foreach (var piece in Map.Furniture) Box(piece.x, piece.y, piece.w, piece.h, FurnitureColor);
             if (!game.IsLive) return;
 

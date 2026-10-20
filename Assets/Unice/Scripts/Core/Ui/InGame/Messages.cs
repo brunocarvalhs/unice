@@ -5,9 +5,6 @@ using static Unice.UiKit;
 
 namespace Unice
 {
-    /// <summary>Colors of a banner (USS classes "banner-info", "banner-rose", …).</summary>
-    public enum BannerStyle { Info, Rose, Blood, Moss, Candle }
-
     /// <summary>
     /// Text messages over the game: the big banner, the toast stack, the caption for sounds heard but not seen,
     /// the key-hints prompt, and the hiding-phase countdown (black screen for the Unice, a pill for everyone else).
@@ -36,10 +33,17 @@ namespace Unice
             caption = (Label)IgnorePointer(AddLabel(captionBox, "", "caption-in"));
             promptBox = IgnorePointer(AddElement(safeArea, "prompt"));
             prompt = (Label)IgnorePointer(AddLabel(promptBox, "", "prompt-in"));
-            if (ui.isMobile) { promptBox.style.bottom = MobilePromptBottom; captionBox.style.bottom = MobileCaptionBottom; }
+            SetTouchLayout(ui.isTouch);
             toasts = IgnorePointer(AddElement(safeArea, "toasts"));
             banner = (Label)IgnorePointer(AddLabel(safeArea, "", "banner"));
             Show(banner, false); Show(blackout, false); Show(countdownPill, false); Show(captionBox, false); Show(promptBox, false);
+        }
+
+        /// <summary>On touch the prompt and the caption move up above the action buttons; with keyboard and mouse they go back to the USS position.</summary>
+        public void SetTouchLayout(bool touch)
+        {
+            promptBox.style.bottom = touch ? MobilePromptBottom : StyleKeyword.Null;
+            captionBox.style.bottom = touch ? MobileCaptionBottom : StyleKeyword.Null;
         }
 
         public void Banner(string text, BannerStyle style, float seconds)
@@ -94,7 +98,7 @@ namespace Unice
 
             // hiding phase: the Unice waits with eyes closed, the others see a countdown
             bool hiding = game.phase == Phase.Hide; int secondsLeft = Mathf.CeilToInt(game.timeLeft);
-            Show(blackout, hiding && me != null && me.IsUnice);
+            Show(blackout, hiding && me != null && me.IsUnice && !ui.comic.Playing);
             Show(countdownPill, hiding && (me == null || !me.IsUnice));
             if (hiding) { SetText(countdownNumber, secondsLeft.ToString()); SetText(countdownPillText, Localization.Get("game.unice_enters_in", secondsLeft)); }
         }

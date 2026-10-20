@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,6 +15,9 @@ namespace Unice
     {
         public static Language Current { get; private set; } = Load();
 
+        /// <summary>Raised after <see cref="Set"/> (the analytics layer listens, so this module does not depend on it).</summary>
+        public static event Action LanguageChanged;
+
         const string LanguagePrefKey = "unice.lang";
 
         /// <summary>Switches the language and remembers it on this device.</summary>
@@ -22,7 +26,7 @@ namespace Unice
             Current = language;
             PlayerPrefs.SetInt(LanguagePrefKey, (int)language);
             PlayerPrefs.Save();
-            Metrics.SetLanguageProperty();
+            LanguageChanged?.Invoke();
         }
 
         static Language Load() => Initial(
@@ -50,8 +54,6 @@ namespace Unice
             return args != null && args.Length > 0 ? string.Format(text, args) : text;
         }
 
-        /// <summary>A room's name, e.g. "Biblioteca" / "Library" / "Biblioteca".</summary>
-        public static string RoomName(Room room) => Get("room." + room.id + ".name");
         /// <summary>A room's "in" phrase for sentences, e.g. "na Biblioteca" / "in the Library" / "en la Biblioteca".</summary>
         public static string RoomPhrase(Room room) => Get("room." + room.id + ".in");
         /// <summary>A hiding spot's flavor phrase, e.g. "debaixo da cama" / "under the bed" / "debajo de la cama".</summary>

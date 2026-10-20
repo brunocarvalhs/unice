@@ -9,6 +9,8 @@ namespace Unice
     public sealed class ProfileStore
     {
         const string NameKey = "unice.name", KitKey = "unice.kit", OnlineWinsKey = "unice.online_wins", FirstMatchEndKey = "unice.first_match_end";
+        /// <summary>Followed by the story id: one flag per story.</summary>
+        const string ComicSeenKeyPrefix = "unice.comic_seen.";
 
         public string Name;
         public int[] Kit;
@@ -58,6 +60,16 @@ namespace Unice
             PlayerPrefs.SetInt(FirstMatchEndKey, 1);
             PlayerPrefs.Save();
             return true;
+        }
+
+        /// <summary>True if the intro comic of this story already played on this install (<see cref="MarkComicSeen"/>).</summary>
+        public bool ComicSeen(string storyId) => PlayerPrefs.HasKey(ComicSeenKeyPrefix + storyId);
+
+        /// <summary>Remembers that the intro comic of this story played, so later rounds skip it.</summary>
+        public void MarkComicSeen(string storyId)
+        {
+            PlayerPrefs.SetInt(ComicSeenKeyPrefix + storyId, 1);
+            PlayerPrefs.Save();
         }
 
         /// <summary>Replaces the look (invalid options become 0) and saves.</summary>

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static Unice.UiKit;
@@ -7,22 +8,26 @@ namespace Unice
     /// <summary>The main menu over the house map: the main page and its sub-pages (online, how to play, my child).</summary>
     sealed class HomeMenu : UiPart
     {
-        enum Page { Main, Online, HowToPlay, MyKid }
+        enum Page { Main, Online, HowToPlay, MyKid, Credits, Stories }
 
         /// <summary>A typed room code needs at least this many characters.</summary>
         const int MinRoomCodeLength = 4;
 
         public readonly VisualElement Root;
-        readonly VisualElement mainPage, onlinePage, myKidPage, kidCustomizerSlot;
+        readonly VisualElement mainPage, onlinePage, myKidPage, storiesPage, kidCustomizerSlot;
         VisualElement howToPlayPage;   // set by BuildHowToPlay
+        readonly CreditsScreen credits;
         readonly TextField roomCodeField;
         readonly Label netStatusLabel;
         readonly Button createRoomButton, joinRoomButton, soloButton, onlineButton;
         Page currentPage = Page.Main;
+        /// <summary>What the story picker does once a story is chosen (start solo, create the room), and the page to show meanwhile.</summary>
+        Action startWithChosenStory;
+        Page pageAfterPick = Page.Main;
 
         public HomeMenu(Ui ui) : base(ui)
         {
-            Root = AddElement(ui.root, "menu");
+            Root = AddElement(ui.root, "menu", "cordel");
             AddLabel(Root, "v" + Application.version, "menu-version");
 
             // main page
@@ -30,15 +35,16 @@ namespace Unice
             AddLabel(mainPage, "Unice", "menu-title");
             LocalizedLabel(mainPage, "menu.sub", "menu-sub");
             var grid = AddElement(mainPage, "menu-grid");
-            soloButton = LocalizedButton(grid, "menu.local", () => app.PlaySolo(), "mbtn");
+            soloButton = LocalizedButton(grid, "menu.local", () => ChooseStory(app.PlaySolo, Page.Main), "mbtn");
             onlineButton = LocalizedButton(grid, "menu.online", () => { app.SetNetStatus(""); ShowPage(Page.Online); }, "mbtn");
             LocalizedButton(grid, "menu.howto", () => ShowPage(Page.HowToPlay), "mbtn", "mbtn-sm");
             LocalizedButton(grid, "menu.mykid", () => ShowPage(Page.MyKid), "mbtn", "mbtn-sm");
+            LocalizedButton(grid, "menu.credits", () => ShowPage(Page.Credits), "mbtn", "mbtn-sm");
 
             // online: create a room (the code is generated for you) or join one with a code
             var online = AddPanelPage(out onlinePage, "menu.online_title");
             LocalizedLabel(online, "menu.online_desc", "mnote");
-            createRoomButton = LocalizedButton(online, "menu.create_room", () => app.EnterRoom(true, null), "mbtn", "mbtn-wide");
+            createRoomButton = LocalizedButton(online, "menu.create_room", () => ChooseStory(() => app.EnterRoom(true, null), Page.Online), "mbtn", "mbtn-wide");
             LocalizedLabel(online, "menu.or_join", "menu-or");
             var joinRow = AddElement(online, "row");
             roomCodeField = Add(joinRow, new TextField { maxLength = 10 }, new[] { "mfield", "grow" });
@@ -52,6 +58,11 @@ namespace Unice
             netStatusLabel = AddLabel(online, "", "mnote", "mnet");
             LocalizedButton(online, "menu.back", () => ShowPage(Page.Main), "mbtn", "mbtn-back");
 
+            // story picker: solo and "create room" come here first; the story decides the map
+            var stories = AddPanelPage(out storiesPage, "menu.stories_title");
+            LocalizedLabel(stories, "menu.stories_desc", "mnote");
+            new StoryPicker(ui, stories, PickStory, () => ShowPage(Page.Main));
+
             BuildHowToPlay();
 
             // my child: the same customization as in the waiting room
@@ -60,13 +71,32 @@ namespace Unice
             kidCustomizerSlot = AddElement(scroll, "mkid");
             LocalizedButton(myKid, "menu.ready", () => ShowPage(Page.Main), "mbtn", "mbtn-back");
 
-            var footer = AddElement(Root, "menu-foot");
-            ui.settings.AddSoundButton(footer, "mpill"); ui.settings.AddMicButton(footer, "mpill");
-            ui.settings.AddWhisperButton(footer, "mpill"); ui.settings.AddLanguageButton(footer, "mpill");
+            // top right: sound and language next to quit; the voice toggles stay at the bottom
+            var topRight = AddElement(Root, "menu-top");
+            ui.settings.AddSoundIconButton(topRight, "mpill"); ui.settings.AddLanguageIconButton(topRight, "mpill");
 #if !UNITY_WEBGL
-            LocalizedButton(Root, "menu.quit", () => Application.Quit(), "mbtn", "mexit");   // a browser tab can't quit itself
+            LocalizedButton(topRight, "menu.quit", () => Application.Quit(), "mbtn", "mbtn-quit");   // a browser tab can't quit itself
 #endif
+            var footer = AddElement(Root, "menu-foot");
+            ui.settings.AddMicButton(footer, "mpill"); ui.settings.AddWhisperButton(footer, "mpill");
+            credits = new CreditsScreen(ui, Root, () => ShowPage(Page.Main));   // last: drawn over everything else on the menu
             ShowPage(Page.Main);
+        }
+
+        /// <summary>Opens the story picker; <paramref name="start"/> runs once a story is chosen, with <paramref name="pageWhileStarting"/> showing meanwhile (where a connection error can be read).</summary>
+        void ChooseStory(Action start, Page pageWhileStarting)
+        {
+            startWithChosenStory = start; pageAfterPick = pageWhileStarting;
+            ShowPage(Page.Stories);
+        }
+
+        /// <summary>The player chose a story: its map is set and the pending start (solo or room) goes ahead.</summary>
+        void PickStory(Story story)
+        {
+            game.mapId = story.mapId;
+            Metrics.Log("story_pick", ("story", story.id), ("map", story.mapId));
+            ShowPage(pageAfterPick);
+            startWithChosenStory?.Invoke();
         }
 
         void BuildHowToPlay()
@@ -111,7 +141,11 @@ namespace Unice
         }
 
         /// <summary>Per frame while showing.</summary>
-        public void Frame() { if (currentPage == Page.MyKid) ui.kidCustomizer.AnimatePreview(); }
+        public void Frame()
+        {
+            if (currentPage == Page.MyKid) ui.kidCustomizer.AnimatePreview();
+            if (currentPage == Page.Credits) credits.Frame(Time.unscaledDeltaTime);
+        }
 
         /// <summary>A sub-page: a framed panel with a title. Returns the panel to fill.</summary>
         VisualElement AddPanelPage(out VisualElement page, string titleKey)
@@ -125,7 +159,7 @@ namespace Unice
         /// <summary>Analytics screen name of each page; the main page is the phase's own "home".</summary>
         static string ScreenName(Page page) => page switch
         {
-            Page.Online => "home_online", Page.HowToPlay => "home_how_to_play", Page.MyKid => "home_my_kid", _ => "home",
+            Page.Online => "home_online", Page.HowToPlay => "home_how_to_play", Page.MyKid => "home_my_kid", Page.Credits => "home_credits", Page.Stories => "home_stories", _ => "home",
         };
 
         void ShowPage(Page page)
@@ -133,7 +167,9 @@ namespace Unice
             if (page != currentPage) Metrics.Screen(ScreenName(page));
             currentPage = page;
             Show(mainPage, page == Page.Main); Show(onlinePage, page == Page.Online);
-            Show(howToPlayPage, page == Page.HowToPlay); Show(myKidPage, page == Page.MyKid);
+            Show(howToPlayPage, page == Page.HowToPlay); Show(myKidPage, page == Page.MyKid); Show(storiesPage, page == Page.Stories); Show(credits.Root, page == Page.Credits);
+            ui.UpdateBackdrop();
+            if (page == Page.Credits) credits.Begin();
             if (page == Page.MyKid) ui.kidCustomizer.ShowIn(kidCustomizerSlot);
         }
 

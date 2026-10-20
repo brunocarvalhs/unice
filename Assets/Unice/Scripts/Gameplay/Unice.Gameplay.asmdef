@@ -1,0 +1,17 @@
+{
+    "name": "Unice.Gameplay",
+    "rootNamespace": "Unice",
+    "references": [
+        "Unice.Domain",
+        "Unice.Localization"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": true
+}

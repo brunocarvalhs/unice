@@ -329,7 +329,7 @@ namespace Unice
             // StartRound only repositions the round's non-Unice characters to the spawn row; if this bot was originally
             // picked as Unice (before the override above), it would still be sitting at ResetRound's (-600,-600).
             hider.x = hider.targetX = 900; hider.y = hider.targetY = 474; // open hall floor, known clear of furniture
-            g.phase = Phase.Hide; g.timeLeft = 1000;
+            g.phase = Phase.Hide; g.timeLeft = g.hideTime;   // past the opening video, well before the hiding time ends
 
             try
             {

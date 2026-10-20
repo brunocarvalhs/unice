@@ -1,13 +1,14 @@
 # Build targets for the CI/CD pipeline (debug.yml and release.yml).
-# true = built on every run and, on master, published to its store.
+# true = built on every run and, on master, published to its store (Android) or kept as a build artifact (the others).
+# iOS is exported as an Xcode project: signing and TestFlight/App Store need an Apple Developer account and stay manual.
 targets:
   mobile:
     android: true
-    ios: false
+    ios: true
   desktop:
-    windows: false
-    macos: false
-    linux: false
+    windows: true
+    macos: true
+    linux: true
   web:
     webgl: true   # published to GitHub Pages (release.yml)
   console:

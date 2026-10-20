@@ -34,7 +34,7 @@ injetado em `MatchHost.Step(..., Func<List<Game.Human>> humansNow)`, coberto por
 |---|---|---|
 | `Match/` | `Game` (+ `Game.Snapshot`), `MatchHost`, `Character`, `Rules`, `Kit`, `GameEvent`, `RoundResult`, `DollState`, `Phase`, `PlayerAction` | Estado e regras da partida. `Game` = regras (port 1:1 da versão web); `MatchHost` = o que só o host faz (passo fixo, comandos dos outros jogadores, assumir como host); `Game.Snapshot` = formato de bytes host→convidados |
 | `Match/Bots/` | `HiderBot`, `UniceBot`, `BotBrain`, `BotGoal`, `BotPath` | IA dos bots, separada das regras; o estado de IA fica em `BotBrain`, não no `Character` |
-| `Maps/` | `Map`, `Navigation`, `MapParts`, `MapDefinition`, `MapHouse`/`MapQuintal`/`MapPraca` | Geometria, colisão e linha de visão (`Map`); busca de caminho (`Navigation`); dados de cada mapa |
+| `Maps/` | `Map`, `Navigation`, `MapParts`, `MapDefinition`, `MapHouse` (e um `Map<Nome>` por história nova), `Stories` | Geometria, colisão e linha de visão (`Map`); busca de caminho (`Navigation`); dados de cada mapa |
 | `Online/` | `INetBackend`, `IVoiceChat`, `Presence`/`PeerInfo`, `PresenceCodec`, `HostElection` | Portas de rede/voz, o que cada jogador envia, a regra de quem é o host (função pura, testada) |
 | `Common/` | `Point`, `Geometry`, `GameRandom`, `TextFormat` | Utilitários pequenos, um assunto por classe |
 

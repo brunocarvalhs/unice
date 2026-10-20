@@ -1,10 +1,86 @@
+/* ---------- tokens (docs/ART_DIRECTION.md): the palette lives here, nowhere else ---------- */
+:root {
+    --cal: #fbf4e2;
+    --sol: #f2b632;
+    --chita-claro: #ef6b6f;
+    --cal-mudo: #c9b79a;
+    --tinta: #2a1a12;
+    --chita-escuro: #a8232d;
+    --mandacaru-claro: #9fcf7a;
+    --tinta-mudo: #6b4f3d;
+    --borda: #4a352a;
+    --mandacaru-escuro: #3d6229;
+    --papel: #f3e6c8;
+    --cal-suave: #e6d8bc;
+    --noite: #1d1410;
+    --alerta: #f0535a;
+    --chita-fundo: #7d1a22;
+    --noite-3: #3a281d;
+    --noite-0: #120b08;
+    --noite-2: #2a1d17;
+    --preto: #000000;
+    --branco: #ffffff;
+    --transp: rgba(0, 0, 0, 0);
+    --areia: #f0c093;
+    --areia-escura: #e6aa78;
+    --nanquim: #1a1210;
+    --areia-88: rgba(240, 192, 147, 0.88);
+    --anil: #2f5d8c;
+    --anil-claro: #7fb0e0;
+    /* touch targets: ≥ 64 px on the 540 px panel ≈ 50 dp on a 1080p phone */
+    --alvo: 64px;
+    --branco-14: rgba(255, 255, 255, 0.14);
+    --branco-28: rgba(255, 255, 255, 0.28);
+    --branco-30: rgba(255, 255, 255, 0.3);
+    --branco-35: rgba(255, 255, 255, 0.35);
+    --branco-40: rgba(255, 255, 255, 0.4);
+    --branco-45: rgba(255, 255, 255, 0.45);
+    --branco-6: rgba(255, 255, 255, 0.06);
+    --cal-10: rgba(251, 244, 226, 0.1);
+    --cal-20: rgba(251, 244, 226, 0.2);
+    --cal-35: rgba(251, 244, 226, 0.35);
+    --cal-40: rgba(251, 244, 226, 0.4);
+    --cal-55: rgba(251, 244, 226, 0.55);
+    --cal-60: rgba(251, 244, 226, 0.6);
+    --cal-75: rgba(251, 244, 226, 0.75);
+    --cal-mudo-35: rgba(201, 183, 154, 0.35);
+    --chita-claro-22: rgba(239, 107, 111, 0.22);
+    --chita-claro-45: rgba(239, 107, 111, 0.45);
+    --chita-claro-60: rgba(239, 107, 111, 0.6);
+    --noite-0-60: rgba(18, 11, 8, 0.6);
+    --noite-0-70: rgba(18, 11, 8, 0.7);
+    --noite-0-85: rgba(18, 11, 8, 0.85);
+    --noite-0-88: rgba(18, 11, 8, 0.88);
+    --noite-0-90: rgba(18, 11, 8, 0.9);
+    --noite-0-95: rgba(18, 11, 8, 0.95);
+    --noite-2-55: rgba(42, 29, 23, 0.55);
+    --noite-2-75: rgba(42, 29, 23, 0.75);
+    --noite-2-86: rgba(42, 29, 23, 0.86);
+    --noite-2-90: rgba(42, 29, 23, 0.9);
+    --noite-55: rgba(29, 20, 16, 0.55);
+    --noite-80: rgba(29, 20, 16, 0.8);
+    --noite-86: rgba(29, 20, 16, 0.86);
+    --noite-90: rgba(29, 20, 16, 0.9);
+    --noite-92: rgba(29, 20, 16, 0.92);
+    --preto-30: rgba(0, 0, 0, 0.3);
+    --preto-35: rgba(0, 0, 0, 0.35);
+    --preto-50: rgba(0, 0, 0, 0.5);
+    --preto-97: rgba(0, 0, 0, 0.97);
+    --sol-25: rgba(242, 182, 50, 0.25);
+    --tinta-10: rgba(42, 26, 18, 0.1);
+    --tinta-25: rgba(42, 26, 18, 0.25);
+    --tinta-35: rgba(42, 26, 18, 0.35);
+    --tinta-40: rgba(42, 26, 18, 0.4);
+    --tinta-45: rgba(42, 26, 18, 0.45);
+}
+
 /* Unice: candlelit game UI + aged-paper screens. Colors match the web version.
    Panel is 540 px tall (Ui.ReferenceResolution): 1 px ≈ 0.79 dp on a 1080p phone, so every touch target is ≥ 64 px (≈ 50 dp)
    and text the player reads in a match is ≥ 16 px (≈ 12.6 sp). */
 .root {
     flex-grow: 1;
     -unity-font-definition: url("../Fonts/AlegreyaSans-Regular.ttf");
-    color: rgb(241, 231, 216);
+    color: var(--cal);
     font-size: 18px;
 }
 .layer { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
@@ -13,185 +89,168 @@
 /* ---------- shared text ---------- */
 .display { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); }
 .type { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); }
-.bold { -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); }
 
 /* ---------- paper sheets ---------- */
-.overlay { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: rgba(9, 6, 9, 0.88); align-items: center; justify-content: center; padding: 16px; }
+.overlay { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: var(--noite-0-88); align-items: center; justify-content: center; padding: 16px; }
 .sheet-scroll { max-width: 1100px; width: 100%; max-height: 100%; }
-.sheet { background-color: rgb(236, 226, 203); color: rgb(43, 30, 26); border-radius: 4px; border-width: 1px; border-color: rgba(80, 55, 40, 0.4); padding: 26px 32px; }
-.eyebrow { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 14px; letter-spacing: 2px; color: rgb(154, 44, 69); margin-bottom: 4px; }
-.title { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 64px; color: rgb(43, 30, 26); margin-bottom: 6px; }
+.sheet { background-color: var(--papel); color: var(--tinta); border-radius: 4px; border-width: 1px; border-color: var(--tinta-40); padding: 26px 32px; }
+.title { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 64px; color: var(--tinta); margin-bottom: 6px; }
 .title-md { font-size: 44px; }
-.title-red { color: rgb(154, 44, 69); }
-.title-win { color: rgb(47, 107, 67); }
-.lede { font-size: 20px; white-space: normal; margin-bottom: 14px; }
-.muted { color: rgb(111, 90, 77); font-size: 16px; white-space: normal; }
-.lbl { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 13px; letter-spacing: 1px; color: rgb(111, 90, 77); margin-bottom: 4px; }
+.muted { color: var(--tinta-mudo); font-size: 16px; white-space: normal; }
+.lbl { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 13px; letter-spacing: 1px; color: var(--tinta-mudo); margin-bottom: 4px; }
 .row { flex-direction: row; align-items: center; }
 .wrap { flex-wrap: wrap; }
 .grow { flex-grow: 1; flex-shrink: 1; }
-.cols { flex-direction: row; }
-.col { flex-grow: 1; flex-basis: 0; margin-right: 24px; }
 .gap { margin-top: 14px; }
 
-.field { background-color: rgba(255, 255, 255, 0.4); border-width: 1px; border-color: rgba(60, 40, 30, 0.4); border-radius: 4px; color: rgb(43, 30, 26); font-size: 20px; padding: 6px 10px; min-height: 64px; margin: 0; }
-.field > .unity-text-field__input, .field .unity-base-text-field__input { background-color: rgba(0, 0, 0, 0); border-width: 0; color: rgb(43, 30, 26); font-size: 20px; padding: 0; -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); }
-.code-field .unity-base-text-field__input { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); letter-spacing: 4px; font-size: 22px; }
+.field { background-color: var(--branco-40); border-width: 1px; border-color: var(--tinta-40); border-radius: 4px; color: var(--tinta); font-size: 20px; padding: 6px 10px; min-height: var(--alvo); margin: 0; }
+.field > .unity-text-field__input, .field .unity-base-text-field__input { background-color: var(--transp); border-width: 0; color: var(--tinta); font-size: 20px; padding: 0; -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); }
 
-.btn { background-color: rgb(43, 30, 26); color: rgb(236, 226, 203); border-width: 0; border-radius: 4px; padding: 10px 22px; min-height: 64px; font-size: 17px; -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); letter-spacing: 1px; margin: 0 10px 0 0; }
-.btn:hover { background-color: rgb(154, 44, 69); }
-.btn:active { background-color: rgb(120, 30, 50); }
+.btn { background-color: var(--tinta); color: var(--papel); border-width: 0; border-radius: 4px; padding: 10px 22px; min-height: var(--alvo); font-size: 17px; -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); letter-spacing: 1px; margin: 0 10px 0 0; }
+.btn:hover { background-color: var(--chita-escuro); }
+.btn:active { background-color: var(--chita-fundo); }
 .btn:disabled { opacity: 0.45; }
-.btn-ghost { background-color: rgba(0, 0, 0, 0); color: rgb(43, 30, 26); border-width: 2px; border-color: rgb(43, 30, 26); }
-.btn-ghost:hover { background-color: rgba(43, 30, 26, 0.1); }
-.btn-link { background-color: rgba(0, 0, 0, 0); color: rgb(154, 44, 69); padding: 6px 4px; min-height: 64px; }
-.btn-link:hover { background-color: rgba(0, 0, 0, 0); color: rgb(43, 30, 26); }
-.net { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 15px; color: rgb(111, 90, 77); white-space: normal; margin-top: 10px; }
-.net-err { color: rgb(154, 44, 69); }
+.btn-ghost { background-color: var(--transp); color: var(--tinta); border-width: 2px; border-color: var(--tinta); }
+.btn-ghost:hover { background-color: var(--tinta-10); }
+.btn-link { background-color: var(--transp); color: var(--chita-escuro); padding: 6px 4px; min-height: var(--alvo); }
+.btn-link:hover { background-color: var(--transp); color: var(--tinta); }
+.net { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 15px; color: var(--tinta-mudo); white-space: normal; margin-top: 10px; }
+.net-err { color: var(--chita-escuro); }
 
-.rules { flex-direction: row; flex-wrap: wrap; margin-top: 12px; }
-.rule { width: 32%; margin-right: 1%; margin-bottom: 10px; border-top-width: 2px; border-color: rgba(60, 40, 30, 0.35); padding-top: 6px; }
-.rule-t { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 20px; }
-.rule-b { font-size: 15px; white-space: normal; }
-.rule-red { border-color: rgb(154, 44, 69); }
-.rule-red .rule-t { color: rgb(154, 44, 69); }
-.rule-green { border-color: rgb(47, 107, 67); }
-.rule-green .rule-t { color: rgb(47, 107, 67); }
 
 /* waiting room */
-.code { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); color: rgb(154, 44, 69); letter-spacing: 6px; }
-.prow { flex-direction: row; align-items: center; padding: 6px 10px; margin-bottom: 6px; background-color: rgba(255, 255, 255, 0.3); border-radius: 3px; }
-.prow-me { border-width: 2px; border-color: rgb(43, 30, 26); }
-.prow-bots { background-color: rgba(0, 0, 0, 0); border-width: 1px; border-color: rgba(60, 40, 30, 0.4); color: rgb(111, 90, 77); }
-.pname { -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); font-size: 18px; flex-grow: 1; margin-left: 10px; }
-.pstate { -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); font-size: 13px; letter-spacing: 1px; color: rgb(111, 90, 77); }
-.pstate-ok { color: rgb(47, 107, 67); }
 .pts { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 20px; }
-.stepper { flex-direction: row; align-items: center; margin-right: 18px; }
-.step-btn { width: 40px; min-height: 40px; padding: 0; margin: 0 6px; background-color: rgba(255, 255, 255, 0.45); color: rgb(43, 30, 26); font-size: 22px; border-radius: 4px; border-width: 0; }
-.step-val { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 20px; min-width: 24px; -unity-text-align: middle-center; }
-.preview { width: 170px; height: 170px; border-radius: 85px; background-color: rgb(74, 50, 35); margin-right: 16px; }
+.preview { width: 170px; height: 170px; border-radius: 85px; background-color: var(--noite-3); margin-right: 16px; }
 .opt { flex-direction: row; flex-wrap: wrap; align-items: center; margin-bottom: 6px; }
-.opt-l { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 12px; color: rgb(111, 90, 77); width: 110px; }
-.cy { flex-direction: row; align-items: center; flex-grow: 1; background-color: rgba(255, 255, 255, 0.35); border-radius: 4px; }
-.cy-btn { width: 64px; min-height: 64px; padding: 0; margin: 0; background-color: rgba(0, 0, 0, 0); color: rgb(43, 30, 26); font-size: 22px; border-width: 0; }
+.opt-l { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 12px; color: var(--tinta-mudo); width: 110px; }
+.cy { flex-direction: row; align-items: center; flex-grow: 1; background-color: var(--branco-35); border-radius: 4px; }
+.cy-btn { width: 64px; min-height: var(--alvo); padding: 0; margin: 0; background-color: var(--transp); color: var(--tinta); font-size: 22px; border-width: 0; }
 .cy-val { flex-grow: 1; -unity-text-align: middle-center; -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); font-size: 16px; }
 .sws { flex-direction: row; flex-wrap: wrap; flex-grow: 1; }
-.sw { width: 64px; height: 64px; border-radius: 32px; margin: 0 6px 4px 0; border-width: 2px; border-color: rgba(43, 30, 26, 0.25); padding: 0; min-height: 64px; }
-.sw-on { border-width: 3px; border-color: rgb(43, 30, 26); }
+.sw { width: 64px; height: 64px; border-radius: 32px; margin: 0 6px 4px 0; border-width: 2px; border-color: var(--tinta-25); padding: 0; min-height: var(--alvo); }
+.sw-on { border-width: 3px; border-color: var(--tinta); }
 .tabbar { flex-direction: row; flex-wrap: wrap; margin-bottom: 10px; }
-.tabbtn { background-color: rgba(0, 0, 0, 0.3); color: rgb(173, 154, 140); border-width: 0; border-radius: 8px; padding: 7px 12px; margin: 0 6px 6px 0; min-height: 64px; font-size: 13px; letter-spacing: 1px; -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); }
-.tabbtn-on { background-color: rgb(240, 176, 87); color: rgb(17, 12, 18); }
+.tabbtn { background-color: var(--preto-30); color: var(--cal-mudo); border-width: 0; border-radius: 8px; padding: 7px 12px; margin: 0 6px 6px 0; min-height: var(--alvo); font-size: 13px; letter-spacing: 1px; -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); }
+.tabbtn-on { background-color: var(--sol); color: var(--noite); }
 /* on the paper card (My child) the dark tab is invisible: ink text on a light ink wash, ≈10:1 */
-.mkid .tabbtn { background-color: rgba(43, 30, 26, 0.1); color: rgb(43, 30, 26); }
-.mkid .tabbtn-on { background-color: rgb(240, 176, 87); color: rgb(17, 12, 18); }
+.mkid .tabbtn { background-color: var(--tinta-10); color: var(--tinta); }
+.mkid .tabbtn-on { background-color: var(--sol); color: var(--noite); }
 
 /* scores */
-.srow { flex-direction: row; align-items: center; padding: 4px 10px; margin-bottom: 5px; background-color: rgba(255, 255, 255, 0.28); border-radius: 3px; }
-.srank { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); width: 26px; color: rgb(111, 90, 77); }
-.next { flex-direction: row; align-items: center; padding: 10px 12px; margin: 12px 0; border-width: 1px; border-color: rgba(60, 40, 30, 0.45); border-radius: 4px; }
 
 /* ---------- in-game HUD ---------- */
-.hud-card { background-color: rgba(26, 19, 24, 0.86); border-width: 1px; border-color: rgb(59, 43, 53); border-radius: 6px; padding: 8px 12px; }
+.hud-card { background-color: var(--noite-2-86); border-width: 1px; border-color: var(--borda); border-radius: 6px; padding: 8px 12px; }
 .hud-tl { position: absolute; left: 14px; top: 12px; min-width: 200px; }
-.hud-tr { position: absolute; right: 14px; top: 12px; width: 300px; align-items: stretch; }
-.hud-lbl { -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); font-size: 16px; letter-spacing: 1px; color: rgb(173, 154, 140); }
-.clock { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 44px; color: rgb(241, 231, 216); }
-.clock-low { color: rgb(226, 74, 82); }
-.phase { font-size: 16px; color: rgb(173, 154, 140); }
-.where { font-size: 16px; color: rgb(241, 231, 216); }
-.roomline { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 16px; color: rgb(240, 176, 87); }
+/* below the 64 px icon buttons (12 + 64 + 8) */
+.hud-tr { position: absolute; right: 14px; top: 84px; width: 260px; align-items: stretch; }
+.hud-side { margin-left: 12px; }
+.hud-lbl { -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); font-size: 16px; letter-spacing: 1px; color: var(--cal-mudo); }
+.clock { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 38px; color: var(--cal); }
+.clock-low { color: var(--alerta); }
+.phase { font-size: 16px; color: var(--cal-mudo); }
+.where { font-size: 16px; color: var(--cal); }
+.roomline { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 16px; color: var(--sol); }
+.sheet .roomline { color: var(--tinta); margin-bottom: 8px; }
 .role-t { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 22px; }
-.role-unice .role-t { color: rgb(239, 115, 148); }
-.role-holder .role-t { color: rgb(240, 176, 87); }
-.role-out .role-t { color: rgb(173, 154, 140); }
-.role-g { font-size: 16px; white-space: normal; color: rgb(215, 203, 187); }
-.meter { height: 10px; background-color: rgb(12, 8, 11); border-width: 1px; border-color: rgb(59, 43, 53); border-radius: 2px; margin-top: 4px; overflow: hidden; }
-.meter-fill { height: 100%; width: 0; background-color: rgb(239, 115, 148); }
-.meter-noise .meter-fill { background-color: rgb(240, 176, 87); }
-.note { font-size: 16px; color: rgb(173, 154, 140); white-space: normal; margin-top: 3px; }
-.mini { height: 140px; margin-top: 6px; background-color: rgb(10, 7, 10); border-radius: 4px; }
-.hud-btn { background-color: rgba(36, 26, 33, 0.9); color: rgb(241, 231, 216); border-width: 1px; border-color: rgb(59, 43, 53); border-radius: 5px; font-size: 16px; letter-spacing: 1px; -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); padding: 6px 10px; min-height: 64px; min-width: 64px; margin: 0 0 0 6px; }
-.hud-btns { position: absolute; right: 330px; top: 12px; flex-direction: row; }
-.plist { position: absolute; right: 330px; top: 84px; width: 270px; }
+.role-unice .role-t { color: var(--chita-claro); }
+.role-holder .role-t { color: var(--sol); }
+.role-out .role-t { color: var(--cal-mudo); }
+.role-g { font-size: 16px; white-space: normal; color: var(--cal-suave); }
+.meter { height: 10px; background-color: var(--noite-0); border-width: 1px; border-color: var(--borda); border-radius: 2px; margin-top: 4px; overflow: hidden; }
+.meter-fill { height: 100%; width: 0; background-color: var(--chita-claro); }
+.meter-noise .meter-fill { background-color: var(--sol); }
+.note { font-size: 16px; color: var(--cal-mudo); white-space: normal; margin-top: 3px; }
+.mini { height: 120px; margin-top: 6px; background-color: var(--noite-0); border-radius: 4px; }
+.hud-btn { background-color: var(--noite-2-90); color: var(--cal); border-width: 1px; border-color: var(--borda); border-radius: 5px; font-size: 16px; letter-spacing: 1px; -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); padding: 6px 10px; min-height: var(--alvo); min-width: 64px; margin: 0 0 0 6px; }
+.hud-btns { position: absolute; right: 14px; top: 12px; flex-direction: row; }
+.hud-icon { min-width: var(--alvo); padding: 0; align-items: center; justify-content: center; }
+.hud-glyph { width: 36px; height: 36px; }
+/* centered over the game, under the HUD buttons; it covers the role card on narrow screens, which is fine while it is open */
+.plist { position: absolute; left: 50%; margin-left: -150px; top: 84px; width: 300px; }
 /* the rows scroll so 8 players (64 px rows with mute buttons) stay above the bottom of a 540 px panel */
-.plist-rows { max-height: 230px; }
+.plist-rows { max-height: 200px; }
 .plrow { flex-direction: row; align-items: center; margin-bottom: 4px; padding: 2px 4px; border-radius: 4px; }
-.plrow-pick { background-color: rgba(255, 255, 255, 0.06); min-height: 64px; }
-.plrow-pick:hover { background-color: rgba(255, 255, 255, 0.14); }
-.plrow-on { background-color: rgba(239, 115, 148, 0.22); }
+.plrow-pick { background-color: var(--branco-6); min-height: var(--alvo); }
+.plrow-pick:hover { background-color: var(--branco-14); }
+.plrow-on { background-color: var(--chita-claro-22); }
 .plname { -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); font-size: 16px; }
-.plst { font-size: 16px; color: rgb(173, 154, 140); }
+.plst { font-size: 16px; color: var(--cal-mudo); }
 .plout { opacity: 0.5; }
-.tag { font-size: 16px; letter-spacing: 1px; color: rgb(173, 154, 140); border-width: 1px; border-color: rgb(59, 43, 53); border-radius: 3px; padding: 0 4px; margin-left: 6px; }
+.tag { font-size: 16px; letter-spacing: 1px; color: var(--cal-mudo); border-width: 1px; border-color: var(--borda); border-radius: 3px; padding: 0 4px; margin-left: 6px; }
 
 .banner { position: absolute; left: 0; right: 0; top: 18%; -unity-text-align: middle-center; -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 40px; white-space: normal; }
-.banner-info { color: rgb(241, 231, 216); }
-.banner-rose { color: rgb(239, 115, 148); }
-.banner-blood { color: rgb(226, 74, 82); }
-.banner-moss { color: rgb(143, 203, 156); }
-.banner-candle { color: rgb(240, 176, 87); }
+.banner-info { color: var(--cal); }
+.banner-rose { color: var(--chita-claro); }
+.banner-blood { color: var(--alerta); }
+.banner-moss { color: var(--mandacaru-claro); }
+.banner-candle { color: var(--sol); }
 .toasts { position: absolute; left: 14px; top: 190px; width: 340px; }
-.toast { background-color: rgba(17, 12, 18, 0.92); border-left-width: 3px; border-color: rgb(239, 115, 148); border-radius: 5px; padding: 6px 10px; margin-bottom: 6px; font-size: 16px; white-space: normal; }
+.toast { background-color: var(--noite-92); border-left-width: 3px; border-color: var(--chita-claro); border-radius: 5px; padding: 6px 10px; margin-bottom: 6px; font-size: 16px; white-space: normal; }
 .prompt { position: absolute; bottom: 22px; left: 0; right: 0; align-items: center; }
-.prompt-in { background-color: rgba(17, 12, 18, 0.9); border-width: 1px; border-color: rgb(59, 43, 53); border-radius: 22px; padding: 6px 16px; font-size: 17px; }
+.prompt-in { background-color: var(--noite-90); border-width: 1px; border-color: var(--borda); border-radius: 22px; padding: 6px 16px; font-size: 17px; }
 .pill { position: absolute; top: 14px; left: 0; right: 0; align-items: center; }
-.pill-in { background-color: rgba(10, 6, 9, 0.85); border-radius: 19px; padding: 4px 18px; -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 22px; color: rgb(239, 115, 148); }
+.pill-in { background-color: var(--noite-0-85); border-radius: 19px; padding: 4px 18px; -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 22px; color: var(--chita-claro); }
 .caption { position: absolute; bottom: 86px; left: 0; right: 0; align-items: center; }
-.caption-in { background-color: rgba(10, 6, 9, 0.88); border-radius: 15px; padding: 4px 16px; -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 17px; }
-.blackout { background-color: rgba(0, 0, 0, 0.97); align-items: center; justify-content: center; }
-.count { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 200px; color: rgb(239, 115, 148); }
-.count-sub { font-size: 20px; color: rgb(173, 154, 140); }
-.wlabel { position: absolute; -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); font-size: 14px; color: rgb(241, 231, 216); -unity-text-align: middle-center; translate: -50% -50%; -unity-text-outline-width: 1px; -unity-text-outline-color: rgba(10, 6, 9, 0.9); }
-.fxtext { position: absolute; -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); -unity-text-align: middle-center; translate: -50% -50%; -unity-text-outline-width: 1px; -unity-text-outline-color: rgba(10, 6, 9, 0.95); }
-.slat { position: absolute; left: 0; right: 0; height: 12px; background-color: rgba(0, 0, 0, 0.5); }
-.pause { background-color: rgba(10, 6, 9, 0.7); align-items: center; justify-content: center; }
+.caption-in { background-color: var(--noite-0-88); border-radius: 15px; padding: 4px 16px; -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 17px; }
+.blackout { background-color: var(--preto-97); align-items: center; justify-content: center; }
+.count { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 200px; color: var(--chita-claro); }
+.count-sub { font-size: 20px; color: var(--cal-mudo); }
+.wlabel { position: absolute; -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); font-size: 14px; color: var(--cal); -unity-text-align: middle-center; translate: -50% -50%; -unity-text-outline-width: 1px; -unity-text-outline-color: var(--noite-0-90); }
+.fxtext { position: absolute; -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); -unity-text-align: middle-center; translate: -50% -50%; -unity-text-outline-width: 1px; -unity-text-outline-color: var(--noite-0-95); }
+.slat { position: absolute; left: 0; right: 0; height: 12px; background-color: var(--preto-50); }
+.pause { background-color: var(--noite-0-70); align-items: center; justify-content: center; }
 
 /* touch controls */
-.joy { position: absolute; left: 36px; bottom: 30px; width: 204px; height: 204px; border-radius: 102px; background-color: rgba(36, 26, 33, 0.55); border-width: 2px; border-color: rgba(173, 154, 140, 0.35); }
-.joy-knob { position: absolute; left: 66px; top: 66px; width: 72px; height: 72px; border-radius: 36px; background-color: rgba(241, 231, 216, 0.75); }
+.joy { position: absolute; left: 36px; bottom: 30px; width: 204px; height: 204px; border-radius: 102px; background-color: var(--noite-2-55); border-width: 2px; border-color: var(--cal-mudo-35); }
+.joy-knob { position: absolute; left: 66px; top: 66px; width: 72px; height: 72px; border-radius: 36px; background-color: var(--cal-75); }
 .acts { position: absolute; right: 30px; bottom: 30px; flex-direction: row; align-items: flex-end; }
-.act { width: 108px; height: 108px; border-radius: 54px; background-color: rgba(36, 26, 33, 0.75); border-width: 2px; border-color: rgba(241, 231, 216, 0.4); color: rgb(241, 231, 216); font-size: 16px; -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); margin-left: 14px; padding: 0; white-space: normal; -unity-text-align: middle-center; }
-.act-q { border-color: rgb(239, 115, 148); color: rgb(239, 115, 148); width: 90px; height: 90px; border-radius: 45px; }
-.act-r { border-color: rgb(240, 176, 87); color: rgb(240, 176, 87); width: 86px; height: 86px; border-radius: 43px; font-size: 14px; }
+.act { width: 108px; height: 108px; border-radius: 54px; background-color: var(--noite-2-75); border-width: 2px; border-color: var(--cal-40); color: var(--cal); font-size: 16px; -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); margin-left: 14px; padding: 0; white-space: normal; -unity-text-align: middle-center; }
+.act-q { border-color: var(--chita-claro); color: var(--chita-claro); width: 90px; height: 90px; border-radius: 45px; }
+.act-r { border-color: var(--sol); color: var(--sol); width: 86px; height: 86px; border-radius: 43px; font-size: 14px; }
 .act-s { width: 86px; height: 86px; border-radius: 43px; font-size: 13px; }
 .act-icon { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
-.act-on { background-color: rgb(240, 176, 87); color: rgb(17, 12, 18); }
+.act-on { background-color: var(--sol); color: var(--noite); }
 
 /* ---------- main menu over the house map ---------- */
 .menu { position: absolute; left: 0; top: 0; right: 0; bottom: 0; align-items: center; justify-content: center; }
 .menu-page { align-items: center; justify-content: center; max-width: 100%; }
-.menu-version { position: absolute; left: 18px; top: 12px; -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 15px; color: rgba(241, 231, 216, 0.75); }
-.menu-title { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 112px; color: rgb(241, 231, 216); -unity-text-align: middle-center; text-shadow: 0px 0px 22px rgba(239, 115, 148, 0.6); margin-bottom: -10px; }
-.menu-sub { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 17px; letter-spacing: 5px; color: rgb(240, 176, 87); -unity-text-align: middle-center; margin-bottom: 16px; }
+.menu-version { position: absolute; left: 18px; top: 12px; -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 15px; color: var(--cal-75); }
+.menu-title { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 112px; color: var(--cal); -unity-text-align: middle-center; text-shadow: 0px 0px 22px var(--chita-claro-60); margin-bottom: -10px; }
+.menu-sub { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 17px; letter-spacing: 5px; color: var(--sol); -unity-text-align: middle-center; margin-bottom: 16px; }
 .menu-grid { flex-direction: row; flex-wrap: wrap; justify-content: center; width: 660px; max-width: 100%; }
-.mbtn { width: 310px; height: 100px; margin: 9px; padding: 0; background-color: rgba(17, 12, 18, 0.8); border-width: 3px; border-color: rgb(241, 231, 216); border-radius: 14px; color: rgb(241, 231, 216); font-size: 54px; -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); -unity-text-align: middle-center; }
-.mbtn:hover { border-color: rgb(240, 176, 87); color: rgb(240, 176, 87); }
-.mbtn:active { background-color: rgba(240, 176, 87, 0.25); }
+.mbtn { width: 310px; height: 100px; margin: 9px; padding: 0; background-color: var(--noite-80); border-width: 3px; border-color: var(--cal); border-radius: 14px; color: var(--cal); font-size: 54px; -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); -unity-text-align: middle-center; }
+.mbtn:hover { border-color: var(--sol); color: var(--sol); }
+.mbtn:active { background-color: var(--sol-25); }
 .mbtn:disabled { opacity: 0.4; }
 .mbtn-sm { height: 66px; font-size: 32px; }
 .mbtn-wide { width: auto; height: 90px; margin: 14px 0 6px 0; font-size: 48px; }
 .mbtn-join { width: 190px; height: 70px; margin: 0 0 0 12px; font-size: 36px; }
 .mbtn-back { width: 200px; height: 64px; margin: 16px 0 0 0; font-size: 28px; align-self: center; border-width: 2px; }
-/* top right: at 4:3 the bottom-left corner is taken by the settings pills and the menu grid */
+/* the story's skip button: top right, over the story */
 .mexit { position: absolute; right: 18px; top: 12px; width: 130px; height: 64px; margin: 0; font-size: 30px; border-width: 2px; }
+.menu-top { position: absolute; right: 18px; top: 12px; flex-direction: row; align-items: center; }
+/* settings as icons: a round 64 px pill (the language one grows to fit its code) */
+.mpill-icon { min-width: var(--alvo); padding: 0 14px; align-items: center; justify-content: center; }
+.mpill-glyph { width: 40px; height: 40px; }
+.mpill-code { -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); font-size: 20px; margin-left: 6px; }
+.mbtn-quit { width: 130px; height: 64px; margin: 0 0 0 6px; font-size: 30px; border-width: 2px; }
 .menu-foot { position: absolute; left: 0; right: 0; bottom: 22px; flex-direction: row; justify-content: center; }
-.mpill { background-color: rgba(17, 12, 18, 0.8); border-width: 2px; border-color: rgba(241, 231, 216, 0.6); border-radius: 24px; color: rgb(241, 231, 216); font-size: 17px; -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); padding: 8px 20px; min-height: 64px; margin: 0 6px; }
-.mpill:hover { border-color: rgb(240, 176, 87); color: rgb(240, 176, 87); }
-.mpanel { width: 700px; max-width: 100%; max-height: 640px; background-color: rgba(17, 12, 18, 0.9); border-width: 3px; border-color: rgb(241, 231, 216); border-radius: 16px; padding: 22px 30px; }
-.mpanel-t { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 52px; color: rgb(241, 231, 216); -unity-text-align: middle-center; margin-bottom: 6px; }
-.mnote { font-size: 18px; color: rgb(215, 203, 187); white-space: normal; }
-.mnet { margin-top: 10px; -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 16px; color: rgb(173, 154, 140); }
-.mnet.net-err { color: rgb(239, 115, 148); }
-.menu-or { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 14px; letter-spacing: 3px; color: rgb(173, 154, 140); -unity-text-align: middle-center; margin: 14px 0 8px 0; }
+.mpill { background-color: var(--noite-80); border-width: 2px; border-color: var(--cal-60); border-radius: 24px; color: var(--cal); font-size: 17px; -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); padding: 8px 20px; min-height: var(--alvo); margin: 0 6px; }
+.mpill:hover { border-color: var(--sol); color: var(--sol); }
+.mpanel { width: 700px; max-width: 100%; max-height: 640px; background-color: var(--noite-90); border-width: 3px; border-color: var(--cal); border-radius: 16px; padding: 22px 30px; }
+.mpanel-t { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 52px; white-space: normal; color: var(--cal); -unity-text-align: middle-center; margin-bottom: 6px; }
+.mnote { font-size: 18px; color: var(--cal-suave); white-space: normal; }
+.mnet { margin-top: 10px; -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 16px; color: var(--cal-mudo); }
+.mnet.net-err { color: var(--chita-claro); }
+.menu-or { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 14px; letter-spacing: 3px; color: var(--cal-mudo); -unity-text-align: middle-center; margin: 14px 0 8px 0; }
 .mfield { margin: 0; min-height: 70px; }
-.mfield .unity-base-text-field__input { background-color: rgba(0, 0, 0, 0.35); border-width: 2px; border-color: rgba(241, 231, 216, 0.55); border-radius: 10px; color: rgb(241, 231, 216); font-size: 36px; letter-spacing: 8px; -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); -unity-text-align: middle-center; padding: 0 12px; }
+.mfield .unity-base-text-field__input { background-color: var(--preto-35); border-width: 2px; border-color: var(--cal-55); border-radius: 10px; color: var(--cal); font-size: 36px; letter-spacing: 8px; -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); -unity-text-align: middle-center; padding: 0 12px; }
 .mscroll { max-height: 300px; }
 .mrule { margin-bottom: 12px; }
-.mrule-t { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 26px; color: rgb(240, 176, 87); }
-.mrule-rose { color: rgb(239, 115, 148); }
-.mrule-moss { color: rgb(143, 203, 156); }
-.mkid { background-color: rgb(236, 226, 203); color: rgb(43, 30, 26); border-radius: 8px; padding: 14px 18px; }
+.mrule-t { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 26px; color: var(--sol); }
+.mrule-rose { color: var(--chita-claro); }
+.mrule-moss { color: var(--mandacaru-claro); }
+.mkid { background-color: var(--papel); color: var(--tinta); border-radius: 8px; padding: 14px 18px; }
 
 /* ---------- waiting room, full screen for a phone on its side ---------- */
 .lobby { position: absolute; left: 0; top: 0; right: 0; bottom: 0; padding: 16px 22px 10px 22px; }
@@ -199,59 +258,262 @@
 .lobby-top { flex-direction: row; flex-wrap: wrap; align-items: center; min-height: 72px; flex-shrink: 0; }
 .mbtn-top { width: 130px; height: 64px; margin: 0; font-size: 30px; border-width: 2px; }
 .lobby-head { flex-grow: 1; flex-direction: row; align-items: center; justify-content: center; }
-.lobby-title { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 36px; color: rgb(241, 231, 216); margin-right: 16px; text-shadow: 0px 0px 14px rgba(10, 6, 9, 0.9); }
-.lobby-code { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 40px; letter-spacing: 6px; color: rgb(239, 115, 148); margin-right: 18px; text-shadow: 0px 0px 16px rgba(239, 115, 148, 0.45); }
-.lobby-count { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 30px; color: rgb(240, 176, 87); min-width: 70px; margin-left: 12px; -unity-text-align: middle-right; }
+.lobby-title { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 36px; color: var(--cal); margin-right: 16px; text-shadow: 0px 0px 14px var(--noite-0-90); }
+.lobby-code { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 40px; letter-spacing: 6px; color: var(--chita-claro); margin-right: 18px; text-shadow: 0px 0px 16px var(--chita-claro-45); }
+.lobby-count { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 30px; color: var(--sol); min-width: 70px; margin-left: 12px; -unity-text-align: middle-right; }
 .lobby-body { flex-grow: 1; flex-direction: row; margin-top: 8px; }
 /* the cards scroll: 8 players + bots are three rows at 16:9 */
 .lobby-players { flex-grow: 1; flex-shrink: 1; }
 .lobby-cards { flex-direction: row; flex-wrap: wrap; align-content: flex-start; justify-content: center; }
-.pcard { width: 150px; min-height: 190px; margin: 7px; padding: 8px 6px; background-color: rgba(17, 12, 18, 0.86); border-width: 2px; border-color: rgba(241, 231, 216, 0.35); border-radius: 14px; align-items: center; justify-content: center; }
-.pcard-me { border-width: 3px; border-color: rgb(240, 176, 87); }
-.pcard-name { -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); font-size: 21px; color: rgb(241, 231, 216); margin-top: 6px; -unity-text-align: middle-center; }
-.pcard-st { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 16px; letter-spacing: 2px; color: rgb(173, 154, 140); margin-top: 2px; }
-.pcard-ok { color: rgb(143, 203, 156); }
-.pcard-bots { background-color: rgba(17, 12, 18, 0.55); border-color: rgba(241, 231, 216, 0.2); }
-.pcard-plus { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 66px; color: rgb(241, 231, 216); }
+.pcard { width: 150px; min-height: 190px; margin: 7px; padding: 8px 6px; background-color: var(--noite-86); border-width: 2px; border-color: var(--cal-35); border-radius: 14px; align-items: center; justify-content: center; }
+.pcard-me { border-width: 3px; border-color: var(--sol); }
+.pcard-name { -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); font-size: 21px; color: var(--cal); margin-top: 6px; -unity-text-align: middle-center; }
+.pcard-st { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 16px; letter-spacing: 2px; color: var(--cal-mudo); margin-top: 2px; }
+.pcard-ok { color: var(--mandacaru-claro); }
+.pcard-bots { background-color: var(--noite-55); border-color: var(--cal-20); }
+.pcard-plus { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 66px; color: var(--cal); }
 .mpanel.lobby-side { width: 340px; max-height: none; margin: 7px 0 7px 14px; padding: 18px 20px; justify-content: center; flex-shrink: 0; }
 .mstep { flex-direction: row; align-items: center; margin-bottom: 12px; }
-.mstep-l { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 16px; letter-spacing: 3px; color: rgb(173, 154, 140); flex-grow: 1; }
-.mstep-btn { width: 64px; height: 64px; margin: 0; padding: 0; background-color: rgba(0, 0, 0, 0.35); border-width: 2px; border-color: rgba(241, 231, 216, 0.55); border-radius: 10px; color: rgb(241, 231, 216); font-size: 32px; }
-.mstep-btn:hover { border-color: rgb(240, 176, 87); color: rgb(240, 176, 87); }
-.mstep-v { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 32px; color: rgb(241, 231, 216); width: 58px; -unity-text-align: middle-center; }
+.mstep-l { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 16px; letter-spacing: 3px; color: var(--cal-mudo); flex-grow: 1; }
+.mstep-btn { width: 64px; height: 64px; margin: 0; padding: 0; background-color: var(--preto-35); border-width: 2px; border-color: var(--cal-55); border-radius: 10px; color: var(--cal); font-size: 32px; }
+.mstep-btn:hover { border-color: var(--sol); color: var(--sol); }
+.mstep-v { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 32px; color: var(--cal); width: 58px; -unity-text-align: middle-center; }
 /* the kid customizer (styled for paper in "My child") inside the dark side panel: light ink, dark washes, ≥5.6:1 */
-.lobby-side .lbl, .lobby-side .opt-l { color: rgb(173, 154, 140); }
-.lobby-side .field { background-color: rgba(0, 0, 0, 0.35); border-color: rgba(241, 231, 216, 0.55); }
-.lobby-side .field .unity-base-text-field__input { color: rgb(241, 231, 216); }
-.lobby-side .cy { background-color: rgba(0, 0, 0, 0.35); }
-.lobby-side .cy-btn, .lobby-side .cy-val { color: rgb(241, 231, 216); }
-.lobby-side .btn-ghost { color: rgb(241, 231, 216); border-color: rgb(241, 231, 216); }
-.lobby-side .btn-ghost:hover { background-color: rgba(241, 231, 216, 0.1); }
-.lobby-side .sw { border-color: rgba(241, 231, 216, 0.35); }
-.lobby-side .sw-on { border-color: rgb(240, 176, 87); }
+.lobby-side .lbl, .lobby-side .opt-l { color: var(--cal-mudo); }
+.lobby-side .field { background-color: var(--preto-35); border-color: var(--cal-55); }
+.lobby-side .field .unity-base-text-field__input { color: var(--cal); }
+.lobby-side .cy { background-color: var(--preto-35); }
+.lobby-side .cy-btn, .lobby-side .cy-val { color: var(--cal); }
+.lobby-side .btn-ghost { color: var(--cal); border-color: var(--cal); }
+.lobby-side .btn-ghost:hover { background-color: var(--cal-10); }
+.lobby-side .sw { border-color: var(--cal-35); }
+.lobby-side .sw-on { border-color: var(--sol); }
 .lobby-status { margin-top: 8px; -unity-text-align: middle-center; }
 .mbtn-go { width: auto; height: 64px; margin: 14px 0 0 0; font-size: 44px; }
-.mbtn-on { border-color: rgb(143, 203, 156); color: rgb(143, 203, 156); }
-.lobby-note { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 16px; color: rgb(173, 154, 140); -unity-text-align: middle-center; white-space: normal; margin-top: 4px; flex-shrink: 0; }
+.mbtn-on { border-color: var(--mandacaru-claro); color: var(--mandacaru-claro); }
+.lobby-note { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 16px; color: var(--cal-mudo); -unity-text-align: middle-center; white-space: normal; margin-top: 4px; flex-shrink: 0; }
 
 /* ---------- round result and final score, full screen ---------- */
-.result { background-color: rgba(9, 6, 9, 0.6); }
+.result { background-color: var(--noite-0-60); }
 .res-head { align-items: center; flex-shrink: 0; }
-.res-eyebrow { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 17px; letter-spacing: 5px; color: rgb(240, 176, 87); }
-.res-title { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 52px; color: rgb(241, 231, 216); -unity-text-align: middle-center; white-space: normal; text-shadow: 0px 0px 16px rgba(10, 6, 9, 0.9); }
-.res-win { color: rgb(143, 203, 156); }
-.res-lose { color: rgb(239, 115, 148); }
-.res-reason { font-size: 19px; color: rgb(215, 203, 187); -unity-text-align: middle-center; white-space: normal; max-width: 1000px; }
-.pcard-rank { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 15px; color: rgb(240, 176, 87); }
-.pcard-pts { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 32px; color: rgb(241, 231, 216); }
-.pcard-win { border-width: 3px; border-color: rgb(143, 203, 156); }
+.res-eyebrow { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 17px; letter-spacing: 5px; color: var(--sol); }
+.res-title { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 52px; color: var(--cal); -unity-text-align: middle-center; white-space: normal; text-shadow: 0px 0px 16px var(--noite-0-90); }
+.res-win { color: var(--mandacaru-claro); }
+.res-lose { color: var(--chita-claro); }
+.res-reason { font-size: 19px; color: var(--cal-suave); -unity-text-align: middle-center; white-space: normal; max-width: 1000px; }
+.pcard-rank { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 15px; color: var(--sol); }
+.pcard-pts { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 32px; color: var(--cal); }
+.pcard-win { border-width: 3px; border-color: var(--mandacaru-claro); }
 .res-lbl { -unity-text-align: middle-center; flex-grow: 0; margin-bottom: 4px; }
 .res-next { flex-direction: row; align-items: center; justify-content: center; margin: 4px 0; }
-.res-next-name { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 36px; color: rgb(239, 115, 148); margin-left: 10px; }
+.res-next-name { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 36px; color: var(--chita-claro); margin-left: 10px; }
 .res-count { flex-direction: row; align-items: center; justify-content: center; margin-top: 10px; }
-.res-count-n { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 46px; color: rgb(240, 176, 87); margin: 0 10px; }
-.res-rules { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 16px; color: rgb(173, 154, 140); white-space: normal; -unity-text-align: middle-center; margin-top: 12px; }
+.res-count-n { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 46px; color: var(--sol); margin: 0 10px; }
+.res-rules { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 16px; color: var(--cal-mudo); white-space: normal; -unity-text-align: middle-center; margin-top: 12px; }
 
 /* "Mute"/"Unmute" for another player's voice (waiting room cards, in-game player list) */
-.mute-btn { font-size: 12px; letter-spacing: 1px; padding: 1px 10px; margin: 3px 0 0 0; min-height: 64px; border-width: 1px; }
-.mute-btn-on { color: rgb(239, 115, 148); border-color: rgb(239, 115, 148); }
+.mute-btn { font-size: 12px; letter-spacing: 1px; padding: 1px 10px; margin: 3px 0 0 0; min-height: var(--alvo); border-width: 1px; }
+.mute-btn-on { color: var(--chita-claro); border-color: var(--chita-claro); }
+
+/* ---------- button system: one feedback model for every button ----------
+   Two surfaces: dark (.mbtn .mpill .mstep-btn .hud-btn .act) and paper (.btn .btn-ghost .btn-link .tabbtn .cy-btn).
+   Hover is for mouse, :active is the press for touch and mouse, :focus is keyboard / gamepad (a gold ring on dark, an anil ring on paper). */
+.mbtn, .mpill, .mstep-btn, .hud-btn, .act, .btn, .btn-ghost, .btn-link, .tabbtn, .cy-btn, .sw {
+    transition-property: background-color, border-color, color, scale;
+    transition-duration: 0.12s;
+}
+.mbtn:active, .mpill:active, .mstep-btn:active, .hud-btn:active, .act:active,
+.btn:active, .btn-ghost:active, .tabbtn:active, .cy-btn:active:active { scale: 0.96 0.96; }
+.mbtn:disabled, .mpill:disabled, .mstep-btn:disabled, .hud-btn:disabled, .act:disabled,
+.btn-ghost:disabled, .tabbtn:disabled, .cy-btn:disabled:disabled { opacity: 0.4; }
+
+.mbtn:focus, .mpill:focus, .mstep-btn:focus, .hud-btn:focus, .act:focus { border-color: var(--sol); color: var(--sol); border-width: 3px; }
+.mbtn-on:focus { border-color: var(--mandacaru-claro); color: var(--mandacaru-claro); }
+.btn:focus, .btn-ghost:focus, .btn-link:focus, .tabbtn:focus, .cy-btn:focus:focus, .sw:focus { border-width: 3px; border-color: var(--anil); }
+.lobby-side .btn-ghost:focus, .lobby-side .cy-btn:focus, .lobby-side .sw:focus { border-color: var(--sol); }
+
+/* ---------- credits (CreditsScreen): text that scrolls up by itself ---------- */
+.credits { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: var(--noite-0); }
+.credits-view { position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; }
+.credits-scroll { position: absolute; left: 0; right: 0; top: 0; align-items: center; padding: 0 160px; }
+.credits-title { -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); font-size: 150px; color: var(--sol); -unity-text-align: middle-center; }
+.credits-tagline { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 24px; letter-spacing: 5px; color: var(--papel); -unity-text-align: middle-center; margin-top: 4px; }
+.credits-h { -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); font-size: 64px; color: var(--sol); -unity-text-align: middle-center; margin: 110px 0 28px 0; }
+.credits-p { font-size: 36px; color: var(--papel); white-space: normal; -unity-text-align: upper-center; max-width: 1000px; margin: 0 0 28px 0; }
+.credits-photo { margin: 90px 0 0 0; background-size: contain; }
+.credits-to { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 52px; color: var(--cal); -unity-text-align: middle-center; margin: 0 0 30px 0; }
+.credits-sign { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 44px; color: var(--sol); -unity-text-align: middle-center; margin: 20px 0 0 0; }
+.credits-line { font-size: 32px; color: var(--papel); white-space: normal; -unity-text-align: upper-center; max-width: 1000px; margin: 0 0 18px 0; }
+.credits-thanks { -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); font-size: 56px; color: var(--sol); white-space: normal; -unity-text-align: upper-center; max-width: 1000px; margin: 120px 0 80px 0; }
+
+/* ---------- story picker (StoryPicker): one card per story ---------- */
+.scards { width: 100%; flex-direction: row; justify-content: center; align-items: stretch; margin-top: 8px; }
+.scard { flex-grow: 1; flex-shrink: 1; flex-basis: 0; min-width: 0; margin: 0 6px; padding: 8px; background-color: var(--noite-80); border-width: 3px; border-color: var(--cal); border-radius: 14px; align-items: center; }
+.scard:hover { border-color: var(--sol); }
+.scard:disabled { opacity: 0.45; }
+.scard-art { width: 100%; height: 110px; background-color: var(--noite-3); background-size: cover; background-position: center; border-radius: 8px; border-width: 2px; border-color: var(--borda); }
+.scard-name { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 28px; color: var(--cal); -unity-text-align: middle-center; margin-top: 6px; white-space: normal; }
+.scard-blurb { -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); font-size: 16px; color: var(--cal-mudo); -unity-text-align: upper-center; white-space: normal; }
+
+/* ---------- the intro comic (HideComicView): a one-page comic over the Unice's black screen ---------- */
+.comic { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: var(--noite-0); padding: 10px 16px 8px 16px; }
+.comic-head { flex-direction: row; justify-content: space-between; align-items: center; }
+.comic-title { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 34px; color: var(--sol); }
+.comic-count { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 18px; color: var(--cal); }
+.comic-page { flex-grow: 1; justify-content: space-around; }
+.comic-row { flex-grow: 1; flex-direction: row; justify-content: center; margin: 4px 0; }
+.comic-panel { flex-grow: 1; flex-basis: 0; max-width: 31%; margin: 0 8px; background-color: var(--papel); border-width: 3px; border-color: var(--tinta); overflow: hidden; opacity: 0; }
+.comic-panel-last { border-color: var(--sol); }
+.comic-art { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-size: cover; background-position: center; -unity-background-image-tint-color: rgb(190, 175, 160); }
+.comic-figure { position: absolute; }
+.comic-caption { position: absolute; left: 6px; right: 6px; top: 6px; padding: 3px 7px; background-color: var(--papel); border-width: 2px; border-color: var(--tinta); color: var(--tinta); font-size: 14px; -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); white-space: normal; -unity-text-align: upper-left; }
+.comic-skip { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 13px; color: var(--cal-mudo); -unity-text-align: middle-center; }
+
+/* ---------- the menu as a cordel poster: full-screen sand, black ink, paper cards with a stamped shadow (right and bottom edges) ---------- */
+.menu-bg { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: var(--areia); overflow: hidden; }
+.menu-sun { position: absolute; left: 50%; top: 50%; width: 460px; height: 460px; margin-left: -230px; margin-top: -250px; border-radius: 230px; background-color: var(--areia-escura); }
+.menu-rays { position: absolute; left: 50%; top: 50%; width: 660px; height: 660px; margin-left: -330px; margin-top: -350px; color: var(--areia-escura); }
+.menu-dune { position: absolute; left: -20%; bottom: -330px; width: 90%; height: 420px; border-radius: 50%; background-color: var(--areia-escura); }
+.menu-ground { position: absolute; left: -10%; right: -10%; bottom: -60px; height: 90px; border-top-left-radius: 50%; border-top-right-radius: 50%; background-color: var(--nanquim); }
+.decor { position: absolute; background-size: contain; background-position: center; background-repeat: no-repeat; }
+.decor-cactus-l { left: 4%; bottom: 20px; width: 110px; height: 290px; }
+.decor-cactus-r { right: 3%; bottom: 20px; width: 150px; height: 395px; }
+.decor-bird-a { top: 9%; width: 110px; height: 72px; }
+.decor-bird-b { top: 22%; width: 80px; height: 52px; }
+.decor-bird-c { top: 14%; width: 60px; height: 39px; }
+.decor-star-a { left: 6%; top: 34%; width: 44px; height: 44px; }
+.decor-star-b { right: 8%; top: 38%; width: 34px; height: 34px; }
+.decor-star-c { left: 26%; top: 7%; width: 30px; height: 30px; }
+.decor-star-d { right: 26%; top: 10%; width: 36px; height: 36px; }
+
+.menu-version { color: var(--nanquim); }
+.menu-title { color: var(--nanquim); text-shadow: 4px 4px 0px var(--chita-escuro); }
+.menu-sub { color: var(--nanquim); }
+.cordel .mbtn, .cordel .mpill, .cordel .mpanel { background-color: var(--papel); color: var(--nanquim); border-color: var(--nanquim); border-width: 3px; border-right-width: 7px; border-bottom-width: 7px; border-radius: 6px; }
+.cordel .mbtn:hover, .cordel .mpill:hover, .cordel .mbtn:focus, .cordel .mpill:focus { background-color: var(--sol); color: var(--nanquim); border-color: var(--nanquim); border-width: 3px; border-right-width: 7px; border-bottom-width: 7px; }
+.cordel .mbtn:active, .cordel .mpill:active { background-color: var(--chita-claro); }
+.cordel .mpill { border-radius: 6px; }
+.cordel .mbtn-back, .cordel .mbtn-quit { border-width: 2px; border-right-width: 5px; border-bottom-width: 5px; }
+.cordel .mpanel { background-color: var(--papel); }
+.cordel .mpanel-t, .cordel .mrule-t { color: var(--nanquim); }
+.cordel .mrule-rose { color: var(--chita-escuro); }
+.cordel .mrule-moss { color: var(--mandacaru-escuro); }
+.cordel .mnote { color: var(--tinta-mudo); }
+.cordel .mnet, .cordel .menu-or { color: var(--tinta-mudo); }
+.cordel .mnet.net-err { color: var(--chita-escuro); }
+.cordel .mfield .unity-base-text-field__input { background-color: var(--branco-40); border-color: var(--nanquim); color: var(--nanquim); }
+.cordel .scard { background-color: var(--cal); border-color: var(--nanquim); border-width: 3px; border-right-width: 6px; border-bottom-width: 6px; border-radius: 6px; }
+.cordel .scard:hover { background-color: var(--sol); border-color: var(--nanquim); }
+.cordel .scard-art { border-color: var(--nanquim); border-radius: 3px; background-color: var(--areia-escura); }
+.cordel .scard-name { color: var(--nanquim); }
+.cordel .scard-blurb { color: var(--tinta-mudo); }
+
+/* cordel lettering (Rye, OFL): titles and buttons of the menu */
+.cordel .menu-title, .cordel .mpanel-t, .cordel .scard-name, .cordel .mbtn, .cordel .mrule-t { -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); }
+.cordel .menu-title { font-size: 96px; }
+.cordel .mpanel-t { font-size: 40px; }
+.cordel .scard-name { font-size: 22px; }
+.cordel .mbtn { font-size: 38px; }
+.cordel .mbtn-sm { font-size: 24px; }
+.cordel .mbtn-wide { font-size: 34px; }
+.cordel .mbtn-join { font-size: 26px; }
+.cordel .mbtn-back, .cordel .mbtn-quit { font-size: 22px; }
+.cordel .mrule-t { font-size: 22px; }
+
+/* the waiting room on the same poster: paper cards and ink instead of the dark panel and cream text */
+.cordel .lobby-title { color: var(--nanquim); text-shadow: 0px 0px 0px var(--transp); }
+.cordel .lobby-code { color: var(--chita-escuro); text-shadow: 0px 0px 0px var(--transp); }
+.cordel .lobby-count { color: var(--chita-escuro); }
+.cordel .lobby-note, .cordel .mstep-l, .cordel .pcard-st { color: var(--tinta-mudo); }
+.cordel .pcard { background-color: var(--papel); border-color: var(--nanquim); border-width: 3px; border-right-width: 6px; border-bottom-width: 6px; border-radius: 6px; }
+.cordel .pcard-me { border-color: var(--chita-escuro); }
+.cordel .pcard-bots { background-color: var(--areia-escura); border-color: var(--nanquim); }
+.cordel .pcard-name, .cordel .pcard-plus, .cordel .mstep-v { color: var(--nanquim); }
+.cordel .pcard-ok { color: var(--mandacaru-escuro); }
+.cordel .mbtn-on, .cordel .mbtn-on:focus { border-color: var(--mandacaru-escuro); color: var(--mandacaru-escuro); }
+.cordel .mstep-btn { background-color: var(--cal); border-color: var(--nanquim); color: var(--nanquim); border-radius: 6px; }
+.cordel .mstep-btn:hover { background-color: var(--sol); color: var(--nanquim); border-color: var(--nanquim); }
+.cordel .tabbtn { background-color: var(--cal-suave); color: var(--tinta-mudo); border-radius: 4px; }
+.cordel .tabbtn-on { background-color: var(--sol); color: var(--nanquim); }
+.cordel .lobby-side .lbl, .cordel .lobby-side .opt-l { color: var(--tinta-mudo); }
+.cordel .lobby-side .field { background-color: var(--branco-40); border-color: var(--tinta-40); }
+.cordel .lobby-side .field .unity-base-text-field__input { color: var(--tinta); }
+.cordel .lobby-side .cy { background-color: var(--branco-35); }
+.cordel .lobby-side .cy-btn, .cordel .lobby-side .cy-val { color: var(--tinta); }
+.cordel .lobby-side .btn-ghost { color: var(--tinta); border-color: var(--tinta); }
+.cordel .lobby-side .btn-ghost:hover { background-color: var(--tinta-10); }
+.cordel .lobby-side .sw { border-color: var(--tinta-25); }
+.cordel .lobby-side .sw-on { border-color: var(--tinta); }
+.cordel .lobby-title, .cordel .lobby-count { -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); }
+.cordel .lobby-title { font-size: 28px; }
+.cordel .mbtn-go { font-size: 30px; }
+.cordel .mbtn-top, .cordel .mexit { font-size: 20px; }
+
+/* ---------- cordel for the pause sheet and the match HUD: paper, black ink, stamped shadow (right and bottom edges), Rye lettering ---------- */
+.overlay { background-color: var(--areia-88); }
+.sheet { border-color: var(--nanquim); border-width: 3px; border-right-width: 7px; border-bottom-width: 7px; border-radius: 6px; }
+.sheet .title { -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); color: var(--nanquim); }
+.sheet .title-md { font-size: 36px; }
+.sheet .btn { background-color: var(--sol); color: var(--nanquim); border-color: var(--nanquim); border-width: 3px; border-right-width: 6px; border-bottom-width: 6px; border-radius: 6px; -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); font-size: 22px; letter-spacing: 0px; }
+.sheet .btn:hover { background-color: var(--chita-claro); }
+.sheet .btn:active { background-color: var(--chita-escuro); color: var(--papel); }
+.sheet .btn-ghost { background-color: var(--cal); font-size: 18px; -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); }
+.sheet .btn-link { background-color: var(--transp); border-width: 0; color: var(--chita-escuro); font-size: 20px; }
+.sheet .btn-link:hover { background-color: var(--transp); color: var(--nanquim); }
+
+.hud-card { background-color: var(--papel); border-color: var(--nanquim); border-width: 2px; border-right-width: 5px; border-bottom-width: 5px; border-radius: 6px; color: var(--nanquim); }
+.hud-lbl, .phase, .note, .plst, .tag { color: var(--tinta-mudo); }
+.tag { border-color: var(--tinta-mudo); }
+.clock { -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); color: var(--nanquim); font-size: 34px; }
+.clock-low { color: var(--chita-escuro); }
+.where, .plname { color: var(--nanquim); }
+.roomline { color: var(--chita-escuro); }
+.role-t { -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); font-size: 20px; }
+.role-unice .role-t { color: var(--chita-escuro); }
+.role-holder .role-t { color: var(--mandacaru-escuro); }
+.role-out .role-t { color: var(--tinta-mudo); }
+.role-g { color: var(--tinta); }
+.meter { background-color: var(--cal-suave); border-color: var(--nanquim); border-width: 2px; }
+.meter-fill { background-color: var(--chita-escuro); }
+.meter-noise .meter-fill { background-color: var(--sol); }
+.mini { background-color: var(--nanquim); border-radius: 3px; }
+.hud-btn { background-color: var(--papel); color: var(--nanquim); border-color: var(--nanquim); border-width: 2px; border-right-width: 5px; border-bottom-width: 5px; border-radius: 6px; }
+.hud-btn:hover, .hud-btn:focus { background-color: var(--sol); color: var(--nanquim); border-color: var(--nanquim); border-width: 2px; border-right-width: 5px; border-bottom-width: 5px; }
+.hud-btn:active { background-color: var(--chita-claro); }
+.plrow-pick { background-color: var(--tinta-10); }
+.plrow-pick:hover { background-color: var(--sol-25); }
+.plrow-on { background-color: var(--chita-claro-45); }
+
+.banner { -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); font-size: 34px; left: 12%; right: 12%; padding: 8px 16px; background-color: var(--papel); border-color: var(--nanquim); border-width: 3px; border-right-width: 7px; border-bottom-width: 7px; border-radius: 6px; }
+.banner-info { color: var(--nanquim); }
+.banner-rose, .banner-blood { color: var(--chita-escuro); }
+.banner-moss { color: var(--mandacaru-escuro); }
+.banner-candle { color: var(--nanquim); background-color: var(--sol); }
+.toast { background-color: var(--papel); color: var(--nanquim); border-color: var(--nanquim); border-width: 2px; border-left-width: 6px; border-right-width: 4px; border-bottom-width: 4px; border-radius: 4px; }
+.prompt-in { background-color: var(--papel); color: var(--nanquim); border-color: var(--nanquim); border-width: 2px; border-right-width: 4px; border-bottom-width: 4px; border-radius: 6px; -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); }
+.pill-in { background-color: var(--papel); color: var(--chita-escuro); border-color: var(--nanquim); border-width: 2px; border-right-width: 4px; border-bottom-width: 4px; border-radius: 6px; -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); font-size: 18px; }
+.caption-in { background-color: var(--papel); color: var(--nanquim); border-color: var(--nanquim); border-width: 2px; border-right-width: 4px; border-bottom-width: 4px; border-radius: 6px; }
+.joy { background-color: var(--areia-88); border-color: var(--nanquim); border-width: 3px; }
+.joy-knob { background-color: var(--papel); border-color: var(--nanquim); border-width: 3px; }
+.act { background-color: var(--papel); color: var(--nanquim); border-color: var(--nanquim); border-width: 3px; border-right-width: 5px; border-bottom-width: 5px; }
+.act-q { background-color: var(--chita-claro); color: var(--nanquim); border-color: var(--nanquim); }
+.act-r { background-color: var(--sol); color: var(--nanquim); border-color: var(--nanquim); }
+.act-on { background-color: var(--sol); color: var(--nanquim); }
+.act:focus { border-color: var(--nanquim); color: var(--nanquim); }
+
+/* round result and final score on the poster too: the match map only shows while the match is on */
+.cordel.result { background-color: var(--transp); }
+.cordel .res-eyebrow, .cordel .pcard-rank, .cordel .res-next-name, .cordel .res-count-n { color: var(--chita-escuro); }
+.cordel .res-title { -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); font-size: 40px; color: var(--nanquim); text-shadow: 3px 3px 0px var(--chita-escuro); }
+.cordel .res-win { color: var(--mandacaru-escuro); }
+.cordel .res-lose { color: var(--chita-escuro); }
+.cordel .res-reason { color: var(--nanquim); }
+.cordel .pcard-pts { color: var(--nanquim); }
+.cordel .pcard-win { border-color: var(--mandacaru-escuro); }
+.cordel .res-rules { color: var(--tinta-mudo); }
+.cordel .res-next-name { -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); font-size: 28px; }
+
+.hud-tl { max-width: 300px; }
+
+/* the intro video on the Unice screen, in place of the comic page */
+.comic-video { flex-grow: 1; margin: 4px 0; background-color: var(--preto); background-size: contain; background-position: center; background-repeat: no-repeat; border-width: 3px; border-color: var(--nanquim); }
