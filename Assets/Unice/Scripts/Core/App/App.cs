@@ -68,6 +68,7 @@ namespace Unice
 
         void Awake()
         {
+            KitCatalogLoader.LoadAndApply();   // before anything (profile included) reads Kit.OptionCount/Skins/etc.
             if (Instance != null && Instance != this) { Destroy(gameObject); return; }
             Instance = this; DontDestroyOnLoad(gameObject);
             Application.targetFrameRate = 60; Screen.sleepTimeout = SleepTimeout.NeverSleep;

@@ -65,6 +65,11 @@ namespace Unice
             { Kit.HairSlot, "hair" }, { Kit.OutfitSlot, "outfit" }, { Kit.HatSlot, "hat" }, { Kit.AccessorySlot, "accessory" },
         };
 
+        /// <summary>Adds or replaces one string table entry at runtime, under the same "kit.&lt;slot&gt;.&lt;option&gt;" keys
+        /// <see cref="Strings"/> already defines for the built-in options — used by <c>KitCatalogLoader</c> to feed each
+        /// catalog entry's label into the one table <see cref="Get"/> reads, so <see cref="KitOptionName"/> needs no change.</summary>
+        public static void AddOrReplace(string key, string pt, string en, string es) => Strings[key] = new[] { pt, en, es };
+
         /// <summary>1º / 1st / 1º — the one piece of text whose shape (not just words) differs per language.</summary>
         public static string Ordinal(int number)
         {

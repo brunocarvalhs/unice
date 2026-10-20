@@ -126,5 +126,113 @@ namespace Unice
             var k = new[] { 0, 0, 0, 0, 99, 0, 0 };
             Assert.Throws<IndexOutOfRangeException>(() => Kit.OutfitColor(k));
         }
+
+        // ---------- Apply (the catalog asset's loader calls this at boot) ----------
+
+        [TearDown]
+        public void RestoreDefaults() => Kit.ApplyDefaults();   // every Apply test below must not leak into later tests
+
+        static KitSlotData Slot(params (string id, string value, KitSpecial special)[] options)
+        {
+            var array = new KitOptionData[options.Length];
+            for (int i = 0; i < options.Length; i++) array[i] = new KitOptionData(options[i].id, options[i].value, options[i].special);
+            return new KitSlotData(array);
+        }
+
+        static KitSlotData[] SyntheticCatalog(int outfitOptions = 2, KitSpecial outfit1Special = KitSpecial.Cape)
+        {
+            var outfitOptionsArray = new KitOptionData[outfitOptions];
+            for (int i = 0; i < outfitOptions; i++) outfitOptionsArray[i] = new KitOptionData("outfit" + i, "", i == 1 ? outfit1Special : KitSpecial.None);
+            return new[]
+            {
+                Slot(("skinA", "#111111", KitSpecial.None), ("skinB", "#222222", KitSpecial.None)),
+                Slot(("hairA", "", KitSpecial.None)),
+                Slot(("hcA", "#333333", KitSpecial.None)),
+                new KitSlotData(outfitOptionsArray),
+                Slot(("ocA", "#444444", KitSpecial.None)),
+                Slot(("hatA", "", KitSpecial.None), ("hatB", "", KitSpecial.Beanie), ("hatC", "", KitSpecial.Ears)),
+                Slot(("accA", "", KitSpecial.None), ("accB", "", KitSpecial.Backpack)),
+            };
+        }
+
+        [Test]
+        public void Apply_SyntheticCatalog_SetsOptionCountAndArraysFromIt()
+        {
+            Kit.Apply(SyntheticCatalog());
+
+            CollectionAssert.AreEqual(new[] { 2, 1, 1, 2, 1, 3, 2 }, Kit.OptionCount);
+            CollectionAssert.AreEqual(new[] { "#111111", "#222222" }, Kit.Skins);
+            CollectionAssert.AreEqual(new[] { "hairA" }, Kit.Hairs);
+            CollectionAssert.AreEqual(new[] { "outfit0", "outfit1" }, Kit.Outfits);
+            CollectionAssert.AreEqual(new[] { KitSpecial.None, KitSpecial.Cape }, Kit.OutfitSpecial);
+            CollectionAssert.AreEqual(new[] { KitSpecial.None, KitSpecial.Beanie, KitSpecial.Ears }, Kit.HatSpecial);
+            CollectionAssert.AreEqual(new[] { KitSpecial.None, KitSpecial.Backpack }, Kit.AccessorySpecial);
+        }
+
+        [Test]
+        public void Apply_MoreThanEightOptionsInASlot_Throws()
+        {
+            var tooMany = SyntheticCatalog(outfitOptions: Kit.MaxOptionsPerSlot + 1, outfit1Special: KitSpecial.None);
+            Assert.Throws<InvalidOperationException>(() => Kit.Apply(tooMany));
+        }
+
+        [Test]
+        public void Apply_ExactlyEightOptionsInASlot_Succeeds()
+        {
+            Assert.DoesNotThrow(() => Kit.Apply(SyntheticCatalog(outfitOptions: Kit.MaxOptionsPerSlot, outfit1Special: KitSpecial.None)));
+            Assert.AreEqual(Kit.MaxOptionsPerSlot, Kit.OptionCount[Kit.OutfitSlot]);
+        }
+
+        [Test]
+        public void Apply_WrongNumberOfSlots_Throws()
+        {
+            Assert.Throws<InvalidOperationException>(() => Kit.Apply(new[] { Slot(("a", "", KitSpecial.None)) }));
+        }
+
+        [Test]
+        public void Apply_EmptySlot_Throws()
+        {
+            var slots = SyntheticCatalog();
+            slots[0] = new KitSlotData(new KitOptionData[0]);
+            Assert.Throws<InvalidOperationException>(() => Kit.Apply(slots));
+        }
+
+        [Test]
+        public void Apply_ThenSanitizeRandomPackUnpack_BehaveAgainstTheAppliedData()
+        {
+            Kit.Apply(SyntheticCatalog());
+
+            CollectionAssert.AreEqual(new[] { 0, 0, 0, 0, 0, 0, 0 }, Kit.Sanitize(null));
+            CollectionAssert.AreEqual(new[] { 0, 0, 0, 1, 0, 0, 0 }, Kit.Sanitize(new[] { 0, 0, 0, 1, 0, 0, 0 }));
+            // slot 5 (hat) only has 3 options now; index 5 is out of range and falls back to 0
+            CollectionAssert.AreEqual(new int[Kit.Slots], Kit.Sanitize(new[] { 0, 0, 0, 0, 0, 5, 0 }));
+
+            for (int n = 0; n < 50; n++)
+            {
+                var random = Kit.Random();
+                for (int slot = 0; slot < Kit.Slots; slot++) Assert.That(random[slot], Is.InRange(0, Kit.OptionCount[slot] - 1));
+            }
+
+            var k = new[] { 1, 0, 0, 1, 0, 2, 1 };
+            CollectionAssert.AreEqual(k, Kit.Unpack(Kit.Pack(k)));
+            Assert.AreEqual("#444444", Kit.OutfitColor(new[] { 0, 0, 0, 0, 0, 0, 0 }));
+        }
+
+        [Test]
+        public void ApplyDefaults_AfterApply_RestoresTheBuiltInSlotsAndSpecials()
+        {
+            Kit.Apply(SyntheticCatalog());
+
+            Kit.ApplyDefaults();
+
+            CollectionAssert.AreEqual(new[] { 4, 4, 5, 5, 8, 6, 4 }, Kit.OptionCount);
+            Assert.AreEqual(KitSpecial.Cape, Kit.OutfitSpecial[4]);
+            Assert.AreEqual(KitSpecial.Cap, Kit.HatSpecial[1]);
+            Assert.AreEqual(KitSpecial.Beanie, Kit.HatSpecial[2]);
+            Assert.AreEqual(KitSpecial.Ears, Kit.HatSpecial[5]);
+            Assert.AreEqual(KitSpecial.Backpack, Kit.AccessorySpecial[1]);
+            Assert.AreEqual(KitSpecial.Glasses, Kit.AccessorySpecial[2]);
+            Assert.AreEqual(KitSpecial.Teddy, Kit.AccessorySpecial[3]);
+        }
     }
 }
