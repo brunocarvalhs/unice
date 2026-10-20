@@ -33,7 +33,7 @@ Todo o envio passa por `Assets/Unice/Scripts/Core/Analytics/Metrics.cs`.
 
 | Evento | Quando | Parâmetros | Onde no código |
 |---|---|---|---|
-| `screen_view` | A fase muda, ou a página do menu inicial muda | `screen_name` / `screen_class` = `home`, `lobby`, `hide`, `hunt`, `result`, `final`; páginas da Home: `home` (principal), `home_online`, `home_how_to_play`, `home_my_kid`, `home_story`, `home_stories` | `App.Step`, `HomeMenu.ShowPage` |
+| `screen_view` | A fase muda, ou a página do menu inicial muda | `screen_name` / `screen_class` = `home`, `lobby`, `hide`, `hunt`, `result`, `final`; páginas da Home: `home` (principal), `home_online`, `home_how_to_play`, `home_my_kid`, `home_credits`, `home_stories` | `App.Step`, `HomeMenu.ShowPage` |
 | `solo_start` | Começa uma partida solo | — | `RoomSession.PlaySolo` |
 | `story_pick` | O jogador escolhe uma história no seletor (antes de jogar solo ou criar sala) | `story`, `map` | `HomeMenu.PickStory` |
 | `comic_play` | A HQ de introdução começa na tela da Unice durante o esconder | `story`, `round` | `HideComicView.Begin` |

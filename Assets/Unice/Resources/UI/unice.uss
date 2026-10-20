@@ -332,26 +332,19 @@
 .btn:focus, .btn-ghost:focus, .btn-link:focus, .tabbtn:focus, .cy-btn:focus:focus, .sw:focus { border-width: 3px; border-color: var(--anil); }
 .lobby-side .btn-ghost:focus, .lobby-side .cy-btn:focus, .lobby-side .sw:focus { border-color: var(--sol); }
 
-/* ---------- the story: a full-screen animation (StoryScreen) ---------- */
-.story { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: var(--noite-0); }
-.story-stage { position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; }
-.story-backdrop { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-size: cover; background-position: center; -unity-background-image-tint-color: rgb(190, 175, 160); }
-.story-world { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
-.story-prop { position: absolute; }
-.story-sepia { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: var(--papel); opacity: 0; }
-.story-vignette { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-image: resource("Art/vignette"); background-size: 100% 100%; -unity-background-image-tint-color: var(--noite-0-88); }
-.story-flash { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: var(--branco); opacity: 0; }
-.story-title { position: absolute; left: 0; right: 0; top: 10px; -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 40px; color: var(--cal); -unity-text-align: middle-center; text-shadow: 0px 0px 14px var(--noite-0-95); }
-.story-dots { position: absolute; left: 0; right: 0; top: 62px; flex-direction: row; justify-content: center; }
-.story-dot { width: 10px; height: 10px; border-radius: 5px; margin: 0 5px; background-color: var(--cal-35); }
-.story-dot-on { background-color: var(--sol); }
-.story-bubble { position: absolute; background-color: var(--papel); color: var(--tinta); border-width: 2px; border-color: var(--tinta); border-radius: 12px; padding: 3px 12px; font-size: 20px; -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); white-space: nowrap; }
-.story-cardrow { position: absolute; left: 0; right: 0; bottom: 14px; align-items: center; }
-.story-card { background-color: var(--papel); border-width: 2px; border-color: var(--tinta); border-radius: 6px; padding: 10px 28px; min-width: 420px; max-width: 94%; align-items: center; }
-.story-line { color: var(--tinta); font-size: 19px; -unity-text-align: middle-center; white-space: normal; transition-property: opacity; transition-duration: 0.35s; }
-.story-hint { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 14px; color: var(--tinta-mudo); margin-top: 4px; white-space: normal; -unity-text-align: middle-center; }
-.story-card .mbtn-back { margin: 8px 0 0 0; border-color: var(--tinta); color: var(--tinta); background-color: var(--sol); }
-.story-card .mbtn-back:focus, .story-card .mbtn-back:hover { color: var(--noite); border-color: var(--noite); }
+/* ---------- credits (CreditsScreen): text that scrolls up by itself ---------- */
+.credits { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: var(--noite-0); }
+.credits-view { position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; }
+.credits-scroll { position: absolute; left: 0; right: 0; top: 0; align-items: center; padding: 0 160px; }
+.credits-title { -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); font-size: 150px; color: var(--sol); -unity-text-align: middle-center; }
+.credits-tagline { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 24px; letter-spacing: 5px; color: var(--papel); -unity-text-align: middle-center; margin-top: 4px; }
+.credits-h { -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); font-size: 64px; color: var(--sol); -unity-text-align: middle-center; margin: 110px 0 28px 0; }
+.credits-p { font-size: 36px; color: var(--papel); white-space: normal; -unity-text-align: upper-center; max-width: 1000px; margin: 0 0 28px 0; }
+.credits-photo { margin: 90px 0 0 0; background-size: contain; }
+.credits-to { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 52px; color: var(--cal); -unity-text-align: middle-center; margin: 0 0 30px 0; }
+.credits-sign { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 44px; color: var(--sol); -unity-text-align: middle-center; margin: 20px 0 0 0; }
+.credits-line { font-size: 32px; color: var(--papel); white-space: normal; -unity-text-align: upper-center; max-width: 1000px; margin: 0 0 18px 0; }
+.credits-thanks { -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); font-size: 56px; color: var(--sol); white-space: normal; -unity-text-align: upper-center; max-width: 1000px; margin: 120px 0 80px 0; }
 
 /* ---------- story picker (StoryPicker): one card per story ---------- */
 .scards { width: 100%; flex-direction: row; justify-content: center; align-items: stretch; margin-top: 8px; }

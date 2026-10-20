@@ -29,6 +29,7 @@ namespace Unice
 
         // ---------- parts ----------
         [NonSerialized] public Sfx sfx;
+        [NonSerialized] public Music music;
         [NonSerialized] public WorldView worldView;
         [NonSerialized] public Ui ui;
         internal RoomSession room;
@@ -83,6 +84,7 @@ namespace Unice
             }
             worldView = new WorldView(transform);
             sfx = new Sfx(transform);
+            music = new Music(transform);
             var stage = new AppStage(this);
             perspective = new Perspective(game, () => myCharacter);
             soundscape = new Soundscape(game, () => myCharacter, perspective, stage, stage);
@@ -164,11 +166,15 @@ namespace Unice
                 player.UpdateNoiseLevel(dt);
                 heartbeat.Tick(dt);
             }
+            music.Tick(dt, WantedMusic);
             if (IsOnline) room.sync.Tick(dt);
             voice?.Tick(VoiceRule.CanSpeak(MicOn, myCharacter), myCharacter?.x ?? 0, myCharacter?.y ?? 0, myCharacter != null, Whisper);
             if (voice != null) UpdateUnheard();
             ui.Step(dt);
         }
+
+        /// <summary>The menu theme in the main menu only; no music in the waiting room or the match, or when muted. The sound effects are separate (<see cref="sfx"/>).</summary>
+        MusicTrack WantedMusic => sfx.Enabled && game.phase == Phase.Home ? MusicTrack.Menu : MusicTrack.None;
 
         /// <summary>Every frame: camera, characters, fog, UI.</summary>
         void RenderFrame(float dt)
@@ -231,7 +237,6 @@ namespace Unice
         public void SaveProfile() => profile.Save();
         internal int AddOnlineWin() => profile.AddOnlineWin();
         internal bool MarkFirstMatchEnd() => profile.MarkFirstMatchEnd();
-        internal bool MarkStorySeen() => profile.MarkStorySeen();
         internal bool ComicSeen(string storyId) => profile.ComicSeen(storyId);
         internal void MarkComicSeen(string storyId) => profile.MarkComicSeen(storyId);
         public void SetKit(int[] newKit) { profile.SetKit(newKit); room.sync.PublishSoon(); }

@@ -17,7 +17,7 @@ namespace Unice
         /// <summary>Where a tone's volume ends up: (almost) silence.</summary>
         const float EndVolume = .0001f;
 
-        public enum Wave { Square, Triangle, Saw }
+        public enum Wave { Square, Triangle, Saw, Sine }
 
         public struct Tone
         {
@@ -25,12 +25,14 @@ namespace Unice
             /// <summary>Start and end pitch, in Hz (endFrequency 0 = no slide).</summary>
             public float frequency, endFrequency;
             public float duration, volume;
+            /// <summary>Volume the tone ends at (0 = (almost) silence, so it decays; closer to <see cref="volume"/> = it sustains, like a reed).</summary>
+            public float endVolume;
             /// <summary>Seconds after the start of the sound.</summary>
             public float delay;
         }
 
-        public static Tone MakeTone(float frequency, float duration, Wave wave, float volume, float endFrequency = 0, float delay = 0) =>
-            new Tone { frequency = frequency, duration = duration, wave = wave, volume = volume, endFrequency = endFrequency, delay = delay };
+        public static Tone MakeTone(float frequency, float duration, Wave wave, float volume, float endFrequency = 0, float delay = 0, float endVolume = 0) =>
+            new Tone { frequency = frequency, duration = duration, wave = wave, volume = volume, endFrequency = endFrequency, delay = delay, endVolume = endVolume };
 
         /// <summary>A run of notes, one every <paramref name="gap"/> seconds; <paramref name="pitchBend"/> ≠ 1 slides each note by that factor.</summary>
         public static Tone[] ToneSequence(float[] frequencies, float duration, Wave wave, float volume, float gap, float pitchBend)
@@ -62,7 +64,7 @@ namespace Unice
                 {
                     float progress = (float)i / toneSamples;
                     float frequency = tone.endFrequency > 0 ? tone.frequency * MathF.Pow(tone.endFrequency / tone.frequency, progress) : tone.frequency;
-                    float gain = tone.volume * MathF.Pow(EndVolume / tone.volume, progress);   // exponential decay to (almost) silence
+                    float gain = tone.volume * MathF.Pow((tone.endVolume > 0 ? tone.endVolume : EndVolume) / tone.volume, progress);   // exponential decay
                     phase += frequency / SampleRate;
                     float cycle = (float)(phase - Math.Floor(phase));   // 0..1 within the current period
                     samples[start + i] += WaveAt(tone.wave, cycle) * gain * MasterGain;
@@ -77,7 +79,8 @@ namespace Unice
         {
             Wave.Square => cycle < .5f ? 1 : -1,
             Wave.Triangle => cycle < .5f ? 4 * cycle - 1 : 3 - 4 * cycle,
-            _ => 2 * cycle - 1,   // saw
+            Wave.Saw => 2 * cycle - 1,
+            _ => MathF.Sin(2 * MathF.PI * cycle),   // sine
         };
     }
 }

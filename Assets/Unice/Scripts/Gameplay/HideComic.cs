@@ -11,11 +11,14 @@ namespace Unice
         /// <summary>Where the intro videos live, under StreamingAssets.</summary>
         public const string VideoFolder = "Videos";
 
-        /// <summary>The story's video when it has one that has not failed to load (missing file, unsupported format), otherwise its comic, otherwise nothing.</summary>
-        public static IntroMedia MediaFor(Story story, bool videoFailed)
+        /// <summary>
+        /// During the opening (<paramref name="opening"/>) the story's video when it has one that has not failed to load (missing file,
+        /// unsupported format), otherwise its comic, otherwise nothing. After the opening it is the comic only: everyone already saw the video.
+        /// </summary>
+        public static IntroMedia MediaFor(Story story, bool videoFailed, bool opening)
         {
             if (story == null) return IntroMedia.None;
-            if (story.hasIntroVideo && !videoFailed) return IntroMedia.Video;
+            if (opening && story.hasIntroVideo && !videoFailed) return IntroMedia.Video;
             return story.hasComic ? IntroMedia.Comic : IntroMedia.None;
         }
 
@@ -23,14 +26,16 @@ namespace Unice
         public static string VideoPath(Story story) => story != null && story.hasIntroVideo ? VideoFolder + "/" + story.introVideo : null;
 
         /// <summary>
-        /// The Unice's player sees the intro while they wait with their eyes closed: always in the first round,
-        /// and in later rounds only if they never saw it (<paramref name="seenBefore"/>).
+        /// Everyone sees the opening together when the match starts (<see cref="Game.InIntro"/>). After that the Unice's player
+        /// sees the comic while they wait with their eyes closed: always in the first round, and in later rounds only if they never saw it (<paramref name="seenBefore"/>).
         /// </summary>
         public static bool IsWanted(Game game, Character me, bool seenBefore)
         {
-            if (game.phase != Phase.Hide || me == null || !me.IsUnice) return false;
+            if (game.phase != Phase.Hide || me == null) return false;
             var story = Stories.ForMap(game.mapId);
-            return story != null && (story.hasComic || story.hasIntroVideo) && (game.round <= 1 || !seenBefore);
+            if (story == null || !(story.hasComic || story.hasIntroVideo)) return false;
+            if (game.InIntro) return true;
+            return me.IsUnice && (game.round <= 1 || !seenBefore);
         }
 
         /// <summary>How many of the <paramref name="panelCount"/> panels are showing: the first at once, the rest spread evenly over the hiding time so the last one lands near its end.</summary>

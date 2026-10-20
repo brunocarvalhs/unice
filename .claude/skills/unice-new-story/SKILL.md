@@ -40,7 +40,7 @@ HQ (comic) panels with captions, texts in pt/en/es, tasks. Pick:
 - `<id>`: story id, lowercase ASCII, one word (`feira`, `engenho`). Must not exist in `Stories.All`.
 - `<mapId>`: map id, lowercase ASCII, unique in `Maps` (often the same word as `<id>`).
 - Class name `Map<Name>` (e.g. `MapFeira`) in `Assets/Unice/Scripts/Domain/Maps/Map<Name>.cs`.
-The cordel (5 verses, `story.N.*`) is optional and only exists for `doll`; do not build a new cordel screen unless the user asks.
+The opening video is optional (see docs/stories/README.md); there is no cordel screen anymore.
 
 ## 2. Design the map (geometry rules are tested — get them right on paper first)
 Follow `resources/map-design-guide.md`: 1720×1180 world, 6–12 rooms in a grid with exactly **24 px** between neighbours,

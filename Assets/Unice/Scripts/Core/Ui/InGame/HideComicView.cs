@@ -6,8 +6,10 @@ using static Unice.UiKit;
 namespace Unice
 {
     /// <summary>
-    /// The intro comic: while the others hide, the Unice's player (who waits with their eyes closed) reads a one-page comic
-    /// of the story, one panel after another until the hiding time runs out. Tap or click skips it.
+    /// The story's opening, then the intro comic. When the match starts every player watches the story's video while the match
+    /// waits (the comic stands in if the video cannot play); after that, while the others hide, the Unice's player (who waits with
+    /// their eyes closed) reads a one-page comic of the story, one panel after another until the hiding time runs out.
+    /// Tap or click skips the comic, not the opening (everyone waits for it together).
     /// The panels are drawn with the game's own sprites; <see cref="HideComic"/> decides when and how much.
     /// </summary>
     sealed class HideComicView : UiPart
@@ -25,9 +27,19 @@ namespace Unice
         /// <summary>Up to this many panels go in a single row; more are split over two rows.</summary>
         const int MaxPanelsInOneRow = 3;
 
+        // the cousins of the comic: skin, hair, hair color, outfit, outfit color, hat, accessory
+        static readonly int[][] Cousins =
+        {
+            new[] { 2, 0, 0, 2, 0, 3, 1 },   // Márcio: straw hat and satchel
+            new[] { 1, 2, 1, 3, 3, 0, 3 },   // pigtails and a rag doll
+            new[] { 3, 1, 3, 1, 1, 4, 0 },   // leather hat
+            new[] { 0, 3, 2, 0, 5, 1, 2 },   // cap and glasses
+            new[] { 2, 0, 4, 4, 2, 0, 0 },   // cape
+        };
+
         public readonly VisualElement Root;
         readonly Label title, countdown;
-        readonly VisualElement page, videoSurface;
+        readonly VisualElement page, videoSurface, skipHint;
         readonly IntroVideo video = new IntroVideo();
         /// <summary>The video could not be played (missing file, bad format): the comic stands in for the rest of the session.</summary>
         bool videoFailed;
@@ -56,8 +68,8 @@ namespace Unice
             countdown = IgnorePointer(AddLabel(header, "", "comic-count"));
             page = IgnorePointer(AddElement(Root, "comic-page"));
             videoSurface = IgnorePointer(AddElement(Root, "comic-video"));
-            IgnorePointer(LocalizedLabel(Root, "comic.skip", "comic-skip"));
-            Root.RegisterCallback<PointerDownEvent>(_ => skipped = true);
+            skipHint = IgnorePointer(LocalizedLabel(Root, "comic.skip", "comic-skip"));
+            Root.RegisterCallback<PointerDownEvent>(_ => { if (!game.InIntro) skipped = true; });
             Show(Root, false);
         }
 
@@ -81,9 +93,15 @@ namespace Unice
             if (!Playing) { StopVideo(); return; }
 
             time += dt;
-            UpdateVideo(dt);
-            SetText(countdown, Localization.Get("comic.countdown", Mathf.CeilToInt(game.timeLeft)));
-            int shown = HideComic.PanelsShown(panels.Count, game.hideTime, game.timeLeft);
+            bool opening = game.InIntro;
+            if (!opening && video.Current != IntroVideo.State.Idle) StopVideo();   // the opening is over: the Unice's comic takes the page
+            else UpdateVideo(dt);
+            Show(skipHint, !opening);
+            // the comic spreads over the opening when the video is missing, and over the hiding time otherwise
+            float span = opening ? Stories.ForMap(game.mapId).introSeconds : game.hideTime;
+            float left = opening ? game.IntroTimeLeft : game.timeLeft;
+            SetText(countdown, Localization.Get("comic.countdown", Mathf.CeilToInt(left)));
+            int shown = HideComic.PanelsShown(panels.Count, span, left);
             for (int i = 0; i < panels.Count; i++) AnimatePanel(panels[i], i < shown, dt);
             foreach (var (holder, phase) in bobbers) holder.style.marginTop = -BobPixels * (.5f + .5f * Mathf.Sin(time * BobSpeed + phase));
         }
@@ -100,11 +118,11 @@ namespace Unice
             if (!markedSeen) { markedSeen = true; app.MarkComicSeen(story.id); Metrics.Log("comic_play", ("story", story.id), ("round", game.round)); }
         }
 
-        /// <summary>The story's explainer video starts loading, if it has one and it has not failed before; until it plays, the screen shows the comic.</summary>
+        /// <summary>The opening video starts loading, if the story has one and it has not failed before; until it plays, the screen shows the comic.</summary>
         void StartVideo(Story story)
         {
             lastVideoState = IntroVideo.State.Idle;
-            if (HideComic.MediaFor(story, videoFailed) != IntroMedia.Video) { ShowVideo(false); return; }
+            if (HideComic.MediaFor(story, videoFailed, opening: game.InIntro) != IntroMedia.Video) { ShowVideo(false); return; }
             video.Play(HideComic.VideoPath(story), muted: !app.sfx.Enabled);
         }
 
@@ -128,8 +146,7 @@ namespace Unice
                     Metrics.Log("intro_video", ("story", storyId), ("result", "failed"));
                     break;
                 case IntroVideo.State.Finished:
-                    ShowVideo(false);
-                    break;
+                    break;   // the last frame stays up until the opening's wait is over
             }
         }
 
@@ -188,7 +205,7 @@ namespace Unice
         {
             switch (figure.kind)
             {
-                case ComicFigureKind.Kid: AddKid(art, StoryScreen.Cousins[figure.cousin % StoryScreen.Cousins.Length], figure.x, figure.y, figure.flip); break;
+                case ComicFigureKind.Kid: AddKid(art, Cousins[figure.cousin % Cousins.Length], figure.x, figure.y, figure.flip); break;
                 case ComicFigureKind.Unice: AddUnice(art, figure.x, figure.y, figure.flip); break;
                 default: AddSprite(art, figure.art, figure.width, figure.x, figure.y, figure.bob); break;
             }

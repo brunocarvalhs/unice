@@ -40,6 +40,16 @@ jobs:
           sudo docker image prune --all --force > /dev/null
           df -h /
 
+      # Unity sometimes dies with exit code 137 (SIGKILL) right after starting; swap guards against the runner running out of memory.
+      - name: Add swap
+        shell: bash
+        run: |
+          sudo fallocate -l 8G /swapfile
+          sudo chmod 600 /swapfile
+          sudo mkswap /swapfile
+          sudo swapon /swapfile
+          free -h
+
       - name: Checkout repository
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -58,6 +68,33 @@ jobs:
             unity-${{ env.FLAVOR }}-${{ inputs.target }}-
 
       - name: Build ${{ inputs.target }}
+        id: build
+        continue-on-error: true   # a killed Unity (exit 137) gets one more try below
+        uses: game-ci/unity-builder@4423ee75828dff56037d1d1cfdac6b68e3a6ba00 # v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          unityVersion: 6000.6.3f1
+          targetPlatform: ${{ inputs.target }}
+          buildName: Unice
+          buildsPath: build/${{ env.FLAVOR }}
+          versioning: ${{ inputs.release && 'Semantic' || 'None' }}
+          allowDirtyBuild: true
+
+      # Tells whether the kernel killed Unity for lack of memory (look for "Out of memory" / "Killed process").
+      - name: Why the first build failed
+        if: steps.build.outcome == 'failure'
+        shell: bash
+        run: |
+          free -h
+          df -h /
+          sudo dmesg | grep -iE "out of memory|killed process|oom" | tail -n 10 || true
+
+      - name: Build ${{ inputs.target }} (second try)
+        if: steps.build.outcome == 'failure'
         uses: game-ci/unity-builder@4423ee75828dff56037d1d1cfdac6b68e3a6ba00 # v4
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
