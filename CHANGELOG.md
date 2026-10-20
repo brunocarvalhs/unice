@@ -19,6 +19,7 @@ Todas as alterações relevantes do projeto serão documentadas neste arquivo.
 ### Removido
 - Os mapas de rascunho Quintal e Praça (salas desconectadas, sem arte) e seus textos; histórias novas entram pelo processo de `docs/stories/`.
 - A HQ de introdução (os 5 quadros desenhados que a Unice lia enquanto os outros se escondiam): sem substituto por enquanto — uma história sem vídeo de abertura agora não mostra nada, só a tela preta de olhos fechados. O vídeo de abertura continua como estava.
+- **Chat de voz (Vivox) removido por completo** (pacote, código `IVoiceChat`/`VivoxVoice`, botões de microfone/sussurro/silenciar, campos de voz no protocolo de presença e as permissões de microfone/Bluetooth do Android): a Lei 15.211/2025 (ECA Digital, "Lei Felca") exige verificação de idade e consentimento parental para chat de voz entre usuários, que o jogo ainda não implementa. **Formato de presença na versão 3** (bump do `PresenceCodec.Version`): aparelhos com builds anteriores não jogam na mesma sala que este.
 
 ### Alterado
 - Código reorganizado para manutenção: nomes descritivos em inglês, comentários em todas as classes, uma responsabilidade por classe e pastas por assunto (ver `SPEC.md` → Code Style e Project Structure, e `docs/ARCHITECTURE_AUDIT.md`).

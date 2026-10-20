@@ -9,7 +9,6 @@
                 <ui:Label name="code" text="ABCD" class="lobby-code" />
                 <ui:Button name="copy" text="Copiar código" class="mpill" />
             </ui:VisualElement>
-            <!-- the microphone and whisper buttons are added here by the code (only with voice) -->
             <ui:Label name="count" text="4/8" class="lobby-count" />
         </ui:VisualElement>
         <ui:VisualElement name="body" class="lobby-body">

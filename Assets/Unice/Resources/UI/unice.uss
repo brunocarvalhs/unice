@@ -232,7 +232,6 @@
 .mpill-glyph { width: 40px; height: 40px; }
 .mpill-code { -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); font-size: 20px; margin-left: 6px; }
 .mbtn-quit { width: 130px; height: 64px; margin: 0 0 0 6px; font-size: 30px; border-width: 2px; }
-.menu-foot { position: absolute; left: 0; right: 0; bottom: 22px; flex-direction: row; justify-content: center; }
 .mpill { background-color: var(--noite-80); border-width: 2px; border-color: var(--cal-60); border-radius: 24px; color: var(--cal); font-size: 17px; -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); padding: 8px 20px; min-height: var(--alvo); margin: 0 6px; }
 .mpill:hover { border-color: var(--sol); color: var(--sol); }
 .mpanel { width: 700px; max-width: 100%; max-height: 640px; background-color: var(--noite-90); border-width: 3px; border-color: var(--cal); border-radius: 16px; padding: 22px 30px; }
@@ -308,10 +307,6 @@
 .res-count { flex-direction: row; align-items: center; justify-content: center; margin-top: 10px; }
 .res-count-n { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 46px; color: var(--sol); margin: 0 10px; }
 .res-rules { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 16px; color: var(--cal-mudo); white-space: normal; -unity-text-align: middle-center; margin-top: 12px; }
-
-/* "Mute"/"Unmute" for another player's voice (waiting room cards, in-game player list) */
-.mute-btn { font-size: 12px; letter-spacing: 1px; padding: 1px 10px; margin: 3px 0 0 0; min-height: var(--alvo); border-width: 1px; }
-.mute-btn-on { color: var(--chita-claro); border-color: var(--chita-claro); }
 
 /* ---------- button system: one feedback model for every button ----------
    Two surfaces: dark (.mbtn .mpill .mstep-btn .hud-btn .act) and paper (.btn .btn-ghost .btn-link .tabbtn .cy-btn).

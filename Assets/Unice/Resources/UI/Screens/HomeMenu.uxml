@@ -61,7 +61,5 @@
         </ui:VisualElement>
         <!-- sound, language and quit buttons are added here by the code -->
         <ui:VisualElement name="top-right" class="menu-top" />
-        <!-- microphone and whisper toggles are added here by the code -->
-        <ui:VisualElement name="footer" class="menu-foot" />
     </ui:VisualElement>
 </ui:UXML>

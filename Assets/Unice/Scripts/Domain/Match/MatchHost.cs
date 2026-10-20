@@ -65,7 +65,6 @@ namespace Unice
                 }
 
                 var presence = peer.presence;
-                character.talking = presence.talking;
                 // position first: an action sent with it (e.g. hide on arriving at the spot) is judged from where the player is now
                 ApplyPosition(character, presence, dt);
                 int lastSeq = lastActionSeq.TryGetValue(peer.id, out int seq) ? seq : 0;

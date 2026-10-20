@@ -78,14 +78,12 @@ namespace Unice
             kidCustomizerSlot = myKidPage.Q("kid-slot");
             BackToMain(myKidPage, "menu.ready");
 
-            // top right: sound and language next to quit; the voice toggles stay at the bottom
+            // top right: sound and language next to quit
             var topRight = Root.Q("top-right");
             ui.settings.AddSoundIconButton(topRight, "mpill"); ui.settings.AddLanguageIconButton(topRight, "mpill");
 #if !UNITY_WEBGL
             LocalizedButton(topRight, "menu.quit", () => Application.Quit(), "mbtn", "mbtn-quit");   // a browser tab can't quit itself
 #endif
-            var footer = Root.Q("footer");
-            ui.settings.AddMicButton(footer, "mpill"); ui.settings.AddWhisperButton(footer, "mpill");
             ShowPage(Page.Main);
         }
 

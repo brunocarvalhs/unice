@@ -3,7 +3,7 @@ using static Unice.UiKit;
 
 namespace Unice
 {
-    /// <summary>The pause sheet: continue, sound/voice settings, leave. Solo it freezes the match; online it only covers the screen.</summary>
+    /// <summary>The pause sheet: continue, sound setting, leave. Solo it freezes the match; online it only covers the screen.</summary>
     sealed class PauseMenu : UiPart
     {
         /// <summary>The full-screen dim; <see cref="Ui"/> pads it so the sheet stays inside the safe area.</summary>
@@ -19,8 +19,6 @@ namespace Unice
             ui.Localize(Root.Q<Button>("continue"), "pause.continue").clicked += () => app.TogglePause();
             var settingsRow = Root.Q("settings");
             ui.settings.AddSoundButton(settingsRow, "btn", "btn-ghost");
-            ui.settings.AddMicButton(settingsRow, "btn", "btn-ghost");
-            ui.settings.AddWhisperButton(settingsRow, "btn", "btn-ghost");
             leaveButton = Root.Q<Button>("leave"); leaveButton.clicked += () => app.LeaveRoom();
             UiKit.Show(Root, false);
         }

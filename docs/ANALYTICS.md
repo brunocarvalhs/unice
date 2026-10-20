@@ -36,8 +36,8 @@ Todo o envio passa por `Assets/Unice/Scripts/Core/Analytics/Metrics.cs`.
 | `screen_view` | A fase muda, ou a página do menu inicial muda | `screen_name` / `screen_class` = `home`, `lobby`, `hide`, `hunt`, `result`, `final`; páginas da Home: `home` (principal), `home_online`, `home_how_to_play`, `home_my_kid`, `home_credits`, `home_stories` | `App.Step`, `HomeMenu.ShowPage` |
 | `solo_start` | Começa uma partida solo | — | `RoomSession.PlaySolo` |
 | `story_pick` | O jogador escolhe uma história no seletor (antes de jogar solo ou criar sala) | `story`, `map` | `HomeMenu.PickStory` |
-| `room_create` | Sala criada com sucesso | `voice` (Vivox disponível, 1/0) | `RoomSession.EnterRoom` |
-| `room_join` | Entrou numa sala | `voice` | `RoomSession.EnterRoom` |
+| `room_create` | Sala criada com sucesso | — | `RoomSession.EnterRoom` |
+| `room_join` | Entrou numa sala | — | `RoomSession.EnterRoom` |
 | `room_error` | Falha ao criar/entrar | `mode` (`create`/`join`), `error` (tipo da exceção, ou `no_host`) | `RoomSession.EnterRoom` |
 | `room_lost` | A conexão caiu de vez | `phase` em que estava | `RoomSession.OnRoomLost` |
 | `room_leave` | Saiu da sala **ou da partida solo** | `reason` (`button` = botão sair/voltar ao início na sala de espera, pausa ou resultado; `back` = voltar do Android na sala de espera; `lost` = a conexão caiu, junto com `room_lost`; `timeout` = o host não respondeu ao entrar, junto com `room_error` `no_host`), `phase` em que estava, `round` (0 = antes da 1ª rodada), `online`, `lobby_wait_s` (s na sala de espera; 0 se saiu de outra fase) | `RoomSession.LeaveRoom` |
@@ -51,12 +51,6 @@ Todo o envio passa por `Assets/Unice/Scripts/Core/Analytics/Metrics.cs`.
 | `achievement_unlock` | O jogador cumpriu uma conquista padrão do Play Games (A1–A10; as incrementais não). Pode repetir — o Play Games só desbloqueia uma vez; para contar desbloqueios use usuários únicos por `id` | `id` (nome em `Achievement`, ex. `FoundYou`) | `EventFeed.Report` |
 | `player_action` | O jogador usa uma ação | `type` (`hide`/`exit`/`open`/`pass`/`laugh`), `spot` (tipo do móvel, só em `hide`) | `PlayerControl` |
 | `pause` | Abriu o menu de pausa | `online` | `App.TogglePause` |
-| `player_muted` | Silenciou ou voltou a ouvir outro jogador | `muted` (1 = silenciou) | `App.TogglePlayerMuted` |
-
-## Quando a voz voltar
-
-A voz está desligada no M1 (`VoiceRegistry.Enabled = false`). Ao religar, adicionar `mic_permission` (`granted` 1/0)
-quando o Android responder ao pedido do microfone, e `voice_connect` (`ok`, `error`) ao entrar no canal.
 
 ## Como verificar
 

@@ -82,7 +82,7 @@ namespace Unice
         {
             if (game.InIntro) return;   // the opening video is playing
             var direction = MoveInput();
-            controller.Move(dt, (direction.x, direction.y), sneakHeld || app.ui.SneakToggled, app.IsTalking);
+            controller.Move(dt, (direction.x, direction.y), sneakHeld || app.ui.SneakToggled);
         }
     }
 }

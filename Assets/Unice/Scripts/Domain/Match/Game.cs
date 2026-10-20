@@ -375,9 +375,9 @@ namespace Unice
                 character.loud = !character.IsUnice && character.moving && !character.sneaking;
             }
 
-            // running and talking hiders attract the Unice bot
+            // running hiders attract the Unice bot
             foreach (var character in characters)
-                if (!character.IsUnice && !character.outOfRound && character.hidingSpot == null && (character.loud || character.talking))
+                if (!character.IsUnice && !character.outOfRound && character.hidingSpot == null && character.loud)
                 {
                     character.noiseTimer -= dt;
                     if (character.noiseTimer <= 0) { character.noiseTimer = .42f; uniceBot.HearNoise(character); }

@@ -30,14 +30,12 @@ namespace Unice
             // laid out in Resources/UI/Screens/LobbyScreen.uxml (UI Builder); here the buttons, the cards and the options
             Root = ui.LoadScreen("LobbyScreen", ui.root);
 
-            // top bar: leave, room code, voice buttons, player count
+            // top bar: leave, room code, player count
             var top = Root.Q("top");
             leaveButton = Root.Q<Button>("leave"); leaveButton.clicked += () => app.LeaveRoom();
             titleLabel = Root.Q<Label>("title"); codeLabel = Root.Q<Label>("code");
             copyCodeButton = ui.Localize(Root.Q<Button>("copy"), "lobby.copy_code"); copyCodeButton.clicked += CopyCode;
-            ui.settings.AddMicButton(top, "mpill");
-            ui.settings.AddWhisperButton(top, "mpill");
-            countLabel = Root.Q<Label>("count"); countLabel.BringToFront();   // the voice buttons come before the count
+            countLabel = Root.Q<Label>("count"); countLabel.BringToFront();
 
             // body: player cards, and the side panel
             playerCards = Root.Q<ScrollView>("players").contentContainer;
@@ -95,7 +93,7 @@ namespace Unice
             var host = app.IsOnline ? app.FindHost() : null;
             string hostId = host != null ? host.id : app.IsOnline ? null : app.myPlayerId;
             int bots = matchOptions.BotsInMatch;
-            string signature = string.Join("|", players.Select(player => player.id + player.name + Kit.Pack(player.kit) + player.ready + app.CanMutePlayer(player.id) + app.IsPlayerMuted(player.id)))
+            string signature = string.Join("|", players.Select(player => player.id + player.name + Kit.Pack(player.kit) + player.ready))
                              + hostId + game.isHost + bots + game.totalRounds + game.hideTime + game.huntTime + game.giggleInterval + game.mapId + app.ready + app.roomCode;
             if (signature == renderedSignature) return;
             renderedSignature = signature;
@@ -115,7 +113,6 @@ namespace Unice
                 bool isHost = player.id == hostId;
                 var stateLabel = card.Q<Label>("state"); stateLabel.text = Localization.Get(isHost ? "lobby.host" : player.ready ? "lobby.ready" : "lobby.waiting");
                 stateLabel.EnableInClassList("pcard-ok", isHost || player.ready);
-                if (!player.isMe) MuteButton.Add(card, app, player.id, Invalidate);
             }
             if (bots > 0)
             {
