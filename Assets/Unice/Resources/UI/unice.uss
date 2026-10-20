@@ -92,7 +92,7 @@
 
 /* ---------- paper sheets ---------- */
 .overlay { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: var(--noite-0-88); align-items: center; justify-content: center; padding: 16px; }
-.sheet-scroll { max-width: 1100px; width: 100%; max-height: 100%; }
+.sheet-scroll { max-width: 640px; width: 100%; max-height: 100%; }
 .sheet { background-color: var(--papel); color: var(--tinta); border-radius: 4px; border-width: 1px; border-color: var(--tinta-40); padding: 26px 32px; }
 .title { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 64px; color: var(--tinta); margin-bottom: 6px; }
 .title-md { font-size: 44px; }
@@ -560,3 +560,11 @@
 .boxy .decor-cactus-r { right: 0; width: 110px; height: 290px; }
 .boxy .menu-grid .mbtn { width: 230px; }
 .boxy .menu-sub { font-size: 14px; letter-spacing: 2px; }
+
+/* ---------- fixes from the desktop screenshots ---------- */
+/* result: four player cards fit side by side beside the next-Unice panel instead of wrapping under it */
+.result .pcard { width: 108px; min-height: 150px; margin: 5px; }
+/* waiting room: the note sits above the dark ground of the poster instead of over it */
+.cordel .lobby { padding-bottom: 36px; }
+/* "Mi niño": long labels (COLOR DE CABELLO) keep their room before the swatches */
+.mpanel .opt-l { width: 150px; }
