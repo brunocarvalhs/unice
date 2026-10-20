@@ -30,6 +30,7 @@ namespace Unice
         public HomeMenu(Ui ui) : base(ui)
         {
             Root = AddElement(ui.root, "menu");
+            var background = BuildCordelBackground();
             var versionLabel = AddLabel(Root, "v" + Application.version, "menu-version");
 
             // main page
@@ -81,9 +82,30 @@ namespace Unice
 #endif
             var footer = AddElement(Root, "menu-foot");
             ui.settings.AddMicButton(footer, "mpill"); ui.settings.AddWhisperButton(footer, "mpill");
-            chrome = new[] { versionLabel, topRight, footer };
+            chrome = new[] { background, versionLabel, topRight, footer };
             story = new StoryScreen(ui, Root, () => ShowPage(Page.Main));   // last: drawn over everything else on the menu
             ShowPage(Page.Main);
+        }
+
+        /// <summary>The cordel poster behind every menu page: sand sky, a pale sun, cacti, birds and stars in black ink, a strip of ground.</summary>
+        VisualElement BuildCordelBackground()
+        {
+            var background = IgnorePointer(AddElement(Root, "menu-bg"));
+            IgnorePointer(AddElement(background, "menu-sun"));
+            IgnorePointer(AddElement(background, "menu-ground"));
+            void Decor(string art, params string[] classes)
+            {
+                var piece = IgnorePointer(AddElement(background, classes));
+                piece.style.backgroundImage = new StyleBackground(Resources.Load<Texture2D>("Art/" + art));
+            }
+            Decor("cordel_cactus", "decor", "decor-cactus-l");
+            Decor("cordel_cactus", "decor", "decor-cactus-r");
+            Decor("cordel_bird", "decor", "decor-bird-l");
+            Decor("cordel_bird", "decor", "decor-bird-r");
+            Decor("cordel_star", "decor", "decor-star-a");
+            Decor("cordel_star", "decor", "decor-star-b");
+            Decor("cordel_star", "decor", "decor-star-c");
+            return background;
         }
 
         /// <summary>Opens the story picker; <paramref name="start"/> runs once a story is chosen, with <paramref name="pageWhileStarting"/> showing meanwhile (where a connection error can be read).</summary>

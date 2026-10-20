@@ -21,6 +21,9 @@
     --preto: #000000;
     --branco: #ffffff;
     --transp: rgba(0, 0, 0, 0);
+    --areia: #f0c093;
+    --areia-escura: #e6aa78;
+    --nanquim: #1a1210;
     --anil: #2f5d8c;
     --anil-claro: #7fb0e0;
     /* touch targets: ≥ 64 px on the 540 px panel ≈ 50 dp on a 1080p phone */
@@ -263,7 +266,7 @@
 .mpill { background-color: var(--noite-80); border-width: 2px; border-color: var(--cal-60); border-radius: 24px; color: var(--cal); font-size: 17px; -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); padding: 8px 20px; min-height: var(--alvo); margin: 0 6px; }
 .mpill:hover { border-color: var(--sol); color: var(--sol); }
 .mpanel { width: 700px; max-width: 100%; max-height: 640px; background-color: var(--noite-90); border-width: 3px; border-color: var(--cal); border-radius: 16px; padding: 22px 30px; }
-.mpanel-t { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 52px; color: var(--cal); -unity-text-align: middle-center; margin-bottom: 6px; }
+.mpanel-t { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 52px; white-space: normal; color: var(--cal); -unity-text-align: middle-center; margin-bottom: 6px; }
 .mnote { font-size: 18px; color: var(--cal-suave); white-space: normal; }
 .mnet { margin-top: 10px; -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 16px; color: var(--cal-mudo); }
 .mnet.net-err { color: var(--chita-claro); }
@@ -379,12 +382,12 @@
 .story-card .mbtn-back:focus, .story-card .mbtn-back:hover { color: var(--noite); border-color: var(--noite); }
 
 /* ---------- story picker (StoryPicker): one card per story ---------- */
-.scards { flex-direction: row; justify-content: center; align-items: stretch; margin-top: 8px; }
-.scard { width: 200px; margin: 0 8px; padding: 8px; background-color: var(--noite-80); border-width: 3px; border-color: var(--cal); border-radius: 14px; align-items: center; }
+.scards { width: 100%; flex-direction: row; justify-content: center; align-items: stretch; margin-top: 8px; }
+.scard { flex-grow: 1; flex-shrink: 1; flex-basis: 0; min-width: 0; margin: 0 6px; padding: 8px; background-color: var(--noite-80); border-width: 3px; border-color: var(--cal); border-radius: 14px; align-items: center; }
 .scard:hover { border-color: var(--sol); }
 .scard:disabled { opacity: 0.45; }
 .scard-art { width: 100%; height: 110px; background-color: var(--noite-3); background-size: cover; background-position: center; border-radius: 8px; border-width: 2px; border-color: var(--borda); }
-.scard-name { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 34px; color: var(--cal); -unity-text-align: middle-center; margin-top: 6px; }
+.scard-name { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 28px; color: var(--cal); -unity-text-align: middle-center; margin-top: 6px; white-space: normal; }
 .scard-blurb { -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); font-size: 16px; color: var(--cal-mudo); -unity-text-align: upper-center; white-space: normal; }
 
 /* ---------- the intro comic (HideComicView): a one-page comic over the Unice's black screen ---------- */
@@ -400,3 +403,50 @@
 .comic-figure { position: absolute; }
 .comic-caption { position: absolute; left: 6px; right: 6px; top: 6px; padding: 3px 7px; background-color: var(--papel); border-width: 2px; border-color: var(--tinta); color: var(--tinta); font-size: 14px; -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); white-space: normal; -unity-text-align: upper-left; }
 .comic-skip { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 13px; color: var(--cal-mudo); -unity-text-align: middle-center; }
+
+/* ---------- the menu as a cordel poster: full-screen sand, black ink, paper cards with a stamped shadow (right and bottom edges) ---------- */
+.menu-bg { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: var(--areia); overflow: hidden; }
+.menu-sun { position: absolute; left: 50%; top: 50%; width: 480px; height: 480px; margin-left: -240px; margin-top: -250px; border-radius: 240px; background-color: var(--areia-escura); }
+.menu-ground { position: absolute; left: -10%; right: -10%; bottom: -60px; height: 90px; border-top-left-radius: 50%; border-top-right-radius: 50%; background-color: var(--nanquim); }
+.decor { position: absolute; background-size: contain; background-position: center; background-repeat: no-repeat; }
+.decor-cactus-l { left: 3%; bottom: 20px; width: 110px; height: 290px; }
+.decor-cactus-r { right: 2%; bottom: 20px; width: 150px; height: 395px; }
+.decor-bird-l { left: 9%; top: 9%; width: 110px; height: 72px; }
+.decor-bird-r { right: 14%; top: 7%; width: 90px; height: 59px; scale: -1 1; }
+.decor-star-a { left: 4%; top: 36%; width: 44px; height: 44px; }
+.decor-star-b { right: 6%; top: 40%; width: 34px; height: 34px; }
+.decor-star-c { left: 24%; top: 6%; width: 30px; height: 30px; }
+
+.menu-version { color: var(--nanquim); }
+.menu-title { color: var(--nanquim); text-shadow: 4px 4px 0px var(--chita-escuro); }
+.menu-sub { color: var(--nanquim); }
+.menu .mbtn, .menu .mpill, .menu .mpanel { background-color: var(--papel); color: var(--nanquim); border-color: var(--nanquim); border-width: 3px; border-right-width: 7px; border-bottom-width: 7px; border-radius: 6px; }
+.menu .mbtn:hover, .menu .mpill:hover, .menu .mbtn:focus, .menu .mpill:focus { background-color: var(--sol); color: var(--nanquim); border-color: var(--nanquim); border-width: 3px; border-right-width: 7px; border-bottom-width: 7px; }
+.menu .mbtn:active, .menu .mpill:active { background-color: var(--chita-claro); }
+.menu .mpill { border-radius: 6px; }
+.menu .mbtn-back, .menu .mbtn-quit { border-width: 2px; border-right-width: 5px; border-bottom-width: 5px; }
+.menu .mpanel { background-color: var(--papel); }
+.menu .mpanel-t, .menu .mrule-t { color: var(--nanquim); }
+.menu .mrule-rose { color: var(--chita-escuro); }
+.menu .mrule-moss { color: var(--mandacaru-escuro); }
+.menu .mnote { color: var(--tinta-mudo); }
+.menu .mnet, .menu .menu-or { color: var(--tinta-mudo); }
+.menu .mnet.net-err { color: var(--chita-escuro); }
+.menu .mfield .unity-base-text-field__input { background-color: var(--branco-40); border-color: var(--nanquim); color: var(--nanquim); }
+.menu .scard { background-color: var(--cal); border-color: var(--nanquim); border-width: 3px; border-right-width: 6px; border-bottom-width: 6px; border-radius: 6px; }
+.menu .scard:hover { background-color: var(--sol); border-color: var(--nanquim); }
+.menu .scard-art { border-color: var(--nanquim); border-radius: 3px; background-color: var(--areia-escura); }
+.menu .scard-name { color: var(--nanquim); }
+.menu .scard-blurb { color: var(--tinta-mudo); }
+
+/* cordel lettering (Rye, OFL): titles and buttons of the menu */
+.menu .menu-title, .menu .mpanel-t, .menu .scard-name, .menu .mbtn, .menu .mrule-t { -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); }
+.menu .menu-title { font-size: 96px; }
+.menu .mpanel-t { font-size: 40px; }
+.menu .scard-name { font-size: 22px; }
+.menu .mbtn { font-size: 38px; }
+.menu .mbtn-sm { font-size: 24px; }
+.menu .mbtn-wide { font-size: 34px; }
+.menu .mbtn-join { font-size: 26px; }
+.menu .mbtn-back, .menu .mbtn-quit { font-size: 22px; }
+.menu .mrule-t { font-size: 22px; }
