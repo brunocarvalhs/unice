@@ -17,6 +17,7 @@ namespace Unice
         readonly VisualElement mainPage, onlinePage, myKidPage, storiesPage, kidCustomizerSlot;
         VisualElement howToPlayPage;   // set by BuildHowToPlay
         readonly StoryScreen story;
+        readonly CordelBackdrop backdrop;
         /// <summary>Version label, settings pills and quit button: hidden while the story plays full screen.</summary>
         readonly VisualElement[] chrome;
         readonly TextField roomCodeField;
@@ -29,8 +30,8 @@ namespace Unice
 
         public HomeMenu(Ui ui) : base(ui)
         {
+            backdrop = new CordelBackdrop(ui, ui.root);   // before the menu: under it, and outside its safe-area insets so it bleeds to the screen edges
             Root = AddElement(ui.root, "menu");
-            var background = BuildCordelBackground();
             var versionLabel = AddLabel(Root, "v" + Application.version, "menu-version");
 
             // main page
@@ -82,30 +83,16 @@ namespace Unice
 #endif
             var footer = AddElement(Root, "menu-foot");
             ui.settings.AddMicButton(footer, "mpill"); ui.settings.AddWhisperButton(footer, "mpill");
-            chrome = new[] { background, versionLabel, topRight, footer };
+            chrome = new[] { versionLabel, topRight, footer };
             story = new StoryScreen(ui, Root, () => ShowPage(Page.Main));   // last: drawn over everything else on the menu
             ShowPage(Page.Main);
         }
 
-        /// <summary>The cordel poster behind every menu page: sand sky, a pale sun, cacti, birds and stars in black ink, a strip of ground.</summary>
-        VisualElement BuildCordelBackground()
+        /// <summary>The menu screen appears or goes away; its backdrop lives outside <see cref="Root"/>, so it follows by hand.</summary>
+        public void SetVisible(bool visible)
         {
-            var background = IgnorePointer(AddElement(Root, "menu-bg"));
-            IgnorePointer(AddElement(background, "menu-sun"));
-            IgnorePointer(AddElement(background, "menu-ground"));
-            void Decor(string art, params string[] classes)
-            {
-                var piece = IgnorePointer(AddElement(background, classes));
-                piece.style.backgroundImage = new StyleBackground(Resources.Load<Texture2D>("Art/" + art));
-            }
-            Decor("cordel_cactus", "decor", "decor-cactus-l");
-            Decor("cordel_cactus", "decor", "decor-cactus-r");
-            Decor("cordel_bird", "decor", "decor-bird-l");
-            Decor("cordel_bird", "decor", "decor-bird-r");
-            Decor("cordel_star", "decor", "decor-star-a");
-            Decor("cordel_star", "decor", "decor-star-b");
-            Decor("cordel_star", "decor", "decor-star-c");
-            return background;
+            Show(Root, visible);
+            Show(backdrop.Root, visible && currentPage != Page.Story);
         }
 
         /// <summary>Opens the story picker; <paramref name="start"/> runs once a story is chosen, with <paramref name="pageWhileStarting"/> showing meanwhile (where a connection error can be read).</summary>
@@ -169,6 +156,7 @@ namespace Unice
         /// <summary>Per frame while showing.</summary>
         public void Frame()
         {
+            backdrop.Frame();
             if (currentPage == Page.MyKid) ui.kidCustomizer.AnimatePreview();
             if (currentPage == Page.Story) story.Frame(Time.unscaledDeltaTime);
         }
@@ -195,6 +183,7 @@ namespace Unice
             Show(mainPage, page == Page.Main); Show(onlinePage, page == Page.Online);
             Show(howToPlayPage, page == Page.HowToPlay); Show(myKidPage, page == Page.MyKid); Show(storiesPage, page == Page.Stories); Show(story.Root, page == Page.Story);
             foreach (var element in chrome) Show(element, page != Page.Story);
+            Show(backdrop.Root, ui.currentScreen == UiScreen.Home && page != Page.Story);
             if (page == Page.Story) story.Begin();
             if (page == Page.MyKid) ui.kidCustomizer.ShowIn(kidCustomizerSlot);
         }

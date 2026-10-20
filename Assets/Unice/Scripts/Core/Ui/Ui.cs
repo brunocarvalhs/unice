@@ -170,7 +170,7 @@ namespace Unice
             if (wanted != currentScreen)
             {
                 var previous = currentScreen; currentScreen = wanted;
-                Show(homeMenu.Root, wanted == UiScreen.Home); Show(lobbyScreen.Root, wanted == UiScreen.Lobby); Show(resultScreen.Root, resultLike);
+                homeMenu.SetVisible(wanted == UiScreen.Home); Show(lobbyScreen.Root, wanted == UiScreen.Lobby); Show(resultScreen.Root, resultLike);
                 Show(hud.Root, wanted == UiScreen.Game); Show(controls.Root, wanted == UiScreen.Game && isTouch);
                 if (wanted == UiScreen.Home) homeMenu.OnShow();
                 if (wanted == UiScreen.Lobby) lobbyScreen.OnShow(cameFromFinal: previous == UiScreen.Final);

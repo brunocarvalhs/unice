@@ -75,7 +75,7 @@ namespace Unice
             ["net.no_answer"] = new[] { "A sala não respondeu. Confira o código ou peça um novo.", "The room didn't respond. Check the code or ask for a new one.", "La sala no respondió. Revisa el código o pide uno nuevo." },
 
             // ---------- Ui.cs: main menu ----------
-            ["menu.sub"] = new[] { "ESCONDE-ESCONDE NUMA CASA ANTIGA", "HIDE AND SEEK IN AN OLD HOUSE", "ESCONDIDAS EN UNA CASA VIEJA" },
+            ["menu.sub"] = new[] { "UNICE: MEMÓRIAS ESPECIAIS NO FORMATO DE JOGO", "UNICE: SPECIAL MEMORIES AS A GAME", "UNICE: RECUERDOS ESPECIALES EN FORMATO DE JUEGO" },
             ["menu.local"] = new[] { "LOCAL", "SOLO", "LOCAL" },
             ["menu.online"] = new[] { "ONLINE", "ONLINE", "EN LÍNEA" },
             ["menu.howto"] = new[] { "COMO JOGAR", "HOW TO PLAY", "CÓMO JUGAR" },
