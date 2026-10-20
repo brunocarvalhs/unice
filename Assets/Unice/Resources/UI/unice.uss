@@ -345,7 +345,7 @@
 .scards { width: 100%; flex-direction: row; justify-content: center; align-items: stretch; margin-top: 8px; }
 .scard { flex-grow: 1; flex-shrink: 1; flex-basis: 0; min-width: 0; margin: 0 6px; padding: 8px; background-color: var(--noite-80); border-width: 3px; border-color: var(--cal); border-radius: 14px; align-items: center; }
 .scard:hover { border-color: var(--sol); }
-.scard:disabled { opacity: 0.45; }
+.scard:disabled, .scard-off { opacity: 0.45; }
 .scard-art { width: 100%; height: 110px; background-color: var(--noite-3); background-size: cover; background-position: center; border-radius: 8px; border-width: 2px; border-color: var(--borda); }
 .scard-name { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 28px; color: var(--cal); -unity-text-align: middle-center; margin-top: 6px; white-space: normal; }
 .scard-blurb { -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); font-size: 16px; color: var(--cal-mudo); -unity-text-align: upper-center; white-space: normal; }

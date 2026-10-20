@@ -27,6 +27,8 @@ namespace Unice
             var card = (Button)ui.LoadScreen("StoryCard", row);
             card.clicked += () => onPick(story);
             card.SetEnabled(playable);
+            // dimmed whenever the story isn't released, even in the Editor/dev builds where it stays clickable for testing
+            card.EnableInClassList("scard-off", !story.released);
             var picture = IgnorePointer(card.Q("art"));
             string art = story.cardArt;
             if (art != null) picture.style.backgroundImage = new StyleBackground(Resources.Load<Texture2D>("Art/" + art));
