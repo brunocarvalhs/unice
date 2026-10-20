@@ -38,18 +38,20 @@ namespace Unice
         readonly Dictionary<string, VisualElement> tabButtons = new Dictionary<string, VisualElement>();
         string currentTab = Tabs[0];
 
-        public KitOptionPicker(Ui ui, VisualElement parent, Action<int[]> setKit) : base(ui)
+        /// <param name="tabBar">Holds one button per tab, named like the tab key without "tab." (made in KidCustomizer.uxml).</param>
+        /// <param name="rows">Where the option rows go (built here: their swatches come from the kit's data).</param>
+        public KitOptionPicker(Ui ui, VisualElement tabBar, VisualElement rows, Action<int[]> setKit) : base(ui)
         {
             this.setKit = setKit;
-            var tabBar = AddElement(parent, "tabbar");
             foreach (var tab in Tabs)
             {
-                var button = AddButton(tabBar, "", () => { currentTab = tab; Render(); }, "tabbtn");
+                var button = tabBar.Q<Button>(tab.Substring("tab.".Length));
+                button.clicked += () => { currentTab = tab; Render(); };
+                button.text = Localization.Get(tab).ToUpperInvariant();
                 ui.relocalizers.Add(() => button.text = Localization.Get(tab).ToUpperInvariant());
                 tabButtons[tab] = button;
             }
 
-            var rows = AddElement(parent);
             foreach (var option in Rows)
             {
                 var row = AddElement(rows, "opt");

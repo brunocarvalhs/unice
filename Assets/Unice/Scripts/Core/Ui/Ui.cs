@@ -158,7 +158,7 @@ namespace Unice
             if (!screenAssets.TryGetValue(name, out var asset)) screenAssets[name] = asset = Resources.Load<VisualTreeAsset>("UI/Screens/" + name);
             var screen = asset.CloneTree().Q("root");
             screen.styleSheets.Clear();   // the file links unice.uss so the UI Builder can preview it; the panel already has it
-            parent.Add(screen);
+            parent?.Add(screen);
             return screen;
         }
 

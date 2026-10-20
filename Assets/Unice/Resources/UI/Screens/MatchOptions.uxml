@@ -1,0 +1,34 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="../unice.uss" />
+    <ui:Template name="Stepper" src="Stepper.uxml" />
+    <!-- The match options of the waiting room: the host's steppers, or a summary line for the guests. -->
+    <ui:VisualElement name="root">
+        <ui:VisualElement name="steppers">
+            <ui:Instance template="Stepper" name="bots">
+                <ui:AttributeOverrides element-name="label" text="ROBÔS" />
+                <ui:AttributeOverrides element-name="value" text="3" />
+            </ui:Instance>
+            <ui:Instance template="Stepper" name="rounds">
+                <ui:AttributeOverrides element-name="label" text="RODADAS" />
+                <ui:AttributeOverrides element-name="value" text="5" />
+            </ui:Instance>
+            <ui:Instance template="Stepper" name="hide">
+                <ui:AttributeOverrides element-name="label" text="ESCONDER" />
+                <ui:AttributeOverrides element-name="value" text="30s" />
+            </ui:Instance>
+            <ui:Instance template="Stepper" name="hunt">
+                <ui:AttributeOverrides element-name="label" text="CAÇA" />
+                <ui:AttributeOverrides element-name="value" text="120s" />
+            </ui:Instance>
+            <ui:Instance template="Stepper" name="giggle">
+                <ui:AttributeOverrides element-name="label" text="RISADA" />
+                <ui:AttributeOverrides element-name="value" text="10s" />
+            </ui:Instance>
+            <ui:Instance template="Stepper" name="map">
+                <ui:AttributeOverrides element-name="label" text="MAPA" />
+                <ui:AttributeOverrides element-name="value" text="Casa da Vó" />
+            </ui:Instance>
+        </ui:VisualElement>
+        <ui:Label name="summary" text="" class="mnote" />
+    </ui:VisualElement>
+</ui:UXML>

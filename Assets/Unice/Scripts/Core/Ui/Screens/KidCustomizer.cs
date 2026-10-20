@@ -17,19 +17,17 @@ namespace Unice
 
         public KidCustomizer(Ui ui) : base(ui)
         {
-            Root = new VisualElement();
-            LocalizedLabel(Root, "lbl.name", "lbl");
-            nameField = AddTextField(Root, app.myName, TextFormat.MaxNameLength);
+            // laid out in Resources/UI/Screens/KidCustomizer.uxml (UI Builder); not under any parent until ShowIn
+            Root = ui.LoadScreen("KidCustomizer", null);
+            ui.Localize(Root.Q<Label>("name-lbl"), "lbl.name");
+            nameField = Root.Q<TextField>("name"); nameField.maxLength = TextFormat.MaxNameLength; nameField.value = app.myName;
             nameField.RegisterValueChangedCallback(e => { app.myName = TextFormat.CleanName(e.newValue); app.SaveProfile(); });
 
-            LocalizedLabel(Root, "lbl.kid", "lbl").style.marginTop = 10;
-            var previewRow = AddElement(Root, "row");
-            var previewBox = AddElement(previewRow, "preview"); previewBox.style.alignItems = Align.Center; previewBox.style.justifyContent = Justify.Center;
-            preview = new CharacterPortrait(100); previewBox.Add(preview);
-            LocalizedButton(previewRow, "menu.randomize", () => SetKit(Kit.Random()), "btn", "btn-ghost");
+            ui.Localize(Root.Q<Label>("kid-lbl"), "lbl.kid");
+            preview = new CharacterPortrait(100); Root.Q("preview").Add(preview);
+            ui.Localize(Root.Q<Button>("randomize"), "menu.randomize").clicked += () => SetKit(Kit.Random());
 
-            var options = AddElement(Root); options.style.marginTop = 10;
-            optionPicker = new KitOptionPicker(ui, options, SetKit);
+            optionPicker = new KitOptionPicker(ui, Root.Q("tabbar"), Root.Q("rows"), SetKit);
         }
 
         void SetKit(int[] kit)
