@@ -136,6 +136,7 @@ namespace Unice
         // change automatically. These two are for text built ONCE: they remember the key so a language switch
         // can re-apply it later via Relocalize().
         internal readonly List<Action> relocalizers = new List<Action>();
+        readonly Dictionary<string, VisualTreeAsset> screenAssets = new Dictionary<string, VisualTreeAsset>();
         internal Label LocalizedLabel(VisualElement parent, string key, params string[] classes)
         {
             var label = AddLabel(parent, Localization.Get(key), classes);
@@ -154,7 +155,7 @@ namespace Unice
         /// </summary>
         internal VisualElement LoadScreen(string name, VisualElement parent)
         {
-            var asset = Resources.Load<VisualTreeAsset>("UI/Screens/" + name);
+            if (!screenAssets.TryGetValue(name, out var asset)) screenAssets[name] = asset = Resources.Load<VisualTreeAsset>("UI/Screens/" + name);
             var screen = asset.CloneTree().Q("root");
             screen.styleSheets.Clear();   // the file links unice.uss so the UI Builder can preview it; the panel already has it
             parent.Add(screen);

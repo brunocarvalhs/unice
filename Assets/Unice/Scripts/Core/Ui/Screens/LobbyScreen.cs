@@ -109,19 +109,19 @@ namespace Unice
             playerCards.Clear();
             foreach (var player in players)
             {
-                var card = AddElement(playerCards, "pcard"); if (player.isMe) card.AddToClassList("pcard-me");
-                var portrait = new CharacterPortrait(62); portrait.ShowKit(player.kit); card.Add(portrait);
-                AddLabel(card, player.name, "pcard-name");
+                var card = ui.LoadScreen("LobbyCard", playerCards); if (player.isMe) card.AddToClassList("pcard-me");
+                var portrait = new CharacterPortrait(62); portrait.ShowKit(player.kit); card.Q("portrait").Add(portrait);
+                card.Q<Label>("name").text = player.name;
                 bool isHost = player.id == hostId;
-                var stateLabel = AddLabel(card, Localization.Get(isHost ? "lobby.host" : player.ready ? "lobby.ready" : "lobby.waiting"), "pcard-st");
-                if (isHost || player.ready) stateLabel.AddToClassList("pcard-ok");
+                var stateLabel = card.Q<Label>("state"); stateLabel.text = Localization.Get(isHost ? "lobby.host" : player.ready ? "lobby.ready" : "lobby.waiting");
+                stateLabel.EnableInClassList("pcard-ok", isHost || player.ready);
                 if (!player.isMe) MuteButton.Add(card, app, player.id, Invalidate);
             }
             if (bots > 0)
             {
-                var botCard = AddElement(playerCards, "pcard", "pcard-bots");
-                AddLabel(botCard, "+" + bots, "pcard-plus");
-                AddLabel(botCard, Localization.Get(bots > 1 ? "lobby.bots_plural" : "lobby.bot_singular"), "pcard-st");
+                var botCard = ui.LoadScreen("BotsCard", playerCards);
+                botCard.Q<Label>("plus").text = "+" + bots;
+                botCard.Q<Label>("state").text = Localization.Get(bots > 1 ? "lobby.bots_plural" : "lobby.bot_singular");
             }
 
             matchOptions.Render();

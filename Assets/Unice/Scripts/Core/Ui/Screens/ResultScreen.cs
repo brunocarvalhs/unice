@@ -112,13 +112,13 @@ namespace Unice
             var me = app.myCharacter; int rank = 0;
             foreach (var character in game.characters.OrderByDescending(character => character.score))
             {
-                var card = AddElement(scoreCards, "pcard");
+                var card = ui.LoadScreen("ResultCard", scoreCards);
                 if (character == me) card.AddToClassList("pcard-me");
                 if (winners != null && winners.Contains(character)) card.AddToClassList("pcard-win");
-                AddLabel(card, Localization.Ordinal(++rank), "pcard-rank");
-                var portrait = new CharacterPortrait(50); portrait.ShowKit(character.kit); card.Add(portrait);
-                AddLabel(card, character.name + (character.isBot ? Localization.Get("res.bot_tag") : ""), "pcard-name");
-                AddLabel(card, character.score.ToString(), "pcard-pts");
+                card.Q<Label>("rank").text = Localization.Ordinal(++rank);
+                var portrait = new CharacterPortrait(50); portrait.ShowKit(character.kit); card.Q("portrait").Add(portrait);
+                card.Q<Label>("name").text = character.name + (character.isBot ? Localization.Get("res.bot_tag") : "");
+                card.Q<Label>("points").text = character.score.ToString();
             }
         }
     }
