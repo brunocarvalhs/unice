@@ -64,15 +64,17 @@ namespace Unice
         public readonly bool hasComic;
         /// <summary>Picture on the story's card in Resources/Art, or null for a plain card.</summary>
         public readonly string cardArt;
-        /// <summary>File name of the explainer video the Unice's player watches while the others hide, in StreamingAssets/Videos (null = none). Without the file the comic plays instead.</summary>
+        /// <summary>File name of the opening video every player watches when the match starts, in StreamingAssets/Videos (null = none). Without the file the comic plays instead.</summary>
         public readonly string introVideo;
+        /// <summary>Seconds the match waits in the first round while the opening video plays (a little longer than the video itself); 0 = no wait.</summary>
+        public readonly float introSeconds;
         /// <summary>True when the story brings an intro video.</summary>
         public readonly bool hasIntroVideo;
 
-        public Story(string id, string mapId, bool released, ComicPanel[] comic = null, string cardArt = null, string introVideo = null)
+        public Story(string id, string mapId, bool released, ComicPanel[] comic = null, string cardArt = null, string introVideo = null, float introSeconds = 0)
         {
             this.id = id; this.mapId = mapId; this.released = released; this.cardArt = cardArt;
-            this.introVideo = introVideo; hasIntroVideo = !string.IsNullOrEmpty(introVideo);
+            this.introVideo = introVideo; hasIntroVideo = !string.IsNullOrEmpty(introVideo); this.introSeconds = introSeconds;
             this.comic = comic ?? new ComicPanel[0]; hasComic = this.comic.Length > 0;
         }
     }
@@ -81,10 +83,12 @@ namespace Unice
     public static class Stories
     {
         public const string DollId = "doll";
+        /// <summary>The doll video lasts 29.1 s; the match waits this long (a bit more, so the last frame is never cut) in round 1.</summary>
+        const float DollIntroSeconds = 29.5f;
 
         public static readonly Story[] All =
         {
-            new Story(DollId, MapHouse.Id, released: true, cardArt: "floor_master", introVideo: "doll.mp4", comic: new[]
+            new Story(DollId, MapHouse.Id, released: true, cardArt: "floor_master", introVideo: "doll.mp4", introSeconds: DollIntroSeconds, comic: new[]
             {
                 // the kitchen: kids running around grandma's table
                 new ComicPanel("floor_kitchen",

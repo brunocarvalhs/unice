@@ -43,7 +43,7 @@ namespace Unice
             rightHeld = !typing && (keyboard.dKey.isPressed || keyboard.rightArrowKey.isPressed);
             sneakHeld = sneakHeld || keyboard.leftShiftKey.isPressed || keyboard.rightShiftKey.isPressed;
             if (keyboard.escapeKey.wasPressedThisFrame) app.Back();   // also the Android back button
-            if (typing || !game.IsLive || app.paused) return;
+            if (typing || !game.IsLive || game.InIntro || app.paused) return;
             if (keyboard.eKey.wasPressedThisFrame) controller.UseNearbySpot();
             if (keyboard.qKey.wasPressedThisFrame) controller.TryPassDoll();
             if (keyboard.rKey.wasPressedThisFrame) controller.TryLaugh();
@@ -62,7 +62,7 @@ namespace Unice
             padStick.y = -padStick.y;   // the stick is up-positive, the game's y grows downwards
             sneakHeld = pad.leftTrigger.isPressed || pad.rightTrigger.isPressed || pad.leftShoulder.isPressed || pad.rightShoulder.isPressed;
             if (pad.buttonEast.wasPressedThisFrame) app.Back();
-            if (app.ui.Typing || !game.IsLive || app.paused) return;
+            if (app.ui.Typing || !game.IsLive || game.InIntro || app.paused) return;
             if (pad.buttonSouth.wasPressedThisFrame) controller.UseNearbySpot();
             if (pad.buttonWest.wasPressedThisFrame) controller.TryPassDoll();
             if (pad.buttonNorth.wasPressedThisFrame) controller.TryLaugh();
@@ -80,6 +80,7 @@ namespace Unice
         /// <summary>Moves this player from the input.</summary>
         public void Move(float dt)
         {
+            if (game.InIntro) return;   // the opening video is playing
             var direction = MoveInput();
             controller.Move(dt, (direction.x, direction.y), sneakHeld || app.ui.SneakToggled, app.IsTalking);
         }

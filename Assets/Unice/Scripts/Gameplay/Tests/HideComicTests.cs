@@ -15,12 +15,14 @@ namespace Unice
             game = MatchFixture.NewMatch();
             unice = game.unice;
             hider = MatchFixture.PlainHider(game);
-            game.phase = Phase.Hide; game.round = 1;
+            game.phase = Phase.Hide; game.round = 1; game.timeLeft = game.hideTime;   // the opening video is over
         }
 
         [Test]
-        public void IsWanted_UniceInTheFirstHidingPhaseOfTheDollStory_True()
+        public void IsWanted_UniceInTheFirstHidingPhaseOfAStoryWithOnlyAComic_True()
         {
+            game.mapId = MapLobisomem.Id;
+
             Assert.IsTrue(HideComic.IsWanted(game, unice, seenBefore: true));
         }
 
@@ -55,6 +57,7 @@ namespace Unice
         [Test]
         public void IsWanted_LaterRoundNeverSeen_True()
         {
+            game.mapId = MapLobisomem.Id;
             game.round = 3;
 
             Assert.IsTrue(HideComic.IsWanted(game, unice, seenBefore: false));
@@ -94,21 +97,53 @@ namespace Unice
             Assert.AreEqual(3, HideComic.PanelsShown(3, 30, 5));
         }
 
-        // ---------- the intro video ----------
+        // ---------- the opening video ----------
 
         [Test]
-        public void MediaFor_TheDollStory_IsTheVideoUntilItFails()
+        public void IsWanted_TheOpeningVideo_EveryoneIncludingAHider()
+        {
+            game.timeLeft = game.hideTime + 10;
+
+            Assert.IsTrue(HideComic.IsWanted(game, hider, seenBefore: true));
+            Assert.IsTrue(HideComic.IsWanted(game, unice, seenBefore: true));
+        }
+
+        [Test]
+        public void IsWanted_TheDollStoryAfterItsOpening_False()
+        {
+            // the video was the opening: no comic on top of it, in the first round or the later ones
+            Assert.IsFalse(HideComic.IsWanted(game, unice, seenBefore: false));
+            game.round = 3;
+            Assert.IsFalse(HideComic.IsWanted(game, unice, seenBefore: false));
+        }
+
+        [Test]
+        public void IsWanted_TheOpeningVideoButNoCharacterYet_False()
+        {
+            game.timeLeft = game.hideTime + 10;
+
+            Assert.IsFalse(HideComic.IsWanted(game, null, seenBefore: false));
+        }
+
+        [Test]
+        public void MediaFor_TheDollStory_IsTheVideoInTheOpeningUntilItFails()
         {
             var story = Stories.ForMap(game.mapId);
 
-            Assert.AreEqual(IntroMedia.Video, HideComic.MediaFor(story, videoFailed: false));
-            Assert.AreEqual(IntroMedia.Comic, HideComic.MediaFor(story, videoFailed: true), "a missing file falls back to the comic");
+            Assert.AreEqual(IntroMedia.Video, HideComic.MediaFor(story, videoFailed: false, opening: true));
+            Assert.AreEqual(IntroMedia.Comic, HideComic.MediaFor(story, videoFailed: true, opening: true), "a missing file falls back to the comic");
+        }
+
+        [Test]
+        public void MediaFor_AfterTheOpening_IsTheComicEvenWithAVideo()
+        {
+            Assert.AreEqual(IntroMedia.Comic, HideComic.MediaFor(Stories.ForMap(game.mapId), videoFailed: false, opening: false));
         }
 
         [Test]
         public void MediaFor_NoStory_IsNothing()
         {
-            Assert.AreEqual(IntroMedia.None, HideComic.MediaFor(null, videoFailed: false));
+            Assert.AreEqual(IntroMedia.None, HideComic.MediaFor(null, videoFailed: false, opening: false));
         }
 
         [Test]
@@ -116,7 +151,7 @@ namespace Unice
         {
             var story = new Story("x", MapHouse.Id, released: true, comic: new[] { new ComicPanel(null) });
 
-            Assert.AreEqual(IntroMedia.Comic, HideComic.MediaFor(story, videoFailed: false));
+            Assert.AreEqual(IntroMedia.Comic, HideComic.MediaFor(story, videoFailed: false, opening: true));
         }
 
         [Test]
@@ -124,7 +159,7 @@ namespace Unice
         {
             var story = new Story("x", MapHouse.Id, released: true);
 
-            Assert.AreEqual(IntroMedia.None, HideComic.MediaFor(story, videoFailed: false));
+            Assert.AreEqual(IntroMedia.None, HideComic.MediaFor(story, videoFailed: false, opening: true));
             Assert.IsNull(HideComic.VideoPath(story));
         }
 

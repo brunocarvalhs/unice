@@ -54,10 +54,12 @@ feito pelo time de arte. A HQ usa os sprites que já existem (catálogo em `.cla
 - `StoryContentTests` provam: nome da história, legendas da HQ e figuras existem nos 3 idiomas / em `Resources/Art`.
 - Checagem manual (o Claude lista no resumo, não finge que testou): jogar uma rodada solo no mapa, ver a HQ como Unice, olhar o cartão no seletor.
 
-## Vídeo explicativo para a Unice (opcional)
-Enquanto os outros se escondem, quem é a Unice vê o vídeo da história (até uns 30 segundos) no lugar da HQ. Toque na tela pula.
-Para uma história ter vídeo: coloque o arquivo em `Assets/StreamingAssets/Videos/` (use `.mp4` em H.264 + AAC) e passe o nome em
-`Stories.cs` (`introVideo: "doll.mp4"`). Se o arquivo não existir ou não tocar, o jogo mostra a HQ e segue normalmente.
+## Vídeo de abertura (opcional)
+Quando a partida começa (rodada 1), todos os jogadores veem o vídeo da história, ao mesmo tempo, e só depois a rodada começa: o tempo de esconder
+só corre quando o vídeo acaba, e ninguém se mexe enquanto ele toca (nem os bots). Não dá para pular. Depois, quem é a Unice vê a HQ enquanto espera.
+Para uma história ter vídeo: coloque o arquivo em `Assets/StreamingAssets/Videos/` (use `.mp4` em H.264 + AAC, **até 30 segundos**) e passe o nome e a
+duração em `Stories.cs` (`introVideo: "doll.mp4", introSeconds: 29.5f`, um pouco mais que o vídeo). Se o arquivo não existir ou não tocar, o jogo mostra a HQ
+nesse tempo e segue normalmente. O vídeo da Boneca é feito em Remotion (`unice-trailer/`, composição `HistoriaBoneca`).
 
 ## Histórias existentes
 | Id | Mapa | Estado | Spec |

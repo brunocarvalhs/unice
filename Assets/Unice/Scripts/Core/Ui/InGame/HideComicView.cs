@@ -6,8 +6,10 @@ using static Unice.UiKit;
 namespace Unice
 {
     /// <summary>
-    /// The intro comic: while the others hide, the Unice's player (who waits with their eyes closed) reads a one-page comic
-    /// of the story, one panel after another until the hiding time runs out. Tap or click skips it.
+    /// The story's opening, then the intro comic. When the match starts every player watches the story's video while the match
+    /// waits (the comic stands in if the video cannot play); after that, while the others hide, the Unice's player (who waits with
+    /// their eyes closed) reads a one-page comic of the story, one panel after another until the hiding time runs out.
+    /// Tap or click skips the comic, not the opening (everyone waits for it together).
     /// The panels are drawn with the game's own sprites; <see cref="HideComic"/> decides when and how much.
     /// </summary>
     sealed class HideComicView : UiPart
@@ -37,7 +39,7 @@ namespace Unice
 
         public readonly VisualElement Root;
         readonly Label title, countdown;
-        readonly VisualElement page, videoSurface;
+        readonly VisualElement page, videoSurface, skipHint;
         readonly IntroVideo video = new IntroVideo();
         /// <summary>The video could not be played (missing file, bad format): the comic stands in for the rest of the session.</summary>
         bool videoFailed;
@@ -66,8 +68,8 @@ namespace Unice
             countdown = IgnorePointer(AddLabel(header, "", "comic-count"));
             page = IgnorePointer(AddElement(Root, "comic-page"));
             videoSurface = IgnorePointer(AddElement(Root, "comic-video"));
-            IgnorePointer(LocalizedLabel(Root, "comic.skip", "comic-skip"));
-            Root.RegisterCallback<PointerDownEvent>(_ => skipped = true);
+            skipHint = IgnorePointer(LocalizedLabel(Root, "comic.skip", "comic-skip"));
+            Root.RegisterCallback<PointerDownEvent>(_ => Skip());
             Show(Root, false);
         }
 
@@ -91,11 +93,36 @@ namespace Unice
             if (!Playing) { StopVideo(); return; }
 
             time += dt;
-            UpdateVideo(dt);
-            SetText(countdown, Localization.Get("comic.countdown", Mathf.CeilToInt(game.timeLeft)));
-            int shown = HideComic.PanelsShown(panels.Count, game.hideTime, game.timeLeft);
+            bool opening = game.InIntro;
+            if (!opening && video.Current != IntroVideo.State.Idle) StopVideo();   // the opening is over: the Unice's comic takes the page
+            else UpdateVideo(dt);
+            Show(skipHint, true);
+            if (WantsSkipKey()) Skip();
+            // the comic spreads over the opening when the video is missing, and over the hiding time otherwise
+            float span = opening ? Stories.ForMap(game.mapId).introSeconds : game.hideTime;
+            float left = opening ? game.IntroTimeLeft : game.timeLeft;
+            SetText(countdown, Localization.Get("comic.countdown", Mathf.CeilToInt(left)));
+            int shown = HideComic.PanelsShown(panels.Count, span, left);
             for (int i = 0; i < panels.Count; i++) AnimatePanel(panels[i], i < shown, dt);
             foreach (var (holder, phase) in bobbers) holder.style.marginTop = -BobPixels * (.5f + .5f * Mathf.Sin(time * BobSpeed + phase));
+        }
+
+        /// <summary>
+        /// Skips what is playing. The opening is everyone's wait, so only the host (or a solo player) ends it for all, by dropping its extra seconds;
+        /// a guest only closes their own video and waits for the host's clock behind it. The comic is skipped on this device only.
+        /// </summary>
+        void Skip()
+        {
+            if (game.InIntro && game.isHost) game.timeLeft = game.hideTime;
+            else skipped = true;
+        }
+
+        /// <summary>Enter, Space or the gamepad's A skip too.</summary>
+        static bool WantsSkipKey()
+        {
+            var keyboard = UnityEngine.InputSystem.Keyboard.current; var pad = UnityEngine.InputSystem.Gamepad.current;
+            return (keyboard != null && (keyboard.enterKey.wasPressedThisFrame || keyboard.spaceKey.wasPressedThisFrame))
+                || (pad != null && (pad.buttonSouth.wasPressedThisFrame));
         }
 
         /// <summary>The comic starts: builds the page for this map's story the first time, and counts it as seen.</summary>
@@ -110,11 +137,11 @@ namespace Unice
             if (!markedSeen) { markedSeen = true; app.MarkComicSeen(story.id); Metrics.Log("comic_play", ("story", story.id), ("round", game.round)); }
         }
 
-        /// <summary>The story's explainer video starts loading, if it has one and it has not failed before; until it plays, the screen shows the comic.</summary>
+        /// <summary>The opening video starts loading, if the story has one and it has not failed before; until it plays, the screen shows the comic.</summary>
         void StartVideo(Story story)
         {
             lastVideoState = IntroVideo.State.Idle;
-            if (HideComic.MediaFor(story, videoFailed) != IntroMedia.Video) { ShowVideo(false); return; }
+            if (HideComic.MediaFor(story, videoFailed, opening: game.InIntro) != IntroMedia.Video) { ShowVideo(false); return; }
             video.Play(HideComic.VideoPath(story), muted: !app.sfx.Enabled);
         }
 
@@ -138,8 +165,7 @@ namespace Unice
                     Metrics.Log("intro_video", ("story", storyId), ("result", "failed"));
                     break;
                 case IntroVideo.State.Finished:
-                    ShowVideo(false);
-                    break;
+                    break;   // the last frame stays up until the opening's wait is over
             }
         }
 
