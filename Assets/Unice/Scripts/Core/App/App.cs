@@ -173,8 +173,8 @@ namespace Unice
             ui.Step(dt);
         }
 
-        /// <summary>The menu theme in the home and the lobby; no music once the match starts, or when muted.</summary>
-        MusicTrack WantedMusic => sfx.Enabled && game.phase <= Phase.Lobby ? MusicTrack.Menu : MusicTrack.None;
+        /// <summary>The menu theme in the main menu only; no music in the waiting room or the match, or when muted. The sound effects are separate (<see cref="sfx"/>).</summary>
+        MusicTrack WantedMusic => sfx.Enabled && game.phase == Phase.Home ? MusicTrack.Menu : MusicTrack.None;
 
         /// <summary>Every frame: camera, characters, fog, UI.</summary>
         void RenderFrame(float dt)
