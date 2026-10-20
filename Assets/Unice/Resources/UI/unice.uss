@@ -325,16 +325,19 @@
 .btn:focus, .btn-ghost:focus, .btn-link:focus, .tabbtn:focus, .cy-btn:focus:focus, .sw:focus { border-width: 3px; border-color: var(--anil); }
 .lobby-side .btn-ghost:focus, .lobby-side .cy-btn:focus, .lobby-side .sw:focus { border-color: var(--sol); }
 
-/* ---------- credits: scrolls by itself inside a menu panel (CreditsPage) ---------- */
-.credits-scroll { max-height: 380px; }
-.credits { align-items: center; padding: 10px 0 40px 0; }
-.credits-photo { width: 280px; height: 389px; margin-bottom: 14px; background-size: 100% 100%; }
-.credits-name { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 34px; color: var(--sol); white-space: normal; -unity-text-align: middle-center; }
-.credits-role { font-size: 16px; color: var(--cal-suave); margin-top: 10px; white-space: normal; -unity-text-align: middle-center; }
-.credits-text { font-size: 20px; color: var(--cal-suave); white-space: normal; -unity-text-align: middle-center; max-width: 520px; margin-top: 4px; }
-.credits-rule { width: 120px; height: 2px; background-color: var(--cal-35); margin: 22px 0 8px 0; }
-.cordel .credits-name { color: var(--nanquim); -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); font-size: 28px; }
-.cordel .credits-role, .cordel .credits-text { color: var(--tinta-mudo); }
+/* ---------- credits (CreditsScreen): text that scrolls up by itself ---------- */
+.credits { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: var(--noite-0); }
+.credits-view { position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; }
+.credits-scroll { position: absolute; left: 0; right: 0; top: 0; align-items: center; padding: 0 160px; }
+.credits-title { -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); font-size: 150px; color: var(--sol); -unity-text-align: middle-center; }
+.credits-tagline { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 24px; letter-spacing: 5px; color: var(--papel); -unity-text-align: middle-center; margin-top: 4px; }
+.credits-h { -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); font-size: 64px; color: var(--sol); -unity-text-align: middle-center; margin: 110px 0 28px 0; }
+.credits-p { font-size: 36px; color: var(--papel); white-space: normal; -unity-text-align: upper-center; max-width: 1000px; margin: 0 0 28px 0; }
+.credits-photo { margin: 90px 0 0 0; background-size: contain; }
+.credits-to { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 52px; color: var(--cal); -unity-text-align: middle-center; margin: 0 0 30px 0; }
+.credits-sign { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 44px; color: var(--sol); -unity-text-align: middle-center; margin: 20px 0 0 0; }
+.credits-line { font-size: 32px; color: var(--papel); white-space: normal; -unity-text-align: upper-center; max-width: 1000px; margin: 0 0 18px 0; }
+.credits-thanks { -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); font-size: 56px; color: var(--sol); white-space: normal; -unity-text-align: upper-center; max-width: 1000px; margin: 120px 0 80px 0; }
 
 /* ---------- story picker (StoryPicker): one card per story ---------- */
 .scards { width: 100%; flex-direction: row; justify-content: center; align-items: stretch; margin-top: 8px; }

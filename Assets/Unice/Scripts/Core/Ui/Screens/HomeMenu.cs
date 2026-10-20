@@ -15,8 +15,8 @@ namespace Unice
 
         public readonly VisualElement Root;
         readonly VisualElement mainPage, onlinePage, myKidPage, storiesPage, kidCustomizerSlot;
-        VisualElement howToPlayPage, creditsPage;   // set by BuildHowToPlay
-        CreditsPage credits;   // set by BuildCredits
+        VisualElement howToPlayPage;   // set by BuildHowToPlay
+        readonly CreditsScreen credits;
         readonly TextField roomCodeField;
         readonly Label netStatusLabel;
         readonly Button createRoomButton, joinRoomButton, soloButton, onlineButton;
@@ -67,11 +67,6 @@ namespace Unice
 
             BuildHowToPlay();
 
-            creditsPage = Root.Q("credits-page");
-            ui.Localize(creditsPage.Q<Label>("title"), "menu.credits");
-            credits = new CreditsPage(ui, creditsPage.Q("panel"));
-            BackToMain(creditsPage, "menu.back").BringToFront();   // the credits were added after the button: it goes last
-
             // my child: the same customization as in the waiting room
             myKidPage = Root.Q("mykid-page");
             ui.Localize(myKidPage.Q<Label>("title"), "menu.mykid_title");
@@ -84,6 +79,7 @@ namespace Unice
 #if !UNITY_WEBGL
             LocalizedButton(topRight, "menu.quit", () => Application.Quit(), "mbtn", "mbtn-quit");   // a browser tab can't quit itself
 #endif
+            credits = new CreditsScreen(ui, Root, () => ShowPage(Page.Main));   // last: drawn over everything else on the menu
             ShowPage(Page.Main);
         }
 
@@ -171,7 +167,7 @@ namespace Unice
             if (page != currentPage) Metrics.Screen(ScreenName(page));
             currentPage = page;
             Show(mainPage, page == Page.Main); Show(onlinePage, page == Page.Online);
-            Show(howToPlayPage, page == Page.HowToPlay); Show(myKidPage, page == Page.MyKid); Show(storiesPage, page == Page.Stories); Show(creditsPage, page == Page.Credits);
+            Show(howToPlayPage, page == Page.HowToPlay); Show(myKidPage, page == Page.MyKid); Show(storiesPage, page == Page.Stories); Show(credits.Root, page == Page.Credits);
             ui.UpdateBackdrop();
             if (page == Page.Credits) credits.Begin();
             if (page == Page.MyKid) ui.kidCustomizer.ShowIn(kidCustomizerSlot);

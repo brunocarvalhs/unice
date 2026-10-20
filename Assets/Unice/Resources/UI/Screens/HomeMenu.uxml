@@ -43,13 +43,6 @@
                 <ui:Button name="back" text="Voltar" class="mbtn mbtn-back" />
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="credits-page" class="menu-page">
-            <ui:VisualElement name="panel" class="mpanel">
-                <ui:Label name="title" text="CRÉDITOS" class="mpanel-t" />
-                <!-- the credits scroll is added here by the code, above the back button -->
-                <ui:Button name="back" text="Voltar" class="mbtn mbtn-back" />
-            </ui:VisualElement>
-        </ui:VisualElement>
         <ui:VisualElement name="mykid-page" class="menu-page">
             <ui:VisualElement name="panel" class="mpanel">
                 <ui:Label name="title" text="Minha criança" class="mpanel-t" />

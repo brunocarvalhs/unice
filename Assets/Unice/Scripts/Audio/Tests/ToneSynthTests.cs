@@ -16,9 +16,23 @@ namespace Unice
         [TestCase(Wave.Triangle, .75f, 0f)]
         [TestCase(Wave.Saw, 0f, -1f)]
         [TestCase(Wave.Saw, .5f, 0f)]
+        [TestCase(Wave.Sine, 0f, 0f)]
+        [TestCase(Wave.Sine, .25f, 1f)]
+        [TestCase(Wave.Sine, .75f, -1f)]
         public void WaveAt_PointOfThePeriod_ReturnsTheWaveShape(Wave wave, float cycle, float expected)
         {
             Assert.AreEqual(expected, WaveAt(wave, cycle), .001f);
+        }
+
+        [Test]
+        public void Render_ToneWithEndVolume_SustainsInsteadOfDyingAway()
+        {
+            var decaying = Render(new[] { MakeTone(100, .5f, Wave.Square, .1f) });
+            var sustained = Render(new[] { MakeTone(100, .5f, Wave.Square, .1f, 0, 0, .08f) });
+            int nearTheEnd = (int)(.45f * SampleRate);
+
+            Assert.Less(decaying.Skip(nearTheEnd).Take(400).Max(sample => System.Math.Abs(sample)), .01f);
+            Assert.Greater(sustained.Skip(nearTheEnd).Take(400).Max(sample => System.Math.Abs(sample)), .15f);
         }
 
         [Test]

@@ -29,8 +29,8 @@ Mundo 1720 × 1180. Salas separadas por 24 px de parede. Cada linha é uma sala.
 
 Peças só decorativas (sem lado): …
 
-## 4. Cordel (opcional)
-5 estrofes de 4 a 7 versos (`story.N.t` título, `story.N.b` corpo). Só a história `doll` tem a tela do cordel hoje.
+## 4. Vídeo de abertura (opcional)
+Até 30 s, mostrado a todos quando a partida começa (`introVideo`/`introSeconds` em `Stories.cs`; ver o README desta pasta). Sem vídeo, a HQ ocupa o tempo.
 
 ## 5. Textos
 - `map.<mapa>.name`: …

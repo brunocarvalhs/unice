@@ -17,11 +17,11 @@ namespace Unice
         /// <summary>A plain white sprite (top-left pivot), scaled and tinted for flat shapes.</summary>
         public static Sprite WhiteSprite;
         static readonly Dictionary<string, Sprite> spriteCache = new Dictionary<string, Sprite>();
-        static Material spriteMaterial, fogMaterial, pixelMaterial;
+        static Material spriteMaterial, fogMaterial;
 
         // The project enters Play mode without a domain reload, so statics from the last session must be cleared.
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void ResetStatics() { Manifest = null; spriteCache.Clear(); spriteMaterial = null; fogMaterial = null; pixelMaterial = null; WhiteSprite = null; }
+        static void ResetStatics() { Manifest = null; spriteCache.Clear(); spriteMaterial = null; fogMaterial = null; WhiteSprite = null; }
 
         /// <summary>House pixels (y down) → Unity world position (y up).</summary>
         public static Vector3 ToWorld(float x, float y, float z = 0) => new Vector3(x / PxPerUnit, -y / PxPerUnit, z);
@@ -55,9 +55,6 @@ namespace Unice
 
         /// <summary>Plain vertex-color material for the darkness mesh (Resources/UniceFog.shader).</summary>
         public static Material FogMat => fogMaterial ??= MaterialFromShader("UniceFog");
-
-        /// <summary>Chunky/pixelated material for character sprites (Resources/UnicePixel.shader): the chibi retro look.</summary>
-        public static Material PixelMat => pixelMaterial ??= MaterialFromShader("UnicePixel");
 
         static Material MaterialFromShader(string resourceName)
         {
