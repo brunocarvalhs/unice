@@ -25,6 +25,15 @@ only if the story lacks: **where** it happens (nothing to build a map from), or 
 Everything else (names, rooms, hiding spots, tone) you invent from the story, staying faithful to the details the user gave.
 The Unice is a playful seeker, never violent or scary-for-real; keep the tone of the user's story.
 
+## 0b. When the user sends a picture (a hand-drawn plan, a satellite print)
+Read the image before designing anything; the picture beats your own layout.
+- **Plan or print = the map.** Keep its shapes and proportions. Scale plan pixels to the world (anisotropic is fine; tall prints can be turned on their side). Say in the spec that the map was turned/stretched.
+- **Colours and labels are the user's code** (red = car, blue = water tank, street names). Make a colour → element table in the spec; use real street/place names as area names.
+- **Places nobody may enter** (locked house, "proibido entrar nas casas", a church) are walls: leave them uncovered by every area (a hole). A hole that you can name (a house, a church) gets a `public static readonly RectF` constant and two tests in `MapTests` (not walkable inside, blocks sight, no area covers it). Streets between houses are enough; do not draw the houses.
+- **Details the user adds later** ("no fim da praça tem uma igreja, uma cruz no meio, um orelhão") are changes to the same story: edit the map, spec, strings and tests; do not make a new story.
+- **Ambiguous words**: pick the most likely reading, write it in the spec's supposition notes and in the report, and ask the user to correct it (one line). Do not stop to ask.
+- Props that were not in the picture (benches, lamp posts) are suppositions; list them as such.
+
 ## 1. Spec — write `docs/stories/<id>.md` first
 Copy `docs/stories/_template.md` and fill every section from the story: brief, rooms table with coordinates, hiding-spot table,
 HQ (comic) panels with captions, texts in pt/en/es, tasks. Pick:
@@ -70,7 +79,10 @@ Run the whole Edit Mode suite (`unice-run-tests` skill). Without writing any new
 Fix failures in the map data (not the tests). If a test fails and you believe the test is wrong, stop and tell the user why.
 Never add the new map to `MapDefinitionsTests.UnfinishedMaps`.
 
+## 4b. Verify the map without Unity (when the Editor is open on the project)
+A batch run cannot lock an open project. Mirror `MapDefinitionsTests` in a throwaway `dotnet` console project that compiles `Domain/**/*.cs` (without `Tests`) and run it (keep it in the scratchpad, never in the repo). Then run the real suite once the Editor is closed. Never kill the user's Editor.
+
 ## 5. Report
 Reply in the user's language, short: the story id and map id, the room list in one line, the number of hiding spots, how to play it
 (Editor/dev build: Jogar solo → pick the card; or lobby map stepper), the assumptions you made, what is NOT verified (looks, feel, balance:
-no one has played it; art is placeholder), and test numbers (`total / passed / failed`). Do not commit unless asked.
+no one has played it; art is placeholder), and test numbers (`total / passed / failed`). Do not commit unless asked. When asked to commit: stage only the story files (Domain/Maps, Localization.Strings.cs, tests, docs/stories, CHANGELOG.md, the skill) and leave Unity's own churn (`.meta` of art, `packages-lock.json`, `ProjectVersion.txt`, `Logs/`) out.
