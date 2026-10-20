@@ -150,7 +150,7 @@ namespace Unice
             ["rule.rotation.t"] = new[] { "Rodízio", "Rotation", "Rotación" },
             ["rule.rotation.b"] = new[] { "A primeira Unice é sorteada. Quem é pego com a boneca vira a próxima.", "The first Unice is picked at random. Whoever's caught with the doll becomes the next one.", "La primera Unice se sortea al azar. Quien sea atrapado con la muñeca se vuelve la próxima." },
             ["rule.controls.t"] = new[] { "Controles", "Controls", "Controles" },
-            ["rule.controls.b"] = new[] { "Joystick para andar, Devagar para não fazer barulho, Esconder/Sair, Passar a boneca e Rir. No teclado: WASD, Shift, E, Q e R.", "Joystick to move, Sneak to stay quiet, Hide/Leave, Pass the doll and Laugh. On keyboard: WASD, Shift, E, Q and R.", "Joystick para moverte, Despacio para no hacer ruido, Esconder/Salir, Pasar la muñeca y Reír. En teclado: WASD, Shift, E, Q y R." },
+            ["rule.controls.b"] = new[] { "Joystick para andar, Devagar para não fazer barulho, Esconder/Sair, Passar a boneca e Rir. No teclado: WASD, Shift, E, Q e R. No controle: analógico, gatilho, A, X e Y.", "Joystick to move, Sneak to stay quiet, Hide/Leave, Pass the doll and Laugh. On keyboard: WASD, Shift, E, Q and R. On a gamepad: stick, trigger, A, X and Y.", "Joystick para moverte, Despacio para no hacer ruido, Esconder/Salir, Pasar la muñeca y Reír. En teclado: WASD, Shift, E, Q y R. En mando: stick, gatillo, A, X e Y." },
 
             // ---------- Ui.cs: character options ----------
             ["opt.skin"] = new[] { "PELE", "SKIN", "PIEL" },

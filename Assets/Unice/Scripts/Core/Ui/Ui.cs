@@ -163,7 +163,7 @@ namespace Unice
             SyncScreens();
             hudRefreshTimer -= dt;
             if (hudRefreshTimer <= 0 && currentScreen == UiScreen.Game) { hudRefreshTimer = HudRefreshSeconds; hud.Tick(); }
-            var hints = ActionHints.For(game, app.myCharacter, showKeys: !isTouch);
+            var hints = ActionHints.For(game, app.myCharacter, showKeys: !isTouch, gamepad: inputMode.Gamepad);
             messages.SetPrompt(hints.text);
             if (isTouch) controls.ShowAvailable(hints);
         }
