@@ -15,7 +15,7 @@ Valores em `Domain/Match/Rules.cs` (o host pode mudar tempo de esconder, de caç
 ### Histórias (mapas)
 A ideia do projeto: **cada história que a pessoa conta vira um jogo de esconde-esconde** (o lugar vira o mapa, as pessoas viram os escondidos, quem procura vira "a Unice"). As regras da partida não mudam; muda o cenário, os nomes, os textos e a HQ.
 Cada **história** (`Domain/Maps/Stories.cs`) é um mapa mais uma narrativa; o jogador escolhe a história antes de jogar. A escolha define `Game.mapId` (o host decide; os convidados recebem no snapshot).
-- **Menu:** "Jogar solo" e "Criar sala" abrem o seletor de histórias (`StoryPicker`, uma carta por história); entrar numa sala por código não passa por ele. A sala de espera mantém o seletor ‹ › de mapa para o host trocar.
+- **Menu:** "Jogar solo" e "Criar sala" abrem o seletor de histórias (`StoryPicker`, uma carta por história); entrar numa sala por código não passa por ele. O botão "CRÉDITOS" abre a tela de créditos (`CreditsScreen`): a história do jogo, a homenagem à tia Unice (com a foto dela, `Art/tia_moldura`) e quem fez o quê, em texto que rola sozinho (segurar acelera). Os textos são `credits.*` em `Localization.Strings`. A sala de espera mantém o seletor ‹ › de mapa para o host trocar.
 - **Histórias:** `doll` ("A Boneca", casa da vó — lançada, com HQ), as próximas histórias entram pelo processo SDD abaixo. Histórias com `released: false` aparecem como "Em breve" no seletor e só são jogáveis no Editor ou em build de desenvolvimento (`Debug.isDebugBuild`).
 - **HQ de introdução** (`HideComic` + `HideComicView`): na fase de esconder, quem é a Unice não pode se mexer; no lugar da tela preta vê uma HQ de 5 quadros (`comic.{história}.1…5`), um quadro a cada `hideTime / 5` s. Aparece sempre na rodada 1 e, depois, só se a pessoa nunca a viu (`unice.comic_seen.{história}`). Um toque pula.
 - **Vídeo de abertura** (`Story.introVideo`/`introSeconds`, `Game.InIntro`): na rodada 1, todos os jogadores veem o vídeo da história ao mesmo tempo (até 30 s) antes de a rodada começar; o host soma `introSeconds` ao `timeLeft` da primeira fase de esconder (nada novo no snapshot: `InIntro` = fase Hide com `timeLeft > hideTime`), e durante esse tempo só esse relógio corre — ninguém se mexe, bots incluídos. Sem o arquivo, a HQ ocupa o tempo. Os escondidos jogam sem interrupção.
@@ -93,7 +93,7 @@ Assets/Unice/Scripts/Core/    → adapters Unity (assembly Unice.Core)
                   Tests/ confere chaves, idiomas, placeholders e textos de cada mapa
   Analytics/    → Metrics (Google Analytics + Crashlytics via Firebase)
   Ui/           → Ui (troca de telas), UiKit/UiPart (base), SettingToggles, KeyboardLift, CharacterPortrait
-    Screens/    → HomeMenu, StoryPicker (escolha da história), KidCustomizer, KitOptionPicker, LobbyScreen, MatchOptions, ResultScreen, PauseMenu
+    Screens/    → HomeMenu, StoryPicker (escolha da história), CreditsScreen (créditos e homenagem), KidCustomizer, KitOptionPicker, LobbyScreen, MatchOptions, ResultScreen, PauseMenu
     InGame/     → Hud, MatchCard, RoleCard, PlayerListPanel, MiniMap, Messages, HideComicView (a HQ da Unice), WorldLabels, SoundCues,
                   ScreenEffects, TouchControls, Joystick, ActionIcons, ActionHints
   Tests/        → testes Edit Mode do Core
