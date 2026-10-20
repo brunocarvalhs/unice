@@ -71,6 +71,24 @@ namespace Unice
             File.WriteAllText(PathOf(entry.className), MapCodeWriter.Write(map, entry.className, entry.comment, entry.extraMembers), new UTF8Encoding(false));
         }
 
+        /// <summary>
+        /// Writes just <paramref name="id"/>'s file from <paramref name="map"/> (the map editor window's save button), reusing
+        /// <see cref="Entries"/> for its class name and header notes. Returns the project-relative path written, or null if
+        /// <paramref name="id"/> isn't a registered map (nothing is written in that case).
+        /// </summary>
+        public static string SaveOne(string id, MapDefinition map)
+        {
+            foreach (var entry in Entries)
+            {
+                if (entry.id != id) continue;
+                Save(map, entry);
+                AssetDatabase.Refresh();
+                return PathOf(entry.className);
+            }
+            Debug.LogError("Unice: no map source file registered for id \"" + id + "\".");
+            return null;
+        }
+
         /// <summary>Project-relative path of a map's source file.</summary>
         public static string PathOf(string className) => MapsFolder + className + ".cs";
     }
