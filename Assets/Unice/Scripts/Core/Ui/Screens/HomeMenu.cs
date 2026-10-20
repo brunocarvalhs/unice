@@ -27,19 +27,17 @@ namespace Unice
 
         public HomeMenu(Ui ui) : base(ui)
         {
-            Root = AddElement(ui.root, "menu", "cordel");
-            AddLabel(Root, "v" + Application.version, "menu-version");
-
-            // main page
-            mainPage = AddElement(Root, "menu-page");
-            AddLabel(mainPage, "Unice", "menu-title");
-            LocalizedLabel(mainPage, "menu.sub", "menu-sub");
-            var grid = AddElement(mainPage, "menu-grid");
-            soloButton = LocalizedButton(grid, "menu.local", () => ChooseStory(app.PlaySolo, Page.Main), "mbtn");
-            onlineButton = LocalizedButton(grid, "menu.online", () => { app.SetNetStatus(""); ShowPage(Page.Online); }, "mbtn");
-            LocalizedButton(grid, "menu.howto", () => ShowPage(Page.HowToPlay), "mbtn", "mbtn-sm");
-            LocalizedButton(grid, "menu.mykid", () => ShowPage(Page.MyKid), "mbtn", "mbtn-sm");
-            LocalizedButton(grid, "menu.credits", () => ShowPage(Page.Credits), "mbtn", "mbtn-sm");
+            // main page: laid out in Resources/UI/Screens/HomeMenu.uxml (UI Builder); here only the texts and clicks
+            Root = ui.LoadScreen("HomeMenu", ui.root);
+            Root.Q<Label>("version").text = "v" + Application.version;
+            mainPage = Root.Q("main-page");
+            ui.Localize(Root.Q<Label>("sub"), "menu.sub");
+            soloButton = Root.Q<Button>("local"); onlineButton = Root.Q<Button>("online");
+            ui.Localize(soloButton, "menu.local").clicked += () => ChooseStory(app.PlaySolo, Page.Main);
+            ui.Localize(onlineButton, "menu.online").clicked += () => { app.SetNetStatus(""); ShowPage(Page.Online); };
+            ui.Localize(Root.Q<Button>("howto"), "menu.howto").clicked += () => ShowPage(Page.HowToPlay);
+            ui.Localize(Root.Q<Button>("mykid"), "menu.mykid").clicked += () => ShowPage(Page.MyKid);
+            ui.Localize(Root.Q<Button>("credits"), "menu.credits").clicked += () => ShowPage(Page.Credits);
 
             // online: create a room (the code is generated for you) or join one with a code
             var online = AddPanelPage(out onlinePage, "menu.online_title");
@@ -76,12 +74,12 @@ namespace Unice
             LocalizedButton(myKid, "menu.ready", () => ShowPage(Page.Main), "mbtn", "mbtn-back");
 
             // top right: sound and language next to quit; the voice toggles stay at the bottom
-            var topRight = AddElement(Root, "menu-top");
+            var topRight = Root.Q("top-right");
             ui.settings.AddSoundIconButton(topRight, "mpill"); ui.settings.AddLanguageIconButton(topRight, "mpill");
 #if !UNITY_WEBGL
             LocalizedButton(topRight, "menu.quit", () => Application.Quit(), "mbtn", "mbtn-quit");   // a browser tab can't quit itself
 #endif
-            var footer = AddElement(Root, "menu-foot");
+            var footer = Root.Q("footer");
             ui.settings.AddMicButton(footer, "mpill"); ui.settings.AddWhisperButton(footer, "mpill");
             ShowPage(Page.Main);
         }

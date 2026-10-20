@@ -1,0 +1,22 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="../unice.uss" />
+    <!-- The home menu's main page. Open this file in the UI Builder (double click) to move things around; the code (HomeMenu.cs) finds the elements by name. -->
+    <ui:VisualElement name="root" class="menu cordel">
+        <ui:Label name="version" text="v1.0" class="menu-version" />
+        <ui:VisualElement name="main-page" class="menu-page">
+            <ui:Label name="title" text="Unice" class="menu-title" />
+            <ui:Label name="sub" text="UNICE: MEMÓRIAS ESPECIAIS NO FORMATO DE JOGO" class="menu-sub" />
+            <ui:VisualElement name="grid" class="menu-grid">
+                <ui:Button name="local" text="LOCAL" class="mbtn" />
+                <ui:Button name="online" text="ONLINE" class="mbtn" />
+                <ui:Button name="howto" text="COMO JOGAR" class="mbtn mbtn-sm" />
+                <ui:Button name="mykid" text="MINHA CRIANÇA" class="mbtn mbtn-sm" />
+                <ui:Button name="credits" text="CRÉDITOS" class="mbtn mbtn-sm" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <!-- sound, language and quit buttons are added here by the code -->
+        <ui:VisualElement name="top-right" class="menu-top" />
+        <!-- microphone and whisper toggles are added here by the code -->
+        <ui:VisualElement name="footer" class="menu-foot" />
+    </ui:VisualElement>
+</ui:UXML>

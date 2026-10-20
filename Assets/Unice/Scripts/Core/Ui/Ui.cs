@@ -148,6 +148,27 @@ namespace Unice
             relocalizers.Add(() => button.text = Localization.Get(key));
             return button;
         }
+        /// <summary>
+        /// Builds a screen from its UXML (Resources/UI/Screens, editable in the UI Builder) under <paramref name="parent"/> and returns the file's root element.
+        /// The code then finds the elements by name (<c>Q</c>) and gives them their text keys (<see cref="Localize"/>) and clicks.
+        /// </summary>
+        internal VisualElement LoadScreen(string name, VisualElement parent)
+        {
+            var asset = Resources.Load<VisualTreeAsset>("UI/Screens/" + name);
+            var screen = asset.CloneTree().Q("root");
+            screen.styleSheets.Clear();   // the file links unice.uss so the UI Builder can preview it; the panel already has it
+            parent.Add(screen);
+            return screen;
+        }
+
+        /// <summary>A UXML label or button whose text follows language changes: the UXML text is only a preview for the UI Builder.</summary>
+        internal T Localize<T>(T element, string key) where T : TextElement
+        {
+            element.text = Localization.Get(key);
+            relocalizers.Add(() => element.text = Localization.Get(key));
+            return element;
+        }
+
         void Relocalize()
         {
             foreach (var relocalize in relocalizers) relocalize();
