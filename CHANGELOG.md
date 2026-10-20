@@ -4,6 +4,55 @@ Todas as alterações relevantes do projeto serão documentadas neste arquivo.
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-20
+
+### Commits
+* Ignore the Remotion project folder (unice-trailer/: node_modules, renders and the ElevenLabs key file)
+* UI size follows the window on a computer: the panel grows from 540 to 900 px tall (controls up to 40 % smaller on a big screen), phones and tablets keep 540
+* Characters use the normal sprite material again: no pixelation shader
+* CI: swap and a second try when Unity is killed (exit 137) on a platform build, with the kernel's out-of-memory log
+* Credits screen in place of the story: the game's story, a tribute to aunt Unice with her photo, and the credits, as text that scrolls by itself
+* Remove the cordel story screen from the menu: the story is told by the opening video in the match
+* The game no longer opens on the story the first time: the cordel is only shown from the "A HISTÓRIA" button
+* Music only in the main menu (not the waiting room); match sounds unchanged
+* No music during the match: the menu theme is the only music
+* Menu music: forró track from Resources/Audio (the synthesized theme stays as fallback); soundtrack for the match; silence during the opening video
+* New app icon: cordel sun, cacti and the UNICE lettering
+* Opening video for every player: the first round waits for the story video (the match is frozen while it plays), the Unice sees the comic afterwards
+* Intro video for the Unice while the others hide, with the comic as fallback when the file is missing
+* Tests for the bots' decisions (domain, gameplay and localization at 100% of lines); remove unused USS classes, strings and code
+* Cordel on the result and final screens (map only while the match is live); giggle meter beside the clock, doll holder no longer shown
+* Cordel style for the pause sheet and the match HUD: paper cards, ink borders, Rye lettering, touch controls
+* Cordel theme through the waiting room: shared backdrop, paper cards, no moving house map until the match starts
+* Metas for the cordel backdrop script and art
+* Menu: animated full-bleed cordel backdrop, no house map behind the home screen, new subtitle
+* Menu as a cordel poster: full-screen sand background with cacti, birds and stars, paper cards, Rye lettering, story picker that fits narrow screens
+* Skill unice-new-story: pictures as input, holes for places you cannot enter, Unity-free map check
+* Story "A Rua da Vó": the town square map from the author's satellite print, story card and intro comic
+* Splash: author name as Brunocarvalhs
+* Branding: app icon, Android adaptive icon and splash with the author and Unity logo
+* Lobisomem map redone from the author's floor plan: house hole, lit balcony, 14 hiding spots
+* Story "O Lobisomem": the night yard map, story card and intro comic
+* Stories: story picker, intro comic for the Unice and the SDD to turn stories into maps
+* Audio module: synthesis, mixing, soundscape and heartbeat without Unity
+* Gameplay: the HUD cards' numbers and words as tested models
+* Gameplay module: the match rules out of Core, behind IStage
+* Split the text table into its own module, Unice.Localization
+* HUD: fold the goal away after 10 s, drop the room line, stronger doors
+* HUD: a lighter in-game layout
+* Map: make the doorways stand out
+* Docs: art direction for the northeastern look
+* Dev: layout screenshots in touch and keyboard/mouse modes
+* Joystick: ignore a release when no finger is down
+* Story: fix the tint property name in the backdrop and vignette styles
+* Platforms: iOS, Windows, macOS and Linux next to Android
+* Input: follow the last device used instead of the platform
+* Menu: sound and language beside quit, as icons
+* Add the Unity meta file for StoryScreen
+* Story: replace the scrolling text panel with a full-screen animation
+* feat(art): visual nordestino (cordel/chita) e a história em cordel no menu
+* ci: version by Conventional Commits with CHANGELOG entry (script from cestou)
+
 ### Adicionado
 - Identidade visual (`Assets/Unice/Branding/`): ícone do app com a marca "Unice" (desktop, iOS e Android adaptativo: fundo + marca dentro da área segura) e abertura do jogo: "Bruno Carvalho apresenta", a marca Unice e depois o logo da Unity.
 - Criação de histórias por especificação (SDD): `docs/stories/` (processo, modelo e a spec de `doll`) e a skill `unice-new-story`, com a qual o Claude transforma uma história contada em spec, mapa novo, cartão, HQ e textos pt/en/es. Novos testes (`MapDefinitionsTests`, `StoryContentTests`) validam todo mapa e história registrados.
