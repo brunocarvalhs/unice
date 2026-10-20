@@ -1,0 +1,30 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="../unice.uss" />
+    <!-- The waiting room. Open in the UI Builder to move things; LobbyScreen.cs finds the elements by name and fills the cards and options. -->
+    <ui:VisualElement name="root" class="lobby cordel">
+        <ui:VisualElement name="top" class="lobby-top">
+            <ui:Button name="leave" text="Sair" class="mbtn mbtn-top" />
+            <ui:VisualElement name="head" class="lobby-head">
+                <ui:Label name="title" text="PARTIDA LOCAL" class="lobby-title" />
+                <ui:Label name="code" text="ABCD" class="lobby-code" />
+                <ui:Button name="copy" text="Copiar código" class="mpill" />
+            </ui:VisualElement>
+            <!-- the microphone and whisper buttons are added here by the code (only with voice) -->
+            <ui:Label name="count" text="4/8" class="lobby-count" />
+        </ui:VisualElement>
+        <ui:VisualElement name="body" class="lobby-body">
+            <ui:ScrollView name="players" class="lobby-players" horizontal-scroller-visibility="Hidden" />
+            <ui:VisualElement name="side" class="mpanel lobby-side">
+                <ui:VisualElement name="tabbar" class="tabbar">
+                    <ui:Button name="tab-match" text="Partida" class="tabbtn" />
+                    <ui:Button name="tab-appearance" text="Aparência" class="tabbtn" />
+                </ui:VisualElement>
+                <ui:ScrollView name="match-tab" horizontal-scroller-visibility="Hidden" style="flex-grow: 1; max-height: 320px;" />
+                <ui:ScrollView name="appearance-tab" horizontal-scroller-visibility="Hidden" style="flex-grow: 1; max-height: 320px;" />
+                <ui:Label name="status" text="Todos prontos!" class="mnote lobby-status" />
+                <ui:Button name="ready" text="COMEÇAR" class="mbtn mbtn-go" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:Label name="note" text="" class="lobby-note" />
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,0 +1,13 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="../unice.uss" />
+    <!-- The round buttons of the touch controls (bottom right); the joystick is placed by the code on the left.
+         The icons are drawn by the code inside each "act-icon". -->
+    <ui:VisualElement name="root" class="layer">
+        <ui:VisualElement name="acts" class="acts">
+            <ui:VisualElement name="sneak" class="act act-s"><ui:VisualElement class="act-icon" /></ui:VisualElement>
+            <ui:VisualElement name="laugh" class="act act-r"><ui:VisualElement class="act-icon" /></ui:VisualElement>
+            <ui:VisualElement name="pass" class="act act-q"><ui:VisualElement class="act-icon" /></ui:VisualElement>
+            <ui:VisualElement name="use" class="act"><ui:VisualElement class="act-icon" /></ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

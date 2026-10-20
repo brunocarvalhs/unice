@@ -13,7 +13,6 @@ namespace Unice
     {
         enum SideTab { Match, Appearance }
 
-        const float SidePanelMaxHeight = 320;
         const int CopiedFeedbackMs = 1800;
 
         public readonly VisualElement Root;
@@ -28,41 +27,31 @@ namespace Unice
 
         public LobbyScreen(Ui ui) : base(ui)
         {
-            Root = AddElement(ui.root, "lobby", "cordel");
+            // laid out in Resources/UI/Screens/LobbyScreen.uxml (UI Builder); here the buttons, the cards and the options
+            Root = ui.LoadScreen("LobbyScreen", ui.root);
 
             // top bar: leave, room code, voice buttons, player count
-            var top = AddElement(Root, "lobby-top");
-            leaveButton = AddButton(top, "", () => app.LeaveRoom(), "mbtn", "mbtn-top");
-            var header = AddElement(top, "lobby-head");
-            titleLabel = AddLabel(header, "", "lobby-title"); codeLabel = AddLabel(header, "", "lobby-code");
-            copyCodeButton = LocalizedButton(header, "lobby.copy_code", CopyCode, "mpill");
+            var top = Root.Q("top");
+            leaveButton = Root.Q<Button>("leave"); leaveButton.clicked += () => app.LeaveRoom();
+            titleLabel = Root.Q<Label>("title"); codeLabel = Root.Q<Label>("code");
+            copyCodeButton = ui.Localize(Root.Q<Button>("copy"), "lobby.copy_code"); copyCodeButton.clicked += CopyCode;
             ui.settings.AddMicButton(top, "mpill");
             ui.settings.AddWhisperButton(top, "mpill");
-            countLabel = AddLabel(top, "", "lobby-count");
+            countLabel = Root.Q<Label>("count"); countLabel.BringToFront();   // the voice buttons come before the count
 
             // body: player cards, and the side panel
-            var body = AddElement(Root, "lobby-body");
-            playerCards = AddScroll(body, "lobby-players", "lobby-cards");
-            var side = AddElement(body, "mpanel", "lobby-side");
-            var tabBar = AddElement(side, "tabbar");
-            matchTabButton = LocalizedButton(tabBar, "tab.match", () => ShowSideTab(SideTab.Match), "tabbtn");
-            appearanceTabButton = LocalizedButton(tabBar, "tab.appearance", () => ShowSideTab(SideTab.Appearance), "tabbtn");
-            matchTab = AddScrollTab(side);
+            playerCards = Root.Q<ScrollView>("players").contentContainer;
+            playerCards.AddToClassList("lobby-cards");
+            var matchButton = ui.Localize(Root.Q<Button>("tab-match"), "tab.match"); matchButton.clicked += () => ShowSideTab(SideTab.Match); matchTabButton = matchButton;
+            var appearanceButton = ui.Localize(Root.Q<Button>("tab-appearance"), "tab.appearance"); appearanceButton.clicked += () => ShowSideTab(SideTab.Appearance); appearanceTabButton = appearanceButton;
+            matchTab = Root.Q<ScrollView>("match-tab");
             matchOptions = new MatchOptions(ui, matchTab, Invalidate);
-            appearanceTab = AddScrollTab(side);
-            statusLabel = AddLabel(side, "", "mnote", "lobby-status");
-            readyOrStartButton = AddButton(side, "", OnReadyOrStart, "mbtn", "mbtn-go");
+            appearanceTab = Root.Q<ScrollView>("appearance-tab");
+            statusLabel = Root.Q<Label>("status");
+            readyOrStartButton = Root.Q<Button>("ready"); readyOrStartButton.clicked += OnReadyOrStart;
 
-            noteLabel = AddLabel(Root, "", "lobby-note");
+            noteLabel = Root.Q<Label>("note");
             ShowSideTab(SideTab.Match);
-        }
-
-        static ScrollView AddScrollTab(VisualElement parent)
-        {
-            var scroll = new ScrollView(ScrollViewMode.Vertical) { horizontalScrollerVisibility = ScrollerVisibility.Hidden };
-            scroll.style.flexGrow = 1; scroll.style.maxHeight = SidePanelMaxHeight;
-            parent.Add(scroll);
-            return scroll;
         }
 
         /// <summary>Forces the next <see cref="Render"/> to rebuild (it skips when nothing it shows changed).</summary>

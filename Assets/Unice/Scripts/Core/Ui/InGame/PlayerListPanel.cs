@@ -15,13 +15,14 @@ namespace Unice
         /// <summary>Everything the list shows, as text: the list is only rebuilt when this changes.</summary>
         string renderedSignature;
 
-        public PlayerListPanel(Ui ui, VisualElement parent) : base(ui)
+        /// <param name="plist">The panel's element, made in Hud.uxml.</param>
+        public PlayerListPanel(Ui ui, VisualElement plist) : base(ui)
         {
-            panel = IgnorePointer(AddElement(parent, "hud-card", "plist"));
-            LocalizedLabel(panel, "hud.house_plan", "hud-lbl");
-            miniMap = new MiniMap(ui, panel);
-            LocalizedLabel(panel, "hud.players", "hud-lbl").style.marginTop = 8;
-            rows = AddScroll(panel, "plist-rows", null);
+            panel = IgnorePointer(plist);
+            ui.Localize(panel.Q<Label>("plan-lbl"), "hud.house_plan");
+            miniMap = new MiniMap(ui, panel.Q("minimap-slot"));
+            ui.Localize(panel.Q<Label>("players-lbl"), "hud.players");
+            rows = panel.Q<ScrollView>("rows").contentContainer;
             Show(panel, false);
         }
 

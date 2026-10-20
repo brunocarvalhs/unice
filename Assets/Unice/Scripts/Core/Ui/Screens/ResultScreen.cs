@@ -20,11 +20,11 @@ namespace Unice
 
         public ResultScreen(Ui ui) : base(ui)
         {
-            Root = AddElement(ui.root, "lobby", "result", "cordel");
-            header = AddElement(Root, "res-head");
-            var body = AddElement(Root, "lobby-body");
-            scoreCards = AddScroll(body, "lobby-players", "lobby-cards");
-            sidePanel = AddElement(body, "mpanel", "lobby-side");
+            // where the header, the cards and the side panel go: Resources/UI/Screens/ResultScreen.uxml (UI Builder)
+            Root = ui.LoadScreen("ResultScreen", ui.root);
+            header = Root.Q("header"); header.Clear();
+            scoreCards = Root.Q<ScrollView>("cards").contentContainer; scoreCards.AddToClassList("lobby-cards");
+            sidePanel = Root.Q("side");
         }
 
         /// <summary>Per step: the countdown to the next round, or who can start a new match.</summary>

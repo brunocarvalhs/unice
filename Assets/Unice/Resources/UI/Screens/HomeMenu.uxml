@@ -14,6 +14,51 @@
                 <ui:Button name="credits" text="CRÉDITOS" class="mbtn mbtn-sm" />
             </ui:VisualElement>
         </ui:VisualElement>
+        <!-- sub-pages: one framed panel each (the code shows one page at a time) -->
+        <ui:VisualElement name="online-page" class="menu-page">
+            <ui:VisualElement name="panel" class="mpanel">
+                <ui:Label name="title" text="Online" class="mpanel-t" />
+                <ui:Label name="desc" text="Jogue com seus amigos. Quem cria a sala recebe um código automático para compartilhar." class="mnote" />
+                <ui:Button name="create" text="CRIAR SALA" class="mbtn mbtn-wide" />
+                <ui:Label name="or" text="OU ENTRE COM O CÓDIGO DE UM AMIGO" class="menu-or" />
+                <ui:VisualElement name="join-row" class="row">
+                    <ui:TextField name="room-code" max-length="10" class="mfield grow" />
+                    <ui:Button name="join" text="ENTRAR" class="mbtn mbtn-join" />
+                </ui:VisualElement>
+                <ui:Label name="net" text="" class="mnote mnet" />
+                <ui:Button name="back" text="Voltar" class="mbtn mbtn-back" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="stories-page" class="menu-page">
+            <ui:VisualElement name="panel" class="mpanel">
+                <ui:Label name="title" text="ESCOLHA A HISTÓRIA" class="mpanel-t" />
+                <ui:Label name="desc" text="Cada história acontece em um lugar diferente." class="mnote" />
+                <!-- the story cards and the back button are added here by the code -->
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="howto-page" class="menu-page">
+            <ui:VisualElement name="panel" class="mpanel">
+                <ui:Label name="title" text="Como jogar" class="mpanel-t" />
+                <ui:ScrollView name="rules" class="mscroll" />
+                <ui:Button name="back" text="Voltar" class="mbtn mbtn-back" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="credits-page" class="menu-page">
+            <ui:VisualElement name="panel" class="mpanel">
+                <ui:Label name="title" text="CRÉDITOS" class="mpanel-t" />
+                <!-- the credits scroll is added here by the code, above the back button -->
+                <ui:Button name="back" text="Voltar" class="mbtn mbtn-back" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="mykid-page" class="menu-page">
+            <ui:VisualElement name="panel" class="mpanel">
+                <ui:Label name="title" text="Minha criança" class="mpanel-t" />
+                <ui:ScrollView name="kid-scroll" class="mscroll">
+                    <ui:VisualElement name="kid-slot" class="mkid" />
+                </ui:ScrollView>
+                <ui:Button name="back" text="Pronto" class="mbtn mbtn-back" />
+            </ui:VisualElement>
+        </ui:VisualElement>
         <!-- sound, language and quit buttons are added here by the code -->
         <ui:VisualElement name="top-right" class="menu-top" />
         <!-- microphone and whisper toggles are added here by the code -->

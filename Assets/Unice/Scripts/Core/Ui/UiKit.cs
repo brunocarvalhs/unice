@@ -21,9 +21,13 @@ namespace Unice
         public static Button AddButton(VisualElement parent, string text, Action onClick, params string[] classes) => Add(parent, new Button(onClick) { text = text }, classes);
 
         /// <summary>A button that shows only a vector icon, drawn in the button's own text color (so hover and focus tint it).</summary>
-        public static Button AddGlyphButton(VisualElement parent, ActionIcon icon, Action onClick, params string[] classes)
+        public static Button AddGlyphButton(VisualElement parent, ActionIcon icon, Action onClick, params string[] classes) =>
+            BindGlyphButton(AddButton(parent, "", null, classes), icon, onClick);
+
+        /// <summary><see cref="AddGlyphButton"/> for a button that already exists (made in a UXML): gives it the icon and the click.</summary>
+        public static Button BindGlyphButton(Button button, ActionIcon icon, Action onClick)
         {
-            var button = AddButton(parent, "", onClick, classes);
+            button.clicked += onClick;
             var glyph = IgnorePointer(AddElement(button, "hud-glyph"));
             glyph.generateVisualContent += context => ActionIcons.Draw(context, icon, button.resolvedStyle.color);
             button.RegisterCallback<PointerEnterEvent>(e => glyph.MarkDirtyRepaint()); button.RegisterCallback<PointerLeaveEvent>(e => glyph.MarkDirtyRepaint());

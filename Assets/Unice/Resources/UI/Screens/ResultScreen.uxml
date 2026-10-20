@@ -1,0 +1,16 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="../unice.uss" />
+    <!-- The end of a round / of the match: header on top, score cards on the left, side panel on the right.
+         Their contents change with the round, so the code (ResultScreen.cs) fills them; here is only where each goes. -->
+    <ui:VisualElement name="root" class="lobby result cordel">
+        <ui:VisualElement name="header" class="res-head">
+            <ui:Label text="RODADA 1 DE 5" class="res-eyebrow" />
+            <ui:Label text="Unice recuperou a boneca" class="res-title" />
+            <ui:Label text="Zeca tirou a boneca de Tito no Quarto Principal." class="res-reason" />
+        </ui:VisualElement>
+        <ui:VisualElement name="body" class="lobby-body">
+            <ui:ScrollView name="cards" class="lobby-players" horizontal-scroller-visibility="Hidden" />
+            <ui:VisualElement name="side" class="mpanel lobby-side" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
