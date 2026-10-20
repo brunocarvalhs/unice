@@ -23,8 +23,12 @@ namespace Unice
         internal bool spaceHeld;
         string statusMessage;
 
+        /// <summary>Bumped whenever <see cref="Working"/> is mutated or swapped, so the validation panel knows when to re-run.</summary>
+        internal int Revision { get; private set; }
+
         MapEditorUndoStack undo = new MapEditorUndoStack();
         readonly MapEditorCanvas canvas = new MapEditorCanvas();
+        readonly MapEditorValidationPanel validation = new MapEditorValidationPanel();
 
         [MenuItem("Unice/Editor de mapas")]
         static void Open() => GetWindow<MapEditorWindow>("Editor de mapas");
@@ -44,6 +48,8 @@ namespace Unice
             var canvasRect = GUILayoutUtility.GetRect(10, 10, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
             canvas.Draw(canvasRect, this);
             EditorGUILayout.BeginVertical(GUILayout.Width(PropertiesWidth), GUILayout.ExpandHeight(true));
+            validation.Draw(this);
+            EditorGUILayout.Space(8);
             MapEditorPropertiesPanel.Draw(this);
             EditorGUILayout.EndVertical();
             EditorGUILayout.EndHorizontal();
@@ -93,14 +99,28 @@ namespace Unice
             undo = new MapEditorUndoStack();
             Dirty = false;
             statusMessage = null;
+            Revision++;
             Repaint();
         }
 
         internal void SaveCurrentMap()
         {
             if (Working == null) return;
+            if (EditorApplication.isPlaying) { statusMessage = "Não é possível salvar durante o Play."; return; }
+
+            // never trust the validation panel's cached list here: re-check right before writing anything
+            var problems = MapEditorValidationPanel.ValidateAndRestore(Working);
+            if (problems.Count > 0)
+            {
+                EditorUtility.DisplayDialog("Não é possível salvar",
+                    problems.Count + " problema(s) encontrados. Veja a lista de problemas antes de salvar.", "Ok");
+                return;
+            }
+
             var path = MapSourceFiles.SaveOne(selectedMapId, Working);
             if (path == null) { statusMessage = "Não consegui salvar: mapa não registrado em MapSourceFiles."; return; }
+            if (Working.id == MapHouse.Id) HouseManifestSync.SyncFile(Working.rooms);
+
             Dirty = false;
             statusMessage = "Salvo em " + path + ".";
             Debug.Log("[Unice] Mapa \"" + selectedMapId + "\" salvo em " + path + ".");
@@ -112,20 +132,21 @@ namespace Unice
             undo.RecordSnapshot(Working);
             Dirty = true;
             statusMessage = null;
+            Revision++;
         }
 
         internal void PerformUndo()
         {
             var previous = undo.Undo(Working);
             if (previous == null) return;
-            Working = previous; Selection = MapEditorSelection.None; Dirty = true; Repaint();
+            Working = previous; Selection = MapEditorSelection.None; Dirty = true; Revision++; Repaint();
         }
 
         internal void PerformRedo()
         {
             var next = undo.Redo(Working);
             if (next == null) return;
-            Working = next; Selection = MapEditorSelection.None; Dirty = true; Repaint();
+            Working = next; Selection = MapEditorSelection.None; Dirty = true; Revision++; Repaint();
         }
 
         internal void AddRoom()

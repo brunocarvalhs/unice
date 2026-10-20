@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -6,8 +7,9 @@ namespace Unice
     /// <summary>
     /// The map editor's left-hand canvas: draws the map (world bounds, rooms, doors, furniture, spawn/entry) and handles
     /// its own input (pan, zoom, select, drag/resize). View state (zoom/pan/drag) lives here; the data it draws and the
-    /// selection/undo it writes into live on the owning <see cref="MapEditorWindow"/>. Flat colored rectangles only — no
-    /// painted art (that's Etapa 3). World/room/door/prop coordinates are drawn in their own Y-down pixel space, scaled
+    /// selection/undo it writes into live on the owning <see cref="MapEditorWindow"/>. Rooms are flat colored rectangles,
+    /// except the house map's, which show the real painted floor (<see cref="FloorTexture"/>) under a faint tint — other
+    /// maps have no painted art. World/room/door/prop coordinates are drawn in their own Y-down pixel space, scaled
     /// by <see cref="zoom"/> and offset by <see cref="pan"/>; no Y-flip.
     /// </summary>
     sealed class MapEditorCanvas
@@ -40,6 +42,9 @@ namespace Unice
         Rect dragOriginalRect;        // room/furniture being resized/moved
         Vector2 dragOriginalPoint;    // door/spawn/entry being moved
 
+        /// <summary>By room id; null cached once a room has no "floor_&lt;id&gt;" texture (a brand-new room, or a non-house map).</summary>
+        readonly Dictionary<string, Texture2D> floorTextureCache = new Dictionary<string, Texture2D>();
+
         /// <summary>The world point at the center of the canvas right now — where newly added items are placed, so they land where the user is looking.</summary>
         public Vector2 ViewCenterWorld => MapEditorMath.ScreenToWorld(lastRect.size / 2f, pan, zoom);
 
@@ -55,8 +60,9 @@ namespace Unice
             DrawGrid(local);
             DrawOutline(WorldToScreenRect(new Rect(0, 0, map.worldW, map.worldH)), WorldBoundsColor, 2);
 
+            bool isHouse = map.id == MapHouse.Id;
             for (int i = 0; i < map.rooms.Length; i++)
-                DrawRoom(map.rooms[i], window.Selection.kind == MapEditorSelectionKind.Room && window.Selection.index == i);
+                DrawRoom(map.rooms[i], window.Selection.kind == MapEditorSelectionKind.Room && window.Selection.index == i, isHouse);
             DrawDoors(map.verticalDoors, true, window.Selection);
             DrawDoors(map.horizontalDoors, false, window.Selection);
             for (int i = 0; i < map.furniture.Length; i++)
@@ -95,13 +101,33 @@ namespace Unice
             EditorGUI.DrawRect(new Rect(r.xMax - thickness, r.y, thickness, r.height), color);
         }
 
-        void DrawRoom(Room room, bool selected)
+        void DrawRoom(Room room, bool selected, bool isHouse)
         {
             var r = WorldToScreenRect(new Rect(room.x, room.y, room.w, room.h));
             var baseColor = room.tint != null && ColorUtility.TryParseHtmlString(room.tint, out var tintColor) ? tintColor : ColorForId(room.id);
-            EditorGUI.DrawRect(r, new Color(baseColor.r, baseColor.g, baseColor.b, 0.35f));
+            var floorArt = isHouse ? FloorTexture(room.id) : null;
+
+            if (floorArt != null)
+            {
+                GUI.DrawTexture(r, floorArt, ScaleMode.StretchToFill);
+                // a faint tint on top of the real art, just enough to show selection and keep the id label legible
+                EditorGUI.DrawRect(r, new Color(baseColor.r, baseColor.g, baseColor.b, selected ? 0.22f : 0.1f));
+            }
+            else
+            {
+                EditorGUI.DrawRect(r, new Color(baseColor.r, baseColor.g, baseColor.b, 0.35f));
+            }
             DrawOutline(r, selected ? SelectionColor : new Color(baseColor.r, baseColor.g, baseColor.b, 0.9f), selected ? 3 : 1.5f);
             GUI.Label(new Rect(r.x + 4, r.y + 2, Mathf.Max(0, r.width - 8), 16), room.id, EditorStyles.whiteMiniLabel);
+        }
+
+        /// <summary>The house's painted floor for a room id (Resources/Art/floor_&lt;id&gt;.png), same file as <c>MapScenery</c> loads in-game; null when there is none (cached either way).</summary>
+        Texture2D FloorTexture(string roomId)
+        {
+            if (floorTextureCache.TryGetValue(roomId, out var cached)) return cached;
+            var texture = Resources.Load<Texture2D>("Art/floor_" + roomId);
+            floorTextureCache[roomId] = texture;
+            return texture;
         }
 
         void DrawFurniture(MapProp prop, bool selected)
