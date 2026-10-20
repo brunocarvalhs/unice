@@ -25,13 +25,16 @@ namespace Unice
         const float OverlayPadding = 16;
 
         /// <summary>
-        /// Panel size in USS pixels, matched by height: the panel is always 540 px tall and as wide as the screen's aspect gives
-        /// (960 at 16:9, 1200 at 20:9, 720 at 4:3). 540 (not 720) makes 1 px ≈ 0.79 dp on a 1080p ~400 ppi phone, so a 64 px
-        /// button is ≥ 48 dp.
+        /// Panel size in USS pixels, matched by height: on phones and tablets the panel is 540 px tall and as wide as the screen's
+        /// aspect gives (960 at 16:9, 1200 at 20:9, 720 at 4:3). 540 (not 720) makes 1 px ≈ 0.79 dp on a 1080p ~400 ppi phone, so a
+        /// 64 px button is ≥ 48 dp. On a computer the panel gets taller with the window (<see cref="PanelScale"/>), keeping the width/height ratio.
         /// </summary>
         public static readonly Vector2Int ReferenceResolution = new Vector2Int(960, 540);
 
         internal readonly App app;
+        readonly PanelSettings panelSettings;
+        /// <summary>Layout screenshots pretend to be a phone (see <see cref="ForceTouch"/>).</summary>
+        bool forcedHandheld;
         Game game => app.game;
         internal readonly VisualElement root;
         /// <summary>The part of the screen not covered by notches and system bars; HUD and messages live inside it.</summary>
@@ -66,7 +69,7 @@ namespace Unice
             this.app = app;
             inputMode = new InputMode(isTouch);
             // The panel asset made by Unice > Configurar projeto keeps the UI shaders in the build; the fallback is for the editor.
-            var panelSettings = Resources.Load<PanelSettings>("UI/UnicePanel");
+            panelSettings = Resources.Load<PanelSettings>("UI/UnicePanel");
             if (panelSettings == null) panelSettings = ScriptableObject.CreateInstance<PanelSettings>();
             panelSettings.scaleMode = PanelScaleMode.ScaleWithScreenSize; panelSettings.referenceResolution = ReferenceResolution;
             panelSettings.screenMatchMode = PanelScreenMatchMode.MatchWidthOrHeight; panelSettings.match = 1;
@@ -194,6 +197,7 @@ namespace Unice
         {
             if (root.panel == null) return;
             if (inputMode.Update()) ApplyInputMode();
+            ApplyPanelScale();
             ApplySafeArea(); homeKeyboardLift.Update(); lobbyKeyboardLift.Update();
             float panelHeight = root.layout.height;
             if (float.IsNaN(panelHeight) || panelHeight < 1) return;   // no layout yet
@@ -214,7 +218,15 @@ namespace Unice
         }
 
         /// <summary>Pretends the player uses touch or keyboard/mouse (layout screenshots).</summary>
-        internal void ForceTouch(bool touch) { inputMode.Force(touch); ApplyInputMode(); }
+        internal void ForceTouch(bool touch) { forcedHandheld = touch; inputMode.Force(touch); ApplyInputMode(); }
+
+        /// <summary>The panel's height follows the window on a computer (and stays 540 on a phone or tablet): see <see cref="PanelScale"/>.</summary>
+        void ApplyPanelScale()
+        {
+            int height = PanelScale.ReferenceHeight(Application.isMobilePlatform || forcedHandheld, Screen.height);
+            if (panelSettings.referenceResolution.y == height) return;
+            panelSettings.referenceResolution = new Vector2Int(ReferenceResolution.x * height / ReferenceResolution.y, height);
+        }
 
         /// <summary>The player switched between touch and keyboard/mouse: shows the matching controls and spacing.</summary>
         void ApplyInputMode()

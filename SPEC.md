@@ -31,7 +31,7 @@ Quem abre o jogo pela primeira vez, sem ler regra nenhuma, deve conseguir jogar 
 4. **Controles previsíveis.** Toque: joystick à esquerda, botões de ação à direita, só os que servem naquele momento. Teclado/mouse: dicas de tecla na tela. Troca automática pelo último dispositivo usado (`InputMode`).
 5. **Fácil de voltar e de errar.** Todo sub-menu tem "Voltar"; o botão voltar do sistema volta uma página (`HomeMenu.Back`); sair/pausar nunca perde a partida sem aviso; erro de rede aparece na página onde a pessoa está (ex.: "Criar sala" volta para a página online).
 6. **Feedback imediato.** Todo toque/ação tem resposta visual ou sonora em até 100 ms (botões com `:hover/:active`, ondas de som, vibração visual); nada de espera sem indicação (estado "conectando…").
-7. **Legível em qualquer tela.** Alvos de toque ≥ 64 px do painel de 540 px (≈ 48 dp), texto ≥ 13 px, respeitar a área segura (notch), três idiomas (pt/en/es) sem texto cortado.
+7. **Legível em qualquer tela.** Alvos de toque ≥ 64 px do painel de 540 px (≈ 48 dp), texto ≥ 13 px (no celular e no tablet o painel tem 540 px de altura; no computador ele cresce com a janela, de 540 a 900 px entre janelas de 540 e 1080 px de altura, para os botões não parecerem de tablet em tela grande: `Gameplay/PanelScale.cs`), respeitar a área segura (notch), três idiomas (pt/en/es) sem texto cortado.
 8. **Sem beco sem saída para quem joga sozinho.** Solo com bots é sempre possível; online é opcional.
 
 Critérios de aceite de usabilidade (verificação manual, em celular real e no desktop):
