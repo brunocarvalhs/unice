@@ -350,18 +350,10 @@
 .scard-name { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 28px; color: var(--cal); -unity-text-align: middle-center; margin-top: 6px; white-space: normal; }
 .scard-blurb { -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); font-size: 16px; color: var(--cal-mudo); -unity-text-align: upper-center; white-space: normal; }
 
-/* ---------- the intro comic (HideComicView): a one-page comic over the Unice's black screen ---------- */
+/* ---------- the story's opening video (HideComicView), over the Unice's black screen ---------- */
 .comic { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: var(--noite-0); padding: 10px 16px 8px 16px; }
 .comic-head { flex-direction: row; justify-content: space-between; align-items: center; }
-.comic-title { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 34px; color: var(--sol); }
 .comic-count { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 18px; color: var(--cal); }
-.comic-page { flex-grow: 1; justify-content: space-around; }
-.comic-row { flex-grow: 1; flex-direction: row; justify-content: center; margin: 4px 0; }
-.comic-panel { flex-grow: 1; flex-basis: 0; max-width: 31%; margin: 0 8px; background-color: var(--papel); border-width: 3px; border-color: var(--tinta); overflow: hidden; opacity: 0; }
-.comic-panel-last { border-color: var(--sol); }
-.comic-art { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-size: cover; background-position: center; -unity-background-image-tint-color: rgb(190, 175, 160); }
-.comic-figure { position: absolute; }
-.comic-caption { position: absolute; left: 6px; right: 6px; top: 6px; padding: 3px 7px; background-color: var(--papel); border-width: 2px; border-color: var(--tinta); color: var(--tinta); font-size: 14px; -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); white-space: normal; -unity-text-align: upper-left; }
 .comic-skip { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 13px; color: var(--cal-mudo); -unity-text-align: middle-center; }
 
 /* ---------- the menu as a cordel poster: full-screen sand, black ink, paper cards with a stamped shadow (right and bottom edges) ---------- */
@@ -510,7 +502,7 @@
 
 .hud-tl { max-width: 300px; }
 
-/* the intro video on the Unice screen, in place of the comic page */
+/* the intro video on the Unice screen */
 .comic-video { flex-grow: 1; margin: 4px 0; background-color: var(--preto); background-size: contain; background-position: center; background-repeat: no-repeat; border-width: 3px; border-color: var(--nanquim); }
 
 /* ---------- scrollbars: a slim rounded track and thumb instead of the editor's default look ---------- */

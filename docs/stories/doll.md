@@ -21,6 +21,8 @@ Arte pintada própria (`Resources/Art/manifest.json`); os índices de `furniture
 5 estrofes (`story.1…5.t/.b`): "Peço licença", "A boneca da tia Unice", "A peleja", "Cada um no seu canto", "Menino, almoçar!". (O cordel animado em tela cheia foi removido; as estrofes seguem como texto de referência.)
 
 ## 5. HQ de introdução (5 quadros)
+> Removida do jogo (sem substituto por enquanto); fica aqui como registro de design e referência para um futuro vídeo.
+
 Definida em `Stories.All` (`doll`), legendas em `comic.doll.1…5`:
 1. Cozinha: primos correndo ao redor da mesa — "Na casa da vó tinha mais menino que um quartel."
 2. Quarto da tia: a Unice vigia a boneca, Márcio espia — "No quarto da tia Unice morava uma boneca: o tesouro dela."
@@ -36,4 +38,4 @@ Definida em `Stories.All` (`doll`), legendas em `comic.doll.1…5`:
 
 ## 8. Critérios de aceite
 - [x] Testes verdes.
-- [ ] Verificação manual da HQ em aparelho (como Unice na rodada 1; tocar para pular).
+- [ ] Verificação manual do vídeo de abertura em aparelho (como Unice na rodada 1; tocar para pular). A HQ foi removida do jogo.

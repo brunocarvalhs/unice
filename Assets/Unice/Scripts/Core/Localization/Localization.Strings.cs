@@ -115,19 +115,9 @@ namespace Unice
             ["stories.lobisomem.blurb"] = new[] { "No quintal, um uivo na escuridão… e a porta trancada! Esconde, que o lobisomem vem!", "In the yard, a howl in the dark… and the door is locked! Hide, the werewolf is coming!", "En el patio, un aullido en la oscuridad… ¡y la puerta cerrada! ¡Escóndete, que viene el hombre lobo!" },
             ["stories.soon"] = new[] { "Em breve", "Coming soon", "Próximamente" },
 
-            // ---------- HideComicView.cs: the intro comic the Unice reads while the others hide ----------
-            ["comic.countdown"] = new[] { "Você abre os olhos em {0} s", "You open your eyes in {0}s", "Abres los ojos en {0}s" },
-            ["comic.skip"] = new[] { "toque para pular", "tap to skip", "toca para saltar" },
-            ["comic.doll.1"] = new[] { "Na casa da vó tinha mais menino que um quartel.", "Grandma's house had more kids than a barracks.", "En la casa de la abuela había más niños que en un cuartel." },
-            ["comic.doll.2"] = new[] { "No quarto da tia Unice morava uma boneca: o tesouro dela.", "In aunt Unice's room lived a doll: her treasure.", "En el cuarto de la tía Unice vivía una muñeca: su tesoro." },
-            ["comic.doll.3"] = new[] { "Márcio desafiou: quem pega a boneca sem a tia ver?", "Márcio dared them: who can grab the doll without auntie seeing?", "Márcio retó: ¿quién agarra la muñeca sin que la tía lo vea?" },
-            ["comic.doll.4"] = new[] { "Quando a tia deu por falta… foi primo pra todo canto!", "When auntie noticed… cousins ran everywhere!", "Cuando la tía lo notó… ¡los primos corrieron a todos lados!" },
-            ["comic.doll.5"] = new[] { "Agora é com você, tia: conte até zero e ache a boneca!", "Now it's up to you, auntie: count to zero and find the doll!", "Ahora te toca a ti, tía: cuenta hasta cero y encuentra la muñeca." },
-            ["comic.lobisomem.1"] = new[] { "Noite no interior: o tio contava histórias de lobisomem no quintal.", "Night in the countryside: uncle told werewolf stories in the yard.", "Noche en el campo: el tío contaba historias de hombre lobo en el patio." },
-            ["comic.lobisomem.2"] = new[] { "De repente, no meio da escuridão, um uivo de lobo!", "Suddenly, in the middle of the dark, a wolf's howl!", "¡De repente, en medio de la oscuridad, un aullido de lobo!" },
-            ["comic.lobisomem.3"] = new[] { "A tia Unice gritou \"lobisomem!\" e correu pra casa.", "Aunt Unice screamed \"werewolf!\" and ran for the house.", "La tía Unice gritó \"¡hombre lobo!\" y corrió a la casa." },
-            ["comic.lobisomem.4"] = new[] { "Ela trancou a porta e deixou a gente lá fora!", "She locked the door and left us outside!", "¡Cerró la puerta y nos dejó afuera!" },
-            ["comic.lobisomem.5"] = new[] { "Foi todo mundo correr e se esconder. Agora o lobisomem é você!", "Everyone ran and hid. Now you are the werewolf!", "Todos corrimos a escondernos. ¡Ahora el hombre lobo eres tú!" },
+            // ---------- HideComicView.cs: the story's opening video on the Unice's screen while the others hide ----------
+            ["intro.countdown"] = new[] { "Você abre os olhos em {0} s", "You open your eyes in {0}s", "Abres los ojos en {0}s" },
+            ["intro.skip"] = new[] { "toque para pular", "tap to skip", "toca para saltar" },
             ["lbl.name"] = new[] { "SEU NOME", "YOUR NAME", "TU NOMBRE" },
             ["lbl.kid"] = new[] { "SUA CRIANÇA", "YOUR KID", "TU NIÑO" },
             ["menu.randomize"] = new[] { "Sortear visual", "Randomize look", "Sortear apariencia" },
@@ -381,11 +371,6 @@ namespace Unice
             ["spot.bin"] = new[] { "atrás da lixeira", "behind the trash can", "detrás del basurero" },
             ["stories.rua.name"] = new[] { "A Rua da Vó", "Grandma's Street", "La Calle de la Abuela" },
             ["stories.rua.blurb"] = new[] { "A criançada corre pela praça e pela rua na frente da casa da vó. Esconde, que a tia Unice vem!", "The kids run all over the square and the street in front of grandma's house. Hide, Aunt Unice is coming!", "Los niños corren por la plaza y la calle frente a la casa de la abuela. ¡Escóndanse, que viene la tía Unice!" },
-            ["comic.rua.1"] = new[] { "Na frente da casa da vó, a criançada se juntava pra brincar.", "In front of grandma's house, the kids got together to play.", "Frente a la casa de la abuela, los niños se juntaban a jugar." },
-            ["comic.rua.2"] = new[] { "Um contava de olhos fechados e todo mundo corria pra se esconder.", "One counted with closed eyes and everyone ran to hide.", "Uno contaba con los ojos cerrados y todos corrían a esconderse." },
-            ["comic.rua.3"] = new[] { "Na praça e na rua, era gente correndo pra lá e pra cá!", "In the square and the street, people ran this way and that!", "¡En la plaza y la calle, todos corrían de un lado a otro!" },
-            ["comic.rua.4"] = new[] { "E a tia Unice, do nada, gritava onde alguém estava escondido!", "And Aunt Unice, out of nowhere, shouted where someone was hiding!", "Y la tía Unice, de la nada, gritaba dónde se escondía alguien." },
-            ["comic.rua.5"] = new[] { "Agora a tia Unice é você: ache a criançada!", "Now you are Aunt Unice: find the kids!", "Ahora la tía Unice eres tú: ¡encuentra a los niños!" },
 
             // ---------- MapLobisomem.cs: the night yard of the werewolf story ----------
             ["map.lobisomem.name"] = new[] { "O Quintal da Noite", "The Night Yard", "El Patio de la Noche" },

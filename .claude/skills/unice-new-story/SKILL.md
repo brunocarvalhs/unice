@@ -2,7 +2,7 @@
 name: unice-new-story
 description: >-
   Turn a story the user tells into a new playable Unice story: a spec in docs/stories/<id>.md, a new map (rooms, doors,
-  hiding spots), the story card, the intro comic, texts in pt/en/es and tests. Use whenever the user says things like
+  hiding spots), the story card, texts in pt/en/es and tests. Use whenever the user says things like
   "nova história", "cria um mapa", "new story/map", "conto uma história", or tells a memory/place they want as a game map.
 ---
 
@@ -11,13 +11,17 @@ description: >-
 The user tells a story in plain words. You produce a working, tested story. The process is spec-driven: the spec comes first
 (`docs/stories/<id>.md`, template in `docs/stories/_template.md`, process in `docs/stories/README.md`), the code follows the spec,
 the tests prove it. Read `docs/stories/README.md` and `resources/map-design-guide.md` before you start; `resources/art-catalog.md`
-lists the sprites you may use. Follow the `unity-code` skill for all C#.
+lists the backdrops you may use for `cardArt`. Follow the `unity-code` skill for all C#.
+
+A new story has no intro media today: the intro comic was removed and not replaced, and an opening video is a real recording the
+project owner makes separately. So the output of this skill is just the map, the card and the texts — nothing shown on the Unice's
+screen while the others hide, same as any story without a video.
 
 ## The idea
 Every story the user tells becomes a **hide-and-seek game**: the place becomes the map, the people become the hiders, one person
 (the aunt, the grandfather, the neighbour, the teacher… whoever fits) becomes "the Unice", the seeker who waits with her eyes closed
 and then hunts, and the things in the place become hiding spots. The rules of the match never change (`Rules`, `Game`); only the
-setting, names, texts and comic do. Keep the user's real details (names of places, objects, nicknames, sayings) — that is what makes the game theirs.
+setting, names and texts do. Keep the user's real details (names of places, objects, nicknames, sayings) — that is what makes the game theirs.
 
 ## 0. Ask only what you cannot deduce
 Do not interview. Infer everything you can and state your assumptions in the final summary. Ask (one short message, max 3 questions)
@@ -36,7 +40,7 @@ Read the image before designing anything; the picture beats your own layout.
 
 ## 1. Spec — write `docs/stories/<id>.md` first
 Copy `docs/stories/_template.md` and fill every section from the story: brief, rooms table with coordinates, hiding-spot table,
-HQ (comic) panels with captions, texts in pt/en/es, tasks. Pick:
+texts in pt/en/es, tasks. Pick:
 - `<id>`: story id, lowercase ASCII, one word (`feira`, `engenho`). Must not exist in `Stories.All`.
 - `<mapId>`: map id, lowercase ASCII, unique in `Maps` (often the same word as `<id>`).
 - Class name `Map<Name>` (e.g. `MapFeira`) in `Assets/Unice/Scripts/Domain/Maps/Map<Name>.cs`.
@@ -59,17 +63,14 @@ a door in every gap you want walkable (door ≠ gap means a locked-out room), th
    place** instead of hand-tuning coordinates, with the same checks `MapDefinitionsTests` runs shown live as you edit
    ("Problemas" panel) and Salvar writing `Map<Name>.cs` back for you (see `docs/MAP_EDITOR.md`). This is optional —
    hand-editing the file directly still works exactly as before.
-3. Register the story: add a `new Story(id, Map<Name>.Id, released: …, comic: …, cardArt: …)` to `Stories.All` in `Domain/Maps/Stories.cs`.
-   - `comic`: 5 `ComicPanel`s (3–6 allowed). Backdrop = an `Art` floor name or `null` (map ground color). Figures use only sprites from
-     `resources/art-catalog.md`; kids `ComicFigure.Kid(cousin 0–4, x, y)`, aunt `ComicFigure.Unice(x, y)`. Keep figures at y 0.6–0.95
-     (feet line) and x 0.1–0.9 so the caption box at the top does not cover them.
+3. Register the story: add a `new Story(id, Map<Name>.Id, released: …, cardArt: …)` to `Stories.All` in `Domain/Maps/Stories.cs`.
    - `released`: use `true` only if the user wants it playable by everyone now. The map has flat placeholder art (no painted floors/walls), so
      default to `released: false` ("coming soon" card, playable in dev builds and the Editor) and say how to flip it. If the user
      said "pode lançar", use `true`.
 4. Texts in `Core/Localization/Localization.Strings.cs` (pt, en, es — always all three, same `{0}` placeholders):
    `map.<mapId>.name`; for **every room** `room.<roomId>.name` and `room.<roomId>.in` ("na Cozinha" / "in the Kitchen" / "en la Cocina");
-   for **every hideable prop type** `spot.<type>` ("atrás do pé de umbu"); `stories.<id>.name`, `stories.<id>.blurb` (one sentence), and
-   `comic.<id>.1…N` (captions ≤ 70 characters). Reuse an existing key only if the text fits exactly (`room.kitchen.*`, `spot.bed`, …); never rename existing keys.
+   for **every hideable prop type** `spot.<type>` ("atrás do pé de umbu"); `stories.<id>.name`, `stories.<id>.blurb` (one sentence).
+   Reuse an existing key only if the text fits exactly (`room.kitchen.*`, `spot.bed`, …); never rename existing keys.
 5. New `.cs` files need `.meta` files with fresh GUIDs (see `unity-code` skill). Follow the file/class naming of `MapHouse.cs`.
 6. Docs: add the story to the table in `docs/stories/README.md`, a line in `CHANGELOG.md` (Adicionado), and tick the spec's tasks.
 
@@ -81,7 +82,7 @@ Run the whole Edit Mode suite (`unice-run-tests` skill). Without writing any new
 - `MapDefinitionsTests`: rooms inside the world with unique ids; furniture inside the world; ≥ 8 spots; spawn and entrance on floor and
   connected; every spot's stand point is free and reachable from the spawn; every room reachable.
 - `LocalizationTests.MapContent_*`: every room name/phrase and spot phrase exists in all languages.
-- `StoryContentTests`: story name, blurb (if released), comic captions in all languages; every sprite/backdrop exists; figures within the panel.
+- `StoryContentTests`: story name, blurb (if released) in all languages; card art exists in `Resources/Art`.
 - `StoriesTests`: map exists, ids unique.
 Fix failures in the map data (not the tests). If a test fails and you believe the test is wrong, stop and tell the user why.
 Never add the new map to `MapDefinitionsTests.UnfinishedMaps`.

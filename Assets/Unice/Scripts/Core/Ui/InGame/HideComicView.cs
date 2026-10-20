@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static Unice.UiKit;
@@ -6,85 +5,41 @@ using static Unice.UiKit;
 namespace Unice
 {
     /// <summary>
-    /// The story's opening, then the intro comic. When the match starts every player watches the story's video while the match
-    /// waits (the comic stands in if the video cannot play); after that, while the others hide, the Unice's player (who waits with
-    /// their eyes closed) reads a one-page comic of the story, one panel after another until the hiding time runs out.
-    /// Tap or click skips the comic, not the opening (everyone waits for it together).
-    /// The panels are drawn with the game's own sprites; <see cref="HideComic"/> decides when and how much.
+    /// The story's opening video: when the match starts every player watches it together while the match waits
+    /// (<see cref="HideComic"/> decides when). Tap or click skips it — the host (or a solo player) ends it for everyone,
+    /// a guest only closes their own copy and waits for the host's clock behind it.
     /// </summary>
     sealed class HideComicView : UiPart
     {
-        /// <summary>Seconds a panel takes to pop onto the page.</summary>
-        const float PopSeconds = .35f;
-        /// <summary>A panel starts at this scale and grows to 1 while it pops in.</summary>
-        const float PopStartScale = .7f;
-        /// <summary>How far the figures bob up and down, in panel pixels, and how fast (radians per second).</summary>
-        const float BobPixels = 3, BobSpeed = 3;
-        /// <summary>Every panel is tilted a little, in degrees, alternating sides, like a hand-pasted page.</summary>
-        const float TiltDegrees = .8f;
-        /// <summary>Sprite widths in panel pixels (the sprites are 52 px wide, the Unice's frames a bit wider).</summary>
-        const float KidWidth = 52, UniceWidth = 66;
-        /// <summary>Up to this many panels go in a single row; more are split over two rows.</summary>
-        const int MaxPanelsInOneRow = 3;
-
-        /// <summary>The cousins of the comic: skin, hair, hair color, outfit, outfit color, hat, accessory.</summary>
-        static readonly int[][] Cousins =
-        {
-            new[] { 2, 0, 0, 2, 0, 3, 1 },   // Márcio: straw hat and satchel
-            new[] { 1, 2, 1, 3, 3, 0, 3 },   // pigtails and a rag doll
-            new[] { 3, 1, 3, 1, 1, 4, 0 },   // leather hat
-            new[] { 0, 3, 2, 0, 5, 1, 2 },   // cap and glasses
-            new[] { 2, 0, 4, 4, 2, 0, 0 },   // cape
-        };
-
         public readonly VisualElement Root;
-        readonly Label title, countdown;
-        readonly VisualElement page, videoSurface, skipHint;
+        readonly Label countdown;
+        readonly VisualElement videoSurface, skipHint;
         readonly IntroVideo video = new IntroVideo();
-        /// <summary>The video could not be played (missing file, bad format): the comic stands in for the rest of the session.</summary>
+        /// <summary>The video could not be played (missing file, bad format): nothing fills the wait for the rest of the session.</summary>
         bool videoFailed;
         IntroVideo.State lastVideoState;
-        readonly List<Panel> panels = new List<Panel>();
-        readonly List<(VisualElement holder, float phase)> bobbers = new List<(VisualElement, float)>();
-        string builtForStory;
-        float time;
-        bool phaseEntered, seenBeforeThisPhase, markedSeen, skipped;
+        bool skipped;
 
-        sealed class Panel
-        {
-            public VisualElement Frame;
-            public float Age;
-            public float Tilt;
-        }
-
-        /// <summary>True while the comic covers the screen (the black "heading home" screen stays hidden then).</summary>
+        /// <summary>True while the video covers the screen (the black "heading home" screen stays hidden then).</summary>
         public bool Playing { get; private set; }
 
         public HideComicView(Ui ui) : base(ui)
         {
             Root = AddElement(ui.safeArea, "comic");
             var header = IgnorePointer(AddElement(Root, "comic-head"));
-            title = IgnorePointer(AddLabel(header, "", "comic-title"));
             countdown = IgnorePointer(AddLabel(header, "", "comic-count"));
-            page = IgnorePointer(AddElement(Root, "comic-page"));
             videoSurface = IgnorePointer(AddElement(Root, "comic-video"));
-            skipHint = IgnorePointer(LocalizedLabel(Root, "comic.skip", "comic-skip"));
+            skipHint = IgnorePointer(LocalizedLabel(Root, "intro.skip", "comic-skip"));
             Root.RegisterCallback<PointerDownEvent>(_ => Skip());
             Show(Root, false);
         }
 
-        /// <summary>Per frame: starts, advances and ends the comic according to the game state.</summary>
+        /// <summary>Per frame: starts, advances and ends the opening video according to the game state.</summary>
         public void Frame(float dt)
         {
-            if (game.phase != Phase.Hide) { phaseEntered = false; markedSeen = false; skipped = false; }
-            else if (!phaseEntered)
-            {
-                phaseEntered = true;
-                var story = Stories.ForMap(game.mapId);
-                seenBeforeThisPhase = story != null && app.ComicSeen(story.id);
-            }
+            if (game.phase != Phase.Hide) skipped = false;
 
-            bool wanted = !skipped && HideComic.IsWanted(game, app.myCharacter, seenBeforeThisPhase);
+            bool wanted = !skipped && HideComic.IsWanted(game, app.myCharacter);
             if (wanted != Playing)
             {
                 Playing = wanted; Show(Root, wanted);
@@ -92,24 +47,15 @@ namespace Unice
             }
             if (!Playing) { StopVideo(); return; }
 
-            time += dt;
-            bool opening = game.InIntro;
-            if (!opening && video.Current != IntroVideo.State.Idle) StopVideo();   // the opening is over: the Unice's comic takes the page
-            else UpdateVideo(dt);
+            UpdateVideo(dt);
             Show(skipHint, true);
             if (WantsSkipKey()) Skip();
-            // the comic spreads over the opening when the video is missing, and over the hiding time otherwise
-            float span = opening ? Stories.ForMap(game.mapId).introSeconds : game.hideTime;
-            float left = opening ? game.IntroTimeLeft : game.timeLeft;
-            SetText(countdown, Localization.Get("comic.countdown", Mathf.CeilToInt(left)));
-            int shown = HideComic.PanelsShown(panels.Count, span, left);
-            for (int i = 0; i < panels.Count; i++) AnimatePanel(panels[i], i < shown, dt);
-            foreach (var (holder, phase) in bobbers) holder.style.marginTop = -BobPixels * (.5f + .5f * Mathf.Sin(time * BobSpeed + phase));
+            SetText(countdown, Localization.Get("intro.countdown", Mathf.CeilToInt(game.IntroTimeLeft)));
         }
 
         /// <summary>
-        /// Skips what is playing. The opening is everyone's wait, so only the host (or a solo player) ends it for all, by dropping its extra seconds;
-        /// a guest only closes their own video and waits for the host's clock behind it. The comic is skipped on this device only.
+        /// Skips the opening. It is everyone's wait, so only the host (or a solo player) ends it for all, by dropping its extra seconds;
+        /// a guest only closes their own video and waits for the host's clock behind it.
         /// </summary>
         void Skip()
         {
@@ -125,19 +71,16 @@ namespace Unice
                 || (pad != null && (pad.buttonSouth.wasPressedThisFrame));
         }
 
-        /// <summary>The comic starts: builds the page for this map's story the first time, and counts it as seen.</summary>
+        /// <summary>The opening starts: hides any stale frame from a previous session, then starts the video.</summary>
         void Begin()
         {
+            Show(videoSurface, false);
             var story = Stories.ForMap(game.mapId);
             if (story == null) return;
-            if (story.hasComic && builtForStory != story.id) BuildPage(story);
             StartVideo(story);
-            foreach (var panel in panels) { panel.Age = 0; panel.Frame.style.opacity = 0; }
-            time = 0;
-            if (!markedSeen) { markedSeen = true; app.MarkComicSeen(story.id); Metrics.Log("comic_play", ("story", story.id), ("round", game.round)); }
         }
 
-        /// <summary>The opening video starts loading, if the story has one and it has not failed before; until it plays, the screen shows the comic.</summary>
+        /// <summary>The opening video starts loading, if the story has one and it has not failed before.</summary>
         void StartVideo(Story story)
         {
             lastVideoState = IntroVideo.State.Idle;
@@ -145,7 +88,7 @@ namespace Unice
             video.Play(HideComic.VideoPath(story), muted: !app.sfx.Enabled);
         }
 
-        /// <summary>Per frame: the video replaces the comic while it plays, and gives the page back when it ends or cannot play.</summary>
+        /// <summary>Per frame: advances the video and reacts to it starting, failing or finishing.</summary>
         void UpdateVideo(float dt)
         {
             video.Tick(dt);
@@ -175,95 +118,6 @@ namespace Unice
             ShowVideo(false);
         }
 
-        /// <summary>The video or the comic page fills the middle of the screen, never both.</summary>
-        void ShowVideo(bool visible)
-        {
-            Show(videoSurface, visible); Show(page, !visible);
-        }
-
-        /// <summary>A panel pops in (fade and grow) when its turn comes; it stays on the page after that.</summary>
-        static void AnimatePanel(Panel panel, bool visible, float dt)
-        {
-            if (!visible) return;
-            panel.Age += dt;
-            float progress = Mathf.Clamp01(panel.Age / PopSeconds);
-            float eased = 1 - (1 - progress) * (1 - progress);
-            float scale = Mathf.Lerp(PopStartScale, 1, eased);
-            panel.Frame.style.opacity = progress;
-            panel.Frame.style.scale = new Scale(new Vector3(scale, scale, 1));
-            panel.Frame.style.rotate = new Rotate(new Angle(panel.Tilt * eased, AngleUnit.Degree));
-        }
-
-        // ---------- the page ----------
-        /// <summary>Lays out the story's panels in one row, or two when there are more than three, and draws each one.</summary>
-        void BuildPage(Story forStory)
-        {
-            builtForStory = forStory.id;
-            SetText(title, Localization.Get("stories." + forStory.id + ".name"));
-            page.Clear(); panels.Clear(); bobbers.Clear();
-            int rowSize = forStory.comic.Length > MaxPanelsInOneRow ? (forStory.comic.Length + 1) / 2 : forStory.comic.Length;
-            var groundColor = Art.HexColor(Maps.ById(forStory.mapId).groundTint);
-            VisualElement row = null;
-            for (int i = 0; i < forStory.comic.Length; i++)
-            {
-                if (i % rowSize == 0) row = IgnorePointer(AddElement(page, "comic-row"));
-                var frame = IgnorePointer(AddElement(row, "comic-panel"));
-                if (i == forStory.comic.Length - 1) frame.AddToClassList("comic-panel-last");
-                var art = IgnorePointer(AddElement(frame, "comic-art"));
-                var panel = forStory.comic[i];
-                if (panel.backdrop != null) art.style.backgroundImage = new StyleBackground(Resources.Load<Texture2D>("Art/" + panel.backdrop));
-                else art.style.backgroundColor = groundColor;
-                foreach (var figure in panel.figures) DrawFigure(art, figure);
-                IgnorePointer(LocalizedLabel(frame, "comic." + forStory.id + "." + (i + 1), "comic-caption"));
-                panels.Add(new Panel { Frame = frame, Tilt = i % 2 == 0 ? -TiltDegrees : TiltDegrees });
-            }
-        }
-
-        /// <summary>Puts one figure of the story's panel on the picture.</summary>
-        void DrawFigure(VisualElement art, ComicFigure figure)
-        {
-            switch (figure.kind)
-            {
-                case ComicFigureKind.Kid: AddKid(art, Cousins[figure.cousin % Cousins.Length], figure.x, figure.y, figure.flip); break;
-                case ComicFigureKind.Unice: AddUnice(art, figure.x, figure.y, figure.flip); break;
-                default: AddSprite(art, figure.art, figure.width, figure.x, figure.y, figure.bob); break;
-            }
-        }
-
-        // ---------- panel helpers ----------
-        /// <summary>A box inside the picture whose anchor is its bottom center (its feet), at (x, y) fractions of the panel.</summary>
-        VisualElement AddHolder(VisualElement art, float width, float height, float x, float y, bool flip, bool bob)
-        {
-            var holder = IgnorePointer(AddElement(art, "comic-figure"));
-            var style = holder.style;
-            style.width = width; style.height = height;
-            style.left = Length.Percent(x * 100); style.top = Length.Percent(y * 100);
-            style.translate = new Translate(Length.Percent(-50), Length.Percent(-100));
-            style.transformOrigin = new TransformOrigin(Length.Percent(50), Length.Percent(100));
-            if (flip) style.scale = new Scale(new Vector3(-1, 1, 1));
-            if (bob) bobbers.Add((holder, x * 7));
-            return holder;
-        }
-
-        void AddSprite(VisualElement art, string file, float width, float x, float y, bool bob = false)
-        {
-            var texture = Resources.Load<Texture2D>("Art/" + file);
-            var holder = AddHolder(art, width, texture != null ? width * texture.height / texture.width : width, x, y, false, bob);
-            holder.style.backgroundImage = new StyleBackground(texture);
-        }
-
-        void AddKid(VisualElement art, int[] kit, float x, float y, bool flip = false)
-        {
-            var portrait = new CharacterPortrait(KidWidth);
-            portrait.ShowKit(Kit.Sanitize(kit));
-            AddHolder(art, KidWidth, portrait.style.height.value.value, x, y, flip, bob: true).Add(portrait);
-        }
-
-        void AddUnice(VisualElement art, float x, float y, bool flip = false)
-        {
-            var portrait = new CharacterPortrait(UniceWidth);
-            portrait.SetUnice();
-            AddHolder(art, UniceWidth, portrait.style.height.value.value, x, y, flip, bob: false).Add(portrait);
-        }
+        void ShowVideo(bool visible) => Show(videoSurface, visible);
     }
 }

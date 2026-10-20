@@ -7,7 +7,7 @@ O Claude segue este fluxo sozinho com a skill **`unice-new-story`** (`.claude/sk
 
 ```
  você conta a história  →  1. Spec (docs/stories/<id>.md)  →  2. Design do mapa  →  3. Implementação  →  4. Verificação
-                              brief, cenas, cordel, HQ          salas, portas, esconderijos   código + textos + testes     testes Edit Mode verdes
+                              brief, cenas, cordel              salas, portas, esconderijos   código + textos + testes     testes Edit Mode verdes
 ```
 
 ## Como pedir
@@ -23,9 +23,8 @@ O Claude cria o arquivo a partir de [`_template.md`](_template.md). Ele contém:
 2. **Lugar → mapa:** as salas/áreas (6 a 12), como se ligam, o que cada uma tem.
 3. **Esconderijos:** de 10 a 20 objetos/cantos onde alguém se esconde (mínimo **8**: é o máximo de jogadores).
 4. **Cordel:** 5 estrofes curtas (opcional, só para a história que ganha tela do cordel).
-5. **HQ de introdução:** 5 quadros, cada um com legenda curta e quem aparece, mostrados à Unice enquanto os outros se escondem.
-6. **Textos** em pt, en e es.
-7. **Tarefas** (checklist de implementação) e **critérios de aceite**.
+5. **Textos** em pt, en e es.
+6. **Tarefas** (checklist de implementação) e **critérios de aceite**.
 
 ## Etapa 2 — Design do mapa
 Regras de geometria (o jogo trata o mundo como retângulos em "house pixels"):
@@ -40,30 +39,31 @@ Regras de geometria (o jogo trata o mundo como retângulos em "house pixels"):
 | Peça | Onde |
 |---|---|
 | Dados do mapa | `Domain/Maps/Map<Nome>.cs` (novo) + 1 linha em `Maps.InOrder` (`Domain/Maps/MapDefinition.cs`) |
-| História (cartão, HQ) | 1 entrada em `Stories.All` (`Domain/Maps/Stories.cs`) |
-| Textos | `Core/Localization/Localization.Strings.cs`: `map.<mapa>.name`, `room.<sala>.name/.in`, `spot.<tipo>`, `stories.<id>.name/.blurb`, `comic.<id>.1…5` — sempre pt, en e es |
+| História (cartão) | 1 entrada em `Stories.All` (`Domain/Maps/Stories.cs`) |
+| Textos | `Core/Localization/Localization.Strings.cs`: `map.<mapa>.name`, `room.<sala>.name/.in`, `spot.<tipo>`, `stories.<id>.name/.blurb` — sempre pt, en e es |
 | Testes | nada a escrever à mão: `MapDefinitionsTests`, `LocalizationTests` e `StoryContentTests` já varrem todo mapa/história registrado |
 | Docs | `CHANGELOG.md`, este diretório (`<id>.md`) |
 
 Arte: mapas novos usam formas lisas coloridas (chão pela cor do terreno, móveis como silhuetas) — a arte pintada é um passo à parte,
-feito pelo time de arte. A HQ usa os sprites que já existem (catálogo em `.claude/skills/unice-new-story/resources/art-catalog.md`).
+feito pelo time de arte.
 
 ## Etapa 4 — Verificação (definição de pronto)
 - Testes Edit Mode 100% verdes (a skill `unice-run-tests` mostra como rodar).
 - `MapDefinitionsTests` provam: salas dentro do mundo e sem repetir id; ≥ 8 esconderijos; entrada e spawn em chão livre e ligados; todo esconderijo alcançável; toda sala alcançável.
-- `StoryContentTests` provam: nome da história, legendas da HQ e figuras existem nos 3 idiomas / em `Resources/Art`.
-- Checagem manual (o Claude lista no resumo, não finge que testou): jogar uma rodada solo no mapa, ver a HQ como Unice, olhar o cartão no seletor.
+- `StoryContentTests` provam: nome e blurb da história existem nos 3 idiomas; o cartão existe em `Resources/Art`.
+- Checagem manual (o Claude lista no resumo, não finge que testou): jogar uma rodada solo no mapa, olhar o cartão no seletor.
 
 ## Vídeo de abertura (opcional)
 Quando a partida começa (rodada 1), todos os jogadores veem o vídeo da história, ao mesmo tempo, e só depois a rodada começa: o tempo de esconder
-só corre quando o vídeo acaba, e ninguém se mexe enquanto ele toca (nem os bots). Não dá para pular. Depois, quem é a Unice vê a HQ enquanto espera.
-Para uma história ter vídeo: coloque o arquivo em `Assets/StreamingAssets/Videos/` (use `.mp4` em H.264 + AAC, **até 30 segundos**) e passe o nome e a
-duração em `Stories.cs` (`introVideo: "doll.mp4", introSeconds: 29.5f`, um pouco mais que o vídeo). Se o arquivo não existir ou não tocar, o jogo mostra a HQ
-nesse tempo e segue normalmente. O vídeo da Boneca é feito em Remotion (`unice-trailer/`, composição `HistoriaBoneca`).
+só corre quando o vídeo acaba, e ninguém se mexe enquanto ele toca (nem os bots). Um toque (ou Enter/Espaço/A do controle) pula: o host pula para
+todo mundo, um convidado só fecha o próprio vídeo e segue esperando o relógio do host. Para uma história ter vídeo: coloque o arquivo em
+`Assets/StreamingAssets/Videos/` (use `.mp4` em H.264 + AAC, **até 30 segundos**) e passe o nome e a duração em `Stories.cs`
+(`introVideo: "doll.mp4", introSeconds: 29.5f`, um pouco mais que o vídeo). Sem o arquivo (ou se ele não tocar), nada ocupa a espera — a
+partida começa direto. O vídeo da Boneca é feito em Remotion (`unice-trailer/`, composição `HistoriaBoneca`).
 
 ## Histórias existentes
 | Id | Mapa | Estado | Spec |
 |---|---|---|---|
-| `doll` | `house` | lançada, com HQ e cordel | [doll.md](doll.md) |
+| `doll` | `house` | lançada, com vídeo de abertura e cordel | [doll.md](doll.md) |
 | `lobisomem` | `lobisomem` | pronta (a partir da planta do autor), "Em breve" (arte lisa) | [lobisomem.md](lobisomem.md) |
 | `rua` | `rua` | pronta, "Em breve" (arte lisa) | [rua.md](rua.md) |

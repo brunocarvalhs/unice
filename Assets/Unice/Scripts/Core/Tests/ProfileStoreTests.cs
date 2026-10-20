@@ -40,24 +40,6 @@ namespace Unice
         }
 
         [Test]
-        public void MarkComicSeen_RemembersOnlyThatStory()
-        {
-            const string StoryId = "test_story";
-            PlayerPrefs.DeleteKey("unice.comic_seen." + StoryId);
-            try
-            {
-                var profile = new ProfileStore();
-                Assert.IsFalse(profile.ComicSeen(StoryId));
-
-                profile.MarkComicSeen(StoryId);
-
-                Assert.IsTrue(new ProfileStore().ComicSeen(StoryId), "saved, so a new run still knows");
-                Assert.IsFalse(profile.ComicSeen("another_story"));
-            }
-            finally { PlayerPrefs.DeleteKey("unice.comic_seen." + StoryId); }
-        }
-
-        [Test]
         public void Ctor_NoSavedProfile_DefaultsToNovaAndARandomValidKit()
         {
             var p = new ProfileStore();

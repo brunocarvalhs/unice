@@ -48,6 +48,8 @@ Decorativo: `clothesline` (varal). *(Suposições: lenha, barril, casinha do cac
 Não há (só a história `doll` tem a tela do cordel).
 
 ## 5. HQ de introdução (5 quadros)
+> Removida do jogo (sem substituto por enquanto); fica aqui como registro de design e referência para um futuro vídeo.
+
 | # | Cenário | Quem aparece | Legenda (pt) |
 |---|---|---|---|
 | 1 | chão do mapa (noite) | quatro primos em roda, o "tio" (primo de capa) e um barril | Noite no interior: o tio contava histórias de lobisomem no quintal. |
@@ -74,4 +76,3 @@ Não há (só a história `doll` tem a tela do cordel).
 ## 8. Critérios de aceite
 - [ ] Testes verdes (`MapDefinitionsTests`, `LocalizationTests`, `StoryContentTests`, `MapTests`)
 - [ ] Rodada solo jogável no mapa (checagem manual): a casa não deixa entrar nem enxergar; a sacada é a única área quente
-- [ ] HQ aparece para a Unice na rodada 1 e some com um toque

@@ -27,7 +27,6 @@ namespace Unice
             Assert.AreEqual(Stories.DollId, first.id);
             Assert.AreEqual(MapHouse.Id, first.mapId);
             Assert.IsTrue(first.released);
-            Assert.IsTrue(first.hasComic);
         }
 
         [Test]

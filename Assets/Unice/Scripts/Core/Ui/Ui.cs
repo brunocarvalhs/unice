@@ -55,7 +55,7 @@ namespace Unice
         int scaledForHeight; float scaledForDpi;
 
         internal readonly Messages messages;
-        /// <summary>The intro comic on the Unice's screen while the others hide; <see cref="Messages"/> hides its black screen while it plays.</summary>
+        /// <summary>The story's opening video on the Unice's screen while the others hide; <see cref="Messages"/> hides its black screen while it plays.</summary>
         internal readonly HideComicView comic;
         internal readonly KidCustomizer kidCustomizer;
         internal readonly SettingToggles settings;

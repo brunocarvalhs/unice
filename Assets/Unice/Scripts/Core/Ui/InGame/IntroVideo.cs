@@ -5,7 +5,7 @@ namespace Unice
 {
     /// <summary>
     /// One explainer video from StreamingAssets, played by Unity's VideoPlayer onto a texture the UI can show.
-    /// It never throws: a missing file, an unsupported format or a stuck prepare ends as <see cref="State.Failed"/> and the caller falls back to the comic.
+    /// It never throws: a missing file, an unsupported format or a stuck prepare ends as <see cref="State.Failed"/> and the caller shows nothing.
     /// </summary>
     sealed class IntroVideo
     {
@@ -55,7 +55,7 @@ namespace Unice
             if (Current != State.Preparing) return;
             preparingFor += dt;
             if (preparingFor <= PrepareTimeoutSeconds) return;
-            Debug.LogWarning("Intro video: not ready after " + PrepareTimeoutSeconds + " s, falling back to the comic (" + player.url + ")");
+            Debug.LogWarning("Intro video: not ready after " + PrepareTimeoutSeconds + " s, giving up (" + player.url + ")");
             Current = State.Failed;
         }
 
