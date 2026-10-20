@@ -536,3 +536,17 @@
 .act-r { background-color: var(--sol); color: var(--nanquim); border-color: var(--nanquim); }
 .act-on { background-color: var(--sol); color: var(--nanquim); }
 .act:focus { border-color: var(--nanquim); color: var(--nanquim); }
+
+/* round result and final score on the poster too: the match map only shows while the match is on */
+.cordel.result { background-color: var(--transp); }
+.cordel .res-eyebrow, .cordel .pcard-rank, .cordel .res-next-name, .cordel .res-count-n { color: var(--chita-escuro); }
+.cordel .res-title { -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); font-size: 40px; color: var(--nanquim); text-shadow: 3px 3px 0px var(--chita-escuro); }
+.cordel .res-win { color: var(--mandacaru-escuro); }
+.cordel .res-lose { color: var(--chita-escuro); }
+.cordel .res-reason { color: var(--nanquim); }
+.cordel .pcard-pts { color: var(--nanquim); }
+.cordel .pcard-win { border-color: var(--mandacaru-escuro); }
+.cordel .res-rules { color: var(--tinta-mudo); }
+.cordel .res-next-name { -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); font-size: 28px; }
+
+.hud-tl { max-width: 300px; }

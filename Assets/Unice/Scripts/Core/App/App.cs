@@ -180,7 +180,7 @@ namespace Unice
             bool followView = inGame && perspective.hasView;
             var drawnView = perspective.DrawnView(stepBlend);   // the camera and the fog move with the drawn character, not in steps
             cameraRig.Follow(dt, followView, drawnView);
-            cameraRig.ShowWorld(game.phase != Phase.Home && game.phase != Phase.Lobby);
+            cameraRig.ShowWorld(game.IsLive);
             worldView.SyncCharacters(game, myCharacter, canSee, perspective.ShowsTeamInfo, time, stepBlend);
             worldView.UpdateOcclusion(myCharacter, game.IsLive);
             worldView.Tick(dt);

@@ -206,11 +206,11 @@ namespace Unice
             if (backdrop.Root.style.display != DisplayStyle.None) backdrop.Frame();
         }
 
-        /// <summary>Shows the backdrop on the main menu (not while its story plays) and in the waiting room.</summary>
+        /// <summary>Shows the backdrop on every screen but the match itself (and the intro story).</summary>
         internal void UpdateBackdrop()
         {
             if (homeMenu == null) return;   // the menu's own constructor shows its first page before it is assigned
-            Show(backdrop.Root, currentScreen == UiScreen.Lobby || (currentScreen == UiScreen.Home && !homeMenu.PlayingStory));
+            Show(backdrop.Root, currentScreen == UiScreen.Lobby || currentScreen == UiScreen.Result || currentScreen == UiScreen.Final || (currentScreen == UiScreen.Home && !homeMenu.PlayingStory));
         }
 
         /// <summary>Pretends the player uses touch or keyboard/mouse (layout screenshots).</summary>

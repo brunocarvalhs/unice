@@ -4,7 +4,7 @@ using static Unice.UiKit;
 namespace Unice
 {
     /// <summary>
-    /// In-game HUD: the match card (top left), the map/menu icon buttons (top right) with the role card under them, and the
+    /// In-game HUD: the match card (top left, with the giggle meter), the map/menu icon buttons (top right) with the role card under them, and the
     /// centered panel with the house plan and the player list. Refreshed a few times a second, not every frame.
     /// </summary>
     sealed class Hud : UiPart
@@ -29,7 +29,11 @@ namespace Unice
         }
 
         /// <summary>Every 0.2 s while playing.</summary>
-        public void Tick() { matchCard.Refresh(); roleCard.Refresh(); playerList.Refresh(); }
+        public void Tick()
+        {
+            var role = HudModels.RoleCard(game, app.myCharacter, app.perspective);
+            matchCard.Refresh(role); roleCard.Refresh(role); playerList.Refresh();
+        }
 
         /// <summary>Rebuild the player list on the next tick even if nothing seems to have changed (e.g. the language did).</summary>
         public void Invalidate() => playerList.Invalidate();
