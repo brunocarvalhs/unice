@@ -19,6 +19,8 @@ namespace Unice
         public readonly List<(string name, (string key, object value)[] args)> Logs = new List<(string, (string, object)[])>();
         public readonly List<string> Errors = new List<string>();
         public int HeartbeatStops;
+        /// <summary>Makes <see cref="Toast"/> throw, to test that one broken event does not stop the others.</summary>
+        public bool ThrowOnToast;
 
         public bool IsOnline { get; set; }
         public string MyName { get; set; } = "Ana";
@@ -27,7 +29,11 @@ namespace Unice
         public int OnlineWins { get; private set; }
 
         public void Banner(string text, BannerStyle style, float seconds) => Banners.Add((text, style, seconds));
-        public void Toast(string text) => Toasts.Add(text);
+        public void Toast(string text)
+        {
+            if (ThrowOnToast) throw new InvalidOperationException("broken toast");
+            Toasts.Add(text);
+        }
         public void WorldText(float x, float y, string text, StageColor tone, float size, float seconds, bool alwaysVisible = false) => WorldTexts.Add((x, y, text));
         public void Sound(string name) => Sounds.Add(name);
         public void SoundFrom(float x, float y, float range, string label, StageColor tone, string sound, float minLoudness = 0) => PlacedSounds.Add((x, y, label, sound));

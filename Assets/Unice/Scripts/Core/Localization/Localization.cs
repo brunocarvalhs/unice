@@ -54,8 +54,6 @@ namespace Unice
             return args != null && args.Length > 0 ? string.Format(text, args) : text;
         }
 
-        /// <summary>A room's name, e.g. "Biblioteca" / "Library" / "Biblioteca".</summary>
-        public static string RoomName(Room room) => Get("room." + room.id + ".name");
         /// <summary>A room's "in" phrase for sentences, e.g. "na Biblioteca" / "in the Library" / "en la Biblioteca".</summary>
         public static string RoomPhrase(Room room) => Get("room." + room.id + ".in");
         /// <summary>A hiding spot's flavor phrase, e.g. "debaixo da cama" / "under the bed" / "debajo de la cama".</summary>

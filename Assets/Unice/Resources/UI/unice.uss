@@ -89,30 +89,22 @@
 /* ---------- shared text ---------- */
 .display { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); }
 .type { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); }
-.bold { -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); }
 
 /* ---------- paper sheets ---------- */
 .overlay { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: var(--noite-0-88); align-items: center; justify-content: center; padding: 16px; }
 .sheet-scroll { max-width: 1100px; width: 100%; max-height: 100%; }
 .sheet { background-color: var(--papel); color: var(--tinta); border-radius: 4px; border-width: 1px; border-color: var(--tinta-40); padding: 26px 32px; }
-.eyebrow { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 14px; letter-spacing: 2px; color: var(--chita-escuro); margin-bottom: 4px; }
 .title { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 64px; color: var(--tinta); margin-bottom: 6px; }
 .title-md { font-size: 44px; }
-.title-red { color: var(--chita-escuro); }
-.title-win { color: var(--mandacaru-escuro); }
-.lede { font-size: 20px; white-space: normal; margin-bottom: 14px; }
 .muted { color: var(--tinta-mudo); font-size: 16px; white-space: normal; }
 .lbl { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 13px; letter-spacing: 1px; color: var(--tinta-mudo); margin-bottom: 4px; }
 .row { flex-direction: row; align-items: center; }
 .wrap { flex-wrap: wrap; }
 .grow { flex-grow: 1; flex-shrink: 1; }
-.cols { flex-direction: row; }
-.col { flex-grow: 1; flex-basis: 0; margin-right: 24px; }
 .gap { margin-top: 14px; }
 
 .field { background-color: var(--branco-40); border-width: 1px; border-color: var(--tinta-40); border-radius: 4px; color: var(--tinta); font-size: 20px; padding: 6px 10px; min-height: var(--alvo); margin: 0; }
 .field > .unity-text-field__input, .field .unity-base-text-field__input { background-color: var(--transp); border-width: 0; color: var(--tinta); font-size: 20px; padding: 0; -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); }
-.code-field .unity-base-text-field__input { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); letter-spacing: 4px; font-size: 22px; }
 
 .btn { background-color: var(--tinta); color: var(--papel); border-width: 0; border-radius: 4px; padding: 10px 22px; min-height: var(--alvo); font-size: 17px; -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); letter-spacing: 1px; margin: 0 10px 0 0; }
 .btn:hover { background-color: var(--chita-escuro); }
@@ -125,27 +117,9 @@
 .net { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 15px; color: var(--tinta-mudo); white-space: normal; margin-top: 10px; }
 .net-err { color: var(--chita-escuro); }
 
-.rules { flex-direction: row; flex-wrap: wrap; margin-top: 12px; }
-.rule { width: 32%; margin-right: 1%; margin-bottom: 10px; border-top-width: 2px; border-color: var(--tinta-35); padding-top: 6px; }
-.rule-t { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 20px; }
-.rule-b { font-size: 15px; white-space: normal; }
-.rule-red { border-color: var(--chita-escuro); }
-.rule-red .rule-t { color: var(--chita-escuro); }
-.rule-green { border-color: var(--mandacaru-escuro); }
-.rule-green .rule-t { color: var(--mandacaru-escuro); }
 
 /* waiting room */
-.code { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); color: var(--chita-escuro); letter-spacing: 6px; }
-.prow { flex-direction: row; align-items: center; padding: 6px 10px; margin-bottom: 6px; background-color: var(--branco-30); border-radius: 3px; }
-.prow-me { border-width: 2px; border-color: var(--tinta); }
-.prow-bots { background-color: var(--transp); border-width: 1px; border-color: var(--tinta-40); color: var(--tinta-mudo); }
-.pname { -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); font-size: 18px; flex-grow: 1; margin-left: 10px; }
-.pstate { -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); font-size: 13px; letter-spacing: 1px; color: var(--tinta-mudo); }
-.pstate-ok { color: var(--mandacaru-escuro); }
 .pts { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 20px; }
-.stepper { flex-direction: row; align-items: center; margin-right: 18px; }
-.step-btn { width: 64px; min-height: var(--alvo); padding: 0; margin: 0 6px; background-color: var(--branco-45); color: var(--tinta); font-size: 22px; border-radius: 4px; border-width: 0; }
-.step-val { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 20px; min-width: 24px; -unity-text-align: middle-center; }
 .preview { width: 170px; height: 170px; border-radius: 85px; background-color: var(--noite-3); margin-right: 16px; }
 .opt { flex-direction: row; flex-wrap: wrap; align-items: center; margin-bottom: 6px; }
 .opt-l { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 12px; color: var(--tinta-mudo); width: 110px; }
@@ -163,9 +137,6 @@
 .mkid .tabbtn-on { background-color: var(--sol); color: var(--noite); }
 
 /* scores */
-.srow { flex-direction: row; align-items: center; padding: 4px 10px; margin-bottom: 5px; background-color: var(--branco-28); border-radius: 3px; }
-.srank { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); width: 26px; color: var(--tinta-mudo); }
-.next { flex-direction: row; align-items: center; padding: 10px 12px; margin: 12px 0; border-width: 1px; border-color: var(--tinta-45); border-radius: 4px; }
 
 /* ---------- in-game HUD ---------- */
 .hud-card { background-color: var(--noite-2-86); border-width: 1px; border-color: var(--borda); border-radius: 6px; padding: 8px 12px; }
@@ -345,20 +316,20 @@
 .mute-btn-on { color: var(--chita-claro); border-color: var(--chita-claro); }
 
 /* ---------- button system: one feedback model for every button ----------
-   Two surfaces: dark (.mbtn .mpill .mstep-btn .hud-btn .act) and paper (.btn .btn-ghost .btn-link .tabbtn .cy-btn .step-btn).
+   Two surfaces: dark (.mbtn .mpill .mstep-btn .hud-btn .act) and paper (.btn .btn-ghost .btn-link .tabbtn .cy-btn).
    Hover is for mouse, :active is the press for touch and mouse, :focus is keyboard / gamepad (a gold ring on dark, an anil ring on paper). */
-.mbtn, .mpill, .mstep-btn, .hud-btn, .act, .btn, .btn-ghost, .btn-link, .tabbtn, .cy-btn, .step-btn, .sw {
+.mbtn, .mpill, .mstep-btn, .hud-btn, .act, .btn, .btn-ghost, .btn-link, .tabbtn, .cy-btn, .sw {
     transition-property: background-color, border-color, color, scale;
     transition-duration: 0.12s;
 }
 .mbtn:active, .mpill:active, .mstep-btn:active, .hud-btn:active, .act:active,
-.btn:active, .btn-ghost:active, .tabbtn:active, .cy-btn:active, .step-btn:active { scale: 0.96 0.96; }
+.btn:active, .btn-ghost:active, .tabbtn:active, .cy-btn:active:active { scale: 0.96 0.96; }
 .mbtn:disabled, .mpill:disabled, .mstep-btn:disabled, .hud-btn:disabled, .act:disabled,
-.btn-ghost:disabled, .tabbtn:disabled, .cy-btn:disabled, .step-btn:disabled { opacity: 0.4; }
+.btn-ghost:disabled, .tabbtn:disabled, .cy-btn:disabled:disabled { opacity: 0.4; }
 
 .mbtn:focus, .mpill:focus, .mstep-btn:focus, .hud-btn:focus, .act:focus { border-color: var(--sol); color: var(--sol); border-width: 3px; }
 .mbtn-on:focus { border-color: var(--mandacaru-claro); color: var(--mandacaru-claro); }
-.btn:focus, .btn-ghost:focus, .btn-link:focus, .tabbtn:focus, .cy-btn:focus, .step-btn:focus, .sw:focus { border-width: 3px; border-color: var(--anil); }
+.btn:focus, .btn-ghost:focus, .btn-link:focus, .tabbtn:focus, .cy-btn:focus:focus, .sw:focus { border-width: 3px; border-color: var(--anil); }
 .lobby-side .btn-ghost:focus, .lobby-side .cy-btn:focus, .lobby-side .sw:focus { border-color: var(--sol); }
 
 /* ---------- the story: a full-screen animation (StoryScreen) ---------- */
@@ -488,7 +459,7 @@
 /* ---------- cordel for the pause sheet and the match HUD: paper, black ink, stamped shadow (right and bottom edges), Rye lettering ---------- */
 .overlay { background-color: var(--areia-88); }
 .sheet { border-color: var(--nanquim); border-width: 3px; border-right-width: 7px; border-bottom-width: 7px; border-radius: 6px; }
-.sheet .title, .sheet .eyebrow { -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); color: var(--nanquim); }
+.sheet .title { -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); color: var(--nanquim); }
 .sheet .title-md { font-size: 36px; }
 .sheet .btn { background-color: var(--sol); color: var(--nanquim); border-color: var(--nanquim); border-width: 3px; border-right-width: 6px; border-bottom-width: 6px; border-radius: 6px; -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); font-size: 22px; letter-spacing: 0px; }
 .sheet .btn:hover { background-color: var(--chita-claro); }
@@ -550,3 +521,6 @@
 .cordel .res-next-name { -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); font-size: 28px; }
 
 .hud-tl { max-width: 300px; }
+
+/* the intro video on the Unice screen, in place of the comic page */
+.comic-video { flex-grow: 1; margin: 4px 0; background-color: var(--preto); background-size: contain; background-position: center; background-repeat: no-repeat; border-width: 3px; border-color: var(--nanquim); }

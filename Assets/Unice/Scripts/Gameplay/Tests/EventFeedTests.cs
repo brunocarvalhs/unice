@@ -444,6 +444,44 @@ namespace Unice
             Assert.IsEmpty(stage.Logs);
         }
 
+        [Test]
+        public void MatchEnd_FirstPlaceOnlineWithAnotherPerson_ReportsAnOnlineWin()
+        {
+            var reported = new System.Collections.Generic.List<long>();
+            System.Action<long> previous = AccountRegistry.ReportOnlineWins;
+            AccountRegistry.ReportOnlineWins = reported.Add;
+            try
+            {
+                stage.IsOnline = true; stage.Now = 0;
+                MatchFixture.OtherHider(game, me).isBot = false;   // a second person in the room
+                me.score = 100;
+                foreach (var other in game.characters) if (other != me) other.score = 0;
+                game.AddEvent(GameEventType.Start, actor: game.unice.index, target: game.doll.holder.index, value: 1);
+                feed.PlayNewEvents();
+                stage.Now = Achievements.LeaderboardMinSeconds + 1;
+
+                game.AddEvent(GameEventType.Final);
+                feed.PlayNewEvents();
+
+                CollectionAssert.AreEqual(new long[] { 1 }, reported, "one more online win, counted by the device");
+            }
+            finally { AccountRegistry.ReportOnlineWins = previous; }
+        }
+
+        [Test]
+        public void PlayNewEvents_AnEventThatThrows_IsReportedAndTheNextOnesStillPlay()
+        {
+            stage.ThrowOnToast = true;
+            var leaver = MatchFixture.OtherHider(game, me);
+            game.AddEvent(GameEventType.Left, actor: leaver.index);
+            game.AddEvent(GameEventType.Final);
+
+            feed.PlayNewEvents();
+
+            CollectionAssert.Contains(stage.Errors, "event Left");
+            CollectionAssert.Contains(stage.LogNames, "match_end", "the event after the broken one was still handled");
+        }
+
         // ---------- host and leavers ----------
 
         [Test]

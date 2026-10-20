@@ -117,7 +117,6 @@ namespace Unice
 
             foreach (var room in Map.Rooms)
             {
-                StringAssert.DoesNotContain("missing", Localization.RoomName(room), room.id + " name");
                 StringAssert.DoesNotContain("missing", Localization.RoomPhrase(room), room.id + " phrase");
             }
             foreach (var spot in Map.Spots) StringAssert.DoesNotContain("missing", Localization.SpotPhrase(spot), "spot " + spot.type);

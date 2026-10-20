@@ -13,12 +13,11 @@ namespace Unice
     /// <summary>How the role card is tinted (the UI maps each to its own style).</summary>
     public enum RoleStyle { None, Unice, Out, Holder }
 
-    /// <summary>What the role card shows: your role and goal, who has the doll, the giggle meter and note, and your noise.</summary>
+    /// <summary>What the role card shows: your role and goal, the giggle meter and note, and your noise.</summary>
     public struct RoleCardData
     {
         public string role, goal;
         public RoleStyle style;
-        public string dollHolder;
         public bool showGiggleMeter;
         /// <summary>0..1, how close the doll is to its next giggle.</summary>
         public float giggleProgress;
@@ -87,13 +86,12 @@ namespace Unice
             else { data.role = Localization.Get("hud.role.hiding"); data.goal = Localization.Get(me.hidingSpot != null ? "hud.goal.hiding_spot" : "hud.goal.hiding_out"); }
         }
 
-        /// <summary>The team sees who has the doll and a meter until the next giggle; the Unice only sees where it last giggled.</summary>
+        /// <summary>The team sees a meter until the next giggle; the Unice only sees where it last giggled.</summary>
         static void FillDoll(ref RoleCardData data, Game game, Character me, Perspective perspective)
         {
             var doll = game.doll; var holder = doll.holder;
             if (holder != null && perspective.ShowsTeamInfo)
             {
-                data.dollHolder = holder == me ? Localization.Get("hud.doll_with_you") : Localization.Get("hud.doll_with", holder.name.ToUpperInvariant());
                 data.giggleProgress = game.phase == Phase.Hunt ? Geometry.Clamp(1 - doll.giggleTimer / game.giggleInterval, 0, 1) : 0;
                 // the standing rules ("it stays quiet out of hiding") are in the how-to, not here: only the countdown and the pass cooldown are news
                 string note = game.phase == Phase.Hunt && holder.hidingSpot != null ? Localization.Get("hud.giggle_in", Localization.SpotPhrase(holder.hidingSpot), (int)Math.Ceiling(doll.giggleTimer)) : "";
@@ -102,7 +100,6 @@ namespace Unice
                 data.showGiggleMeter = true;
                 return;
             }
-            data.dollHolder = holder != null ? Localization.Get("hud.doll_hidden") : "";
             if (doll.hasLastGiggle)
             {
                 var room = Map.RoomAt(doll.lastGiggleX, doll.lastGiggleY);

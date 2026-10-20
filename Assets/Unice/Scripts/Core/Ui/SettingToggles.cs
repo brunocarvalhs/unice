@@ -11,7 +11,7 @@ namespace Unice
     /// </summary>
     sealed class SettingToggles : UiPart
     {
-        readonly List<Button> soundButtons = new List<Button>(), micButtons = new List<Button>(), whisperButtons = new List<Button>(), languageButtons = new List<Button>();
+        readonly List<Button> soundButtons = new List<Button>(), micButtons = new List<Button>(), whisperButtons = new List<Button>();
         readonly System.Action onLanguageChanged;
         /// <summary>Buttons that show an icon instead of text: repainted (and their tooltip refreshed) with the settings.</summary>
         readonly List<(VisualElement icon, Button button, Func<string> label)> iconButtons = new List<(VisualElement, Button, Func<string>)>();
@@ -24,7 +24,6 @@ namespace Unice
         public Button AddMicButton(VisualElement parent, params string[] classes) => app.voice == null ? null : Register(micButtons, AddButton(parent, "", ToggleMic, classes));
         /// <summary>Personal choice: "whisper" transmits quieter and never counts as noise for the Unice. Needs the mic on. Not added (null) without voice.</summary>
         public Button AddWhisperButton(VisualElement parent, params string[] classes) => app.voice == null ? null : Register(whisperButtons, AddButton(parent, "", ToggleWhisper, classes));
-        public Button AddLanguageButton(VisualElement parent, params string[] classes) => Register(languageButtons, AddButton(parent, "", CycleLanguage, classes));
 
         /// <summary>The sound toggle as a speaker icon (crossed out when off); the text is only its tooltip.</summary>
         public Button AddSoundIconButton(VisualElement parent, params string[] classes) =>
@@ -72,11 +71,9 @@ namespace Unice
             string sound = Localization.Get(app.sfx.Enabled ? "menu.sound_on" : "menu.sound_off");
             string mic = Localization.Get(app.MicOn ? "menu.mic_on" : "menu.mic_off");
             string whisper = Localization.Get(app.Whisper ? "menu.voice_whisper" : "menu.voice_normal");
-            string language = $"{Localization.Get("menu.lang_prefix")}: {Localization.Current.ToString().ToUpperInvariant()}";
             foreach (var button in soundButtons) button.text = sound;
             foreach (var button in micButtons) button.text = mic;
             foreach (var button in whisperButtons) { button.text = whisper; button.SetEnabled(app.MicOn); }
-            foreach (var button in languageButtons) button.text = language;
             foreach (var code in languageCodes) code.text = Localization.Current.ToString().ToUpperInvariant();
             foreach (var (glyph, button, label) in iconButtons) { button.tooltip = label(); glyph.MarkDirtyRepaint(); }
         }

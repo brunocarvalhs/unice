@@ -162,22 +162,11 @@ namespace Unice
         // ---------- doll ----------
 
         [Test]
-        public void RoleCard_TeamSeesWhoHoldsTheDoll()
+        public void RoleCard_TeamSeesTheGiggleMeter()
         {
-            var holder = game.doll.holder;
-
             var data = Role();
 
-            Assert.AreEqual(Localization.Get("hud.doll_with", holder.name.ToUpperInvariant()), data.dollHolder, "holder");
             Assert.IsTrue(data.showGiggleMeter, "meter");
-        }
-
-        [Test]
-        public void RoleCard_HolderSeesTheDollIsWithYou()
-        {
-            me = game.doll.holder;
-
-            Assert.AreEqual(Localization.Get("hud.doll_with_you"), Role().dollHolder);
         }
 
         [Test]
@@ -223,13 +212,12 @@ namespace Unice
         }
 
         [Test]
-        public void RoleCard_Unice_DoesNotKnowWhoHoldsTheDoll()
+        public void RoleCard_Unice_HasNoGiggleMeter()
         {
             me = game.unice; game.phase = Phase.Hunt;
 
             var data = Role();
 
-            Assert.AreEqual(Localization.Get("hud.doll_hidden"), data.dollHolder, "holder");
             Assert.IsFalse(data.showGiggleMeter, "meter");
         }
 
