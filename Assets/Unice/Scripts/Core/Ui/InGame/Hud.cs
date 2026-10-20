@@ -28,6 +28,9 @@ namespace Unice
             playerList = new PlayerListPanel(ui, Root);
         }
 
+        /// <summary>With keyboard and mouse the house plan and the player list stay open on the side; on touch the map button opens them.</summary>
+        public void SetDocked(bool docked) => playerList.SetOpen(docked);
+
         /// <summary>Every 0.2 s while playing.</summary>
         public void Tick()
         {

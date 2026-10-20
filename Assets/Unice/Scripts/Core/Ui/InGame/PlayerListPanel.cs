@@ -5,7 +5,7 @@ using static Unice.UiKit;
 namespace Unice
 {
     /// <summary>
-    /// The panel opened by the HUD's map button: the house plan and the list of players with their status and score.
+    /// The panel opened by the HUD's map button (always open under the match card with keyboard and mouse): the house plan and the list of players with their status and score.
     /// While spectating, tapping a player follows them.
     /// </summary>
     sealed class PlayerListPanel : UiPart
@@ -27,7 +27,8 @@ namespace Unice
 
         bool IsOpen => panel.style.display != DisplayStyle.None;
 
-        public void Toggle() { Show(panel, !IsOpen); renderedSignature = null; }
+        public void Toggle() => SetOpen(!IsOpen);
+        public void SetOpen(bool open) { Show(panel, open); renderedSignature = null; }
         public void Invalidate() => renderedSignature = null;
 
         public void Refresh()

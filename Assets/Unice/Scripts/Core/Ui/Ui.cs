@@ -21,6 +21,8 @@ namespace Unice
             Blood = new Color32(226, 74, 82, 255), Moss = new Color32(143, 203, 156, 255), Ink = new Color32(241, 231, 216, 255);
 
         const float HudRefreshSeconds = .2f;
+        /// <summary>Width / height from which the panel counts as <c>wide</c> (20:9 phones, ultrawide monitors) and up to which as <c>boxy</c> (tablets, 4:3).</summary>
+        const float WideAspect = 1.9f, BoxyAspect = 1.45f;
         /// <summary>Padding of <c>.overlay</c> in unice.uss (panel pixels), kept around the pause sheet on top of the safe-area insets.</summary>
         const float OverlayPadding = 16;
 
@@ -42,6 +44,7 @@ namespace Unice
         internal UiScreen currentScreen = UiScreen.None;
         float hudRefreshTimer;
         Rect lastSafeRect;
+        string aspectClass;
 
         internal readonly Messages messages;
         /// <summary>The intro comic on the Unice's screen while the others hide; <see cref="Messages"/> hides its black screen while it plays.</summary>
@@ -92,6 +95,7 @@ namespace Unice
             homeMenu = new HomeMenu(this); lobbyScreen = new LobbyScreen(this); resultScreen = new ResultScreen(this); pauseMenu = new PauseMenu(this);
             // the screens with text fields: room code and name (My child) at home, name (Appearance tab) in the waiting room
             homeKeyboardLift = new KeyboardLift(this, homeMenu.Root); lobbyKeyboardLift = new KeyboardLift(this, lobbyScreen.Root);
+            ApplyInputMode();
             settings.Refresh();
         }
 
@@ -197,6 +201,7 @@ namespace Unice
             ApplySafeArea(); homeKeyboardLift.Update(); lobbyKeyboardLift.Update();
             float panelHeight = root.layout.height;
             if (float.IsNaN(panelHeight) || panelHeight < 1) return;   // no layout yet
+            ApplyAspectClass(root.layout.width / panelHeight);
             messages.Frame(dt);
             worldLabels.Frame(dt, camera);
             soundCues.Frame(dt, camera);
@@ -216,10 +221,24 @@ namespace Unice
         /// <summary>Pretends the player uses touch or keyboard/mouse (layout screenshots).</summary>
         internal void ForceTouch(bool touch) { inputMode.Force(touch); ApplyInputMode(); }
 
+        /// <summary>
+        /// Layout classes on the root for unice.uss: <c>touch</c> or <c>pointer</c> (the input in use) and <c>wide</c>, <c>normal</c> or <c>boxy</c> (the aspect).
+        /// A rule written under one of them only applies to that kind of device.
+        /// </summary>
+        void ApplyAspectClass(float aspect)
+        {
+            string kind = aspect >= WideAspect ? "wide" : aspect <= BoxyAspect ? "boxy" : "normal";
+            if (kind == aspectClass) return;
+            if (aspectClass != null) root.RemoveFromClassList(aspectClass);
+            aspectClass = kind; root.AddToClassList(kind);
+        }
+
         /// <summary>The player switched between touch and keyboard/mouse: shows the matching controls and spacing.</summary>
         void ApplyInputMode()
         {
             isTouch = inputMode.Touch;
+            root.EnableInClassList("touch", isTouch); root.EnableInClassList("pointer", !isTouch);
+            hud.SetDocked(!isTouch);
             Show(controls.Root, currentScreen == UiScreen.Game && isTouch);
             messages.SetTouchLayout(isTouch);
             if (!isTouch) controls.Release();   // a held joystick or the sneak toggle must not keep driving the character

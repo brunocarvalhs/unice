@@ -226,8 +226,6 @@
 .mbtn-wide { width: auto; height: 90px; margin: 14px 0 6px 0; font-size: 48px; }
 .mbtn-join { width: 190px; height: 70px; margin: 0 0 0 12px; font-size: 36px; }
 .mbtn-back { width: 200px; height: 64px; margin: 16px 0 0 0; font-size: 28px; align-self: center; border-width: 2px; }
-/* the story's skip button: top right, over the story */
-.mexit { position: absolute; right: 18px; top: 12px; width: 130px; height: 64px; margin: 0; font-size: 30px; border-width: 2px; }
 .menu-top { position: absolute; right: 18px; top: 12px; flex-direction: row; align-items: center; }
 /* settings as icons: a round 64 px pill (the language one grows to fit its code) */
 .mpill-icon { min-width: var(--alvo); padding: 0 14px; align-items: center; justify-content: center; }
@@ -444,7 +442,7 @@
 .cordel .lobby-title, .cordel .lobby-count { -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); }
 .cordel .lobby-title { font-size: 28px; }
 .cordel .mbtn-go { font-size: 30px; }
-.cordel .mbtn-top, .cordel .mexit { font-size: 20px; }
+.cordel .mbtn-top { font-size: 20px; }
 
 /* ---------- cordel for the pause sheet and the match HUD: paper, black ink, stamped shadow (right and bottom edges), Rye lettering ---------- */
 .overlay { background-color: var(--areia-88); }
@@ -524,3 +522,37 @@
 .unity-scroll-view__vertical-scroller .unity-base-slider__dragger:hover { background-color: var(--chita-claro); }
 .cordel .unity-scroll-view__vertical-scroller .unity-base-slider__tracker { background-color: var(--tinta-10); }
 .cordel .unity-scroll-view__vertical-scroller .unity-base-slider__dragger { background-color: var(--chita-escuro); border-color: var(--nanquim); }
+
+/* ---------- layout by device: .touch / .pointer (input in use) and .wide / .normal / .boxy (aspect), set on the root by Ui ---------- */
+/* keyboard and mouse: smaller buttons, and the house plan and players docked under the match card instead of a toggled panel */
+.pointer .hud-icon { min-width: 44px; min-height: 44px; }
+.pointer .hud-glyph { width: 26px; height: 26px; }
+.pointer .hud-tr { top: 64px; }
+.pointer .plist { left: 14px; margin-left: 0; top: 170px; width: 260px; }
+.pointer .plist-rows { max-height: 150px; }
+.pointer .mini { height: 100px; }
+.pointer .plrow-pick { min-height: 44px; }
+/* wide screens: the HUD keeps clear of the corners' rounded edges */
+.wide .hud-tl, .wide .hud-btns, .wide .hud-tr { margin-left: 8px; margin-right: 8px; }
+
+/* step 2: touch targets by input. 64 px is for a finger (≥ 48 dp); with a mouse 40 px is enough and leaves room for content */
+.root.pointer { --alvo: 40px; }
+.pointer .sw { width: 40px; height: 40px; border-radius: 20px; }
+.pointer .cy-btn { width: 44px; }
+.pointer .mbtn-top, .pointer .mbtn-quit { height: 48px; }
+.pointer .mpill-glyph { width: 28px; height: 28px; }
+/* step 3: menu and waiting room by device */
+.pointer .menu-grid { width: 760px; }
+.pointer .menu-grid .mbtn { width: 240px; height: 84px; }
+.pointer .menu-grid .mbtn-sm { height: 60px; }
+.pointer .mpanel { width: 760px; }
+.pointer .pcard { width: 138px; min-height: 160px; }
+.pointer .lobby-side { width: 400px; }
+.wide .lobby-side { width: 380px; }
+.wide .lobby-cards { padding-right: 12px; }
+/* 4:3 tablets: the side panel and the cards are narrower so both keep their place side by side */
+.boxy .lobby { padding-left: 14px; padding-right: 14px; }
+.boxy .lobby-side { width: 280px; padding: 14px 14px; }
+.boxy .pcard { width: 118px; min-height: 170px; margin: 5px; }
+.boxy .menu-grid { width: 100%; }
+.boxy .menu-grid .mbtn { width: 280px; }
