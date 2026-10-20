@@ -29,6 +29,7 @@ namespace Unice
 
         // ---------- parts ----------
         [NonSerialized] public Sfx sfx;
+        [NonSerialized] public Music music;
         [NonSerialized] public WorldView worldView;
         [NonSerialized] public Ui ui;
         internal RoomSession room;
@@ -83,6 +84,7 @@ namespace Unice
             }
             worldView = new WorldView(transform);
             sfx = new Sfx(transform);
+            music = new Music(transform);
             var stage = new AppStage(this);
             perspective = new Perspective(game, () => myCharacter);
             soundscape = new Soundscape(game, () => myCharacter, perspective, stage, stage);
@@ -164,11 +166,18 @@ namespace Unice
                 player.UpdateNoiseLevel(dt);
                 heartbeat.Tick(dt);
             }
+            music.Tick(dt, WantedMusic);
             if (IsOnline) room.sync.Tick(dt);
             voice?.Tick(VoiceRule.CanSpeak(MicOn, myCharacter), myCharacter?.x ?? 0, myCharacter?.y ?? 0, myCharacter != null, Whisper);
             if (voice != null) UpdateUnheard();
             ui.Step(dt);
         }
+
+        /// <summary>The menu theme in the home and the lobby, the soundtrack while a round is played; silence when paused, muted or while the opening video plays.</summary>
+        MusicTrack WantedMusic =>
+            !sfx.Enabled || paused && game.IsLive || game.InIntro ? MusicTrack.None
+            : game.IsLive ? MusicTrack.Match
+            : game.phase <= Phase.Lobby ? MusicTrack.Menu : MusicTrack.None;
 
         /// <summary>Every frame: camera, characters, fog, UI.</summary>
         void RenderFrame(float dt)
