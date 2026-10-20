@@ -7,7 +7,7 @@ O Claude segue este fluxo sozinho com a skill **`unice-new-story`** (`.claude/sk
 
 ```
  você conta a história  →  1. Spec (docs/stories/<id>.md)  →  2. Design do mapa  →  3. Implementação  →  4. Verificação
-                              brief, cenas, cordel, HQ          salas, portas, esconderijos   código + textos + testes     testes Edit Mode verdes
+                              brief, cenas, HQ, vídeo       salas, portas, esconderijos   código + textos + testes     testes Edit Mode verdes
 ```
 
 ## Como pedir
@@ -22,10 +22,9 @@ O Claude cria o arquivo a partir de [`_template.md`](_template.md). Ele contém:
 1. **Brief:** o lugar, a época, as pessoas, o que acontecia (a sua história, organizada).
 2. **Lugar → mapa:** as salas/áreas (6 a 12), como se ligam, o que cada uma tem.
 3. **Esconderijos:** de 10 a 20 objetos/cantos onde alguém se esconde (mínimo **8**: é o máximo de jogadores).
-4. **Cordel:** 5 estrofes curtas (opcional, só para a história que ganha tela do cordel).
-5. **HQ de introdução:** 5 quadros, cada um com legenda curta e quem aparece, mostrados à Unice enquanto os outros se escondem.
-6. **Textos** em pt, en e es.
-7. **Tarefas** (checklist de implementação) e **critérios de aceite**.
+4. **HQ de introdução:** 5 quadros, cada um com legenda curta e quem aparece, mostrados à Unice enquanto os outros se escondem.
+5. **Textos** em pt, en e es.
+6. **Tarefas** (checklist de implementação) e **critérios de aceite**.
 
 ## Etapa 2 — Design do mapa
 Regras de geometria (o jogo trata o mundo como retângulos em "house pixels"):
@@ -64,6 +63,6 @@ nesse tempo e segue normalmente. O vídeo da Boneca é feito em Remotion (`unice
 ## Histórias existentes
 | Id | Mapa | Estado | Spec |
 |---|---|---|---|
-| `doll` | `house` | lançada, com HQ e cordel | [doll.md](doll.md) |
+| `doll` | `house` | lançada, com HQ e vídeo | [doll.md](doll.md) |
 | `lobisomem` | `lobisomem` | pronta (a partir da planta do autor), "Em breve" (arte lisa) | [lobisomem.md](lobisomem.md) |
 | `rua` | `rua` | pronta, "Em breve" (arte lisa) | [rua.md](rua.md) |

@@ -8,7 +8,7 @@ namespace Unice
     /// <summary>The main menu over the house map: the main page and its sub-pages (online, how to play, my child).</summary>
     sealed class HomeMenu : UiPart
     {
-        enum Page { Main, Online, HowToPlay, MyKid, Story, Stories }
+        enum Page { Main, Online, HowToPlay, MyKid, Stories }
 
         /// <summary>A typed room code needs at least this many characters.</summary>
         const int MinRoomCodeLength = 4;
@@ -16,9 +16,6 @@ namespace Unice
         public readonly VisualElement Root;
         readonly VisualElement mainPage, onlinePage, myKidPage, storiesPage, kidCustomizerSlot;
         VisualElement howToPlayPage;   // set by BuildHowToPlay
-        readonly StoryScreen story;
-        /// <summary>Version label, settings pills and quit button: hidden while the story plays full screen.</summary>
-        readonly VisualElement[] chrome;
         readonly TextField roomCodeField;
         readonly Label netStatusLabel;
         readonly Button createRoomButton, joinRoomButton, soloButton, onlineButton;
@@ -30,7 +27,7 @@ namespace Unice
         public HomeMenu(Ui ui) : base(ui)
         {
             Root = AddElement(ui.root, "menu", "cordel");
-            var versionLabel = AddLabel(Root, "v" + Application.version, "menu-version");
+            AddLabel(Root, "v" + Application.version, "menu-version");
 
             // main page
             mainPage = AddElement(Root, "menu-page");
@@ -41,7 +38,6 @@ namespace Unice
             onlineButton = LocalizedButton(grid, "menu.online", () => { app.SetNetStatus(""); ShowPage(Page.Online); }, "mbtn");
             LocalizedButton(grid, "menu.howto", () => ShowPage(Page.HowToPlay), "mbtn", "mbtn-sm");
             LocalizedButton(grid, "menu.mykid", () => ShowPage(Page.MyKid), "mbtn", "mbtn-sm");
-            LocalizedButton(grid, "menu.story", () => ShowPage(Page.Story), "mbtn", "mbtn-sm");
 
             // online: create a room (the code is generated for you) or join one with a code
             var online = AddPanelPage(out onlinePage, "menu.online_title");
@@ -81,13 +77,8 @@ namespace Unice
 #endif
             var footer = AddElement(Root, "menu-foot");
             ui.settings.AddMicButton(footer, "mpill"); ui.settings.AddWhisperButton(footer, "mpill");
-            chrome = new[] { versionLabel, topRight, footer };
-            story = new StoryScreen(ui, Root, () => ShowPage(Page.Main));   // last: drawn over everything else on the menu
             ShowPage(Page.Main);
         }
-
-        /// <summary>The intro story is playing full screen (no backdrop, no chrome).</summary>
-        public bool PlayingStory => currentPage == Page.Story;
 
         /// <summary>Opens the story picker; <paramref name="start"/> runs once a story is chosen, with <paramref name="pageWhileStarting"/> showing meanwhile (where a connection error can be read).</summary>
         void ChooseStory(Action start, Page pageWhileStarting)
@@ -150,7 +141,6 @@ namespace Unice
         public void Frame()
         {
             if (currentPage == Page.MyKid) ui.kidCustomizer.AnimatePreview();
-            if (currentPage == Page.Story) story.Frame(Time.unscaledDeltaTime);
         }
 
         /// <summary>A sub-page: a framed panel with a title. Returns the panel to fill.</summary>
@@ -165,7 +155,7 @@ namespace Unice
         /// <summary>Analytics screen name of each page; the main page is the phase's own "home".</summary>
         static string ScreenName(Page page) => page switch
         {
-            Page.Online => "home_online", Page.HowToPlay => "home_how_to_play", Page.MyKid => "home_my_kid", Page.Story => "home_story", Page.Stories => "home_stories", _ => "home",
+            Page.Online => "home_online", Page.HowToPlay => "home_how_to_play", Page.MyKid => "home_my_kid", Page.Stories => "home_stories", _ => "home",
         };
 
         void ShowPage(Page page)
@@ -173,10 +163,8 @@ namespace Unice
             if (page != currentPage) Metrics.Screen(ScreenName(page));
             currentPage = page;
             Show(mainPage, page == Page.Main); Show(onlinePage, page == Page.Online);
-            Show(howToPlayPage, page == Page.HowToPlay); Show(myKidPage, page == Page.MyKid); Show(storiesPage, page == Page.Stories); Show(story.Root, page == Page.Story);
-            foreach (var element in chrome) Show(element, page != Page.Story);
+            Show(howToPlayPage, page == Page.HowToPlay); Show(myKidPage, page == Page.MyKid); Show(storiesPage, page == Page.Stories);
             ui.UpdateBackdrop();
-            if (page == Page.Story) story.Begin();
             if (page == Page.MyKid) ui.kidCustomizer.ShowIn(kidCustomizerSlot);
         }
 

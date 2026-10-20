@@ -52,8 +52,6 @@ namespace Unice
             yield return Wait(2);
 
             yield return Shoot("home");
-            Click("menu.story"); yield return Wait(3); yield return Shoot("story");
-            Click("menu.story_skip"); yield return Wait(.5f);
             Click("menu.howto"); yield return Wait(.5f); yield return Shoot("howto");
             Click("menu.back");
             Click("menu.mykid"); yield return Wait(.5f); yield return Shoot("mykid");

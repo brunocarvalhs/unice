@@ -17,8 +17,8 @@ Arte pintada própria (`Resources/Art/manifest.json`); os índices de `furniture
 ## 3. Esconderijos
 28 peças com lado de esconderijo (cama, guarda-roupa, baú, banheira, mesa…), frases em `spot.<tipo>`.
 
-## 4. Cordel
-5 estrofes (`story.1…5.t/.b`): "Peço licença", "A boneca da tia Unice", "A peleja", "Cada um no seu canto", "Menino, almoçar!". Tela cheia animada: `StoryScreen`.
+## 4. Vídeo de abertura
+`doll.mp4` (29 s, `Assets/StreamingAssets/Videos/`), feito em Remotion (`unice-trailer/`, composição `HistoriaBoneca`): a boneca, o desafio do Márcio, a tia chegando, a tia pegando os primos e o grito "Vou pegar vocês!". Toca para todos no começo da partida (`introSeconds: 29.5`).
 
 ## 5. HQ de introdução (5 quadros)
 Definida em `Stories.All` (`doll`), legendas em `comic.doll.1…5`:
