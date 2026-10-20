@@ -51,7 +51,14 @@ a door in every gap you want walkable (door ≠ gap means a locked-out room), th
 ## 3. Implement
 1. `Domain/Maps/Map<Name>.cs`: a `public static class` with `const string Id` and `Build()` returning a `MapDefinition`
    (see `MapHouse.cs` for a full example and `resources/map-design-guide.md` for the shape; comment the *why* of the entry point). No `UnityEngine` here.
-2. Register the map: add `Map<Name>.Build()` to `Maps.InOrder` in `Domain/Maps/MapDefinition.cs` (the only place).
+   Write a first draft by hand (coordinates on paper, per the design guide, turn into a `new Room(...)`/`new MapProp(...)` skeleton).
+2. Register the map: add `Map<Name>.Build()` to `Maps.InOrder` in `Domain/Maps/MapDefinition.cs` (the only place), and add
+   an `Entry` for it in `Assets/Unice/Scripts/Editor/MapEditor/MapSourceFiles.cs` (class name, header comment, any extra
+   static members like an off-limits `RectF` — see the yard maps there for the shape). Once both are done, `Map<Name>.Id`
+   shows up in `Unice > Editor de mapas`' map picker: open it to **drag rooms, furniture, doors, spawn and entry into
+   place** instead of hand-tuning coordinates, with the same checks `MapDefinitionsTests` runs shown live as you edit
+   ("Problemas" panel) and Salvar writing `Map<Name>.cs` back for you (see `docs/MAP_EDITOR.md`). This is optional —
+   hand-editing the file directly still works exactly as before.
 3. Register the story: add a `new Story(id, Map<Name>.Id, released: …, comic: …, cardArt: …)` to `Stories.All` in `Domain/Maps/Stories.cs`.
    - `comic`: 5 `ComicPanel`s (3–6 allowed). Backdrop = an `Art` floor name or `null` (map ground color). Figures use only sprites from
      `resources/art-catalog.md`; kids `ComicFigure.Kid(cousin 0–4, x, y)`, aunt `ComicFigure.Unice(x, y)`. Keep figures at y 0.6–0.95
