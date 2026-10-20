@@ -41,5 +41,22 @@ namespace Unice
         {
             Assert.IsNull(Stories.ForMap("nowhere"));
         }
+
+        [Test]
+        public void All_IntroVideosArePlainMp4FileNames()
+        {
+            foreach (var story in Stories.All.Where(story => story.hasIntroVideo))
+            {
+                StringAssert.EndsWith(".mp4", story.introVideo, story.id);
+                Assert.AreEqual(story.introVideo, System.IO.Path.GetFileName(story.introVideo), story.id + " is a file name, not a path");
+            }
+        }
+
+        [Test]
+        public void All_TheDollStoryHasAnIntroVideo()
+        {
+            Assert.IsTrue(Stories.ForMap(MapHouse.Id).hasIntroVideo);
+            Assert.IsFalse(new Story("x", MapHouse.Id, released: true).hasIntroVideo);
+        }
     }
 }

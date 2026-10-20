@@ -27,7 +27,11 @@ namespace Unice
 
         public readonly VisualElement Root;
         readonly Label title, countdown;
-        readonly VisualElement page;
+        readonly VisualElement page, videoSurface;
+        readonly IntroVideo video = new IntroVideo();
+        /// <summary>The video could not be played (missing file, bad format): the comic stands in for the rest of the session.</summary>
+        bool videoFailed;
+        IntroVideo.State lastVideoState;
         readonly List<Panel> panels = new List<Panel>();
         readonly List<(VisualElement holder, float phase)> bobbers = new List<(VisualElement, float)>();
         string builtForStory;
@@ -51,6 +55,7 @@ namespace Unice
             title = IgnorePointer(AddLabel(header, "", "comic-title"));
             countdown = IgnorePointer(AddLabel(header, "", "comic-count"));
             page = IgnorePointer(AddElement(Root, "comic-page"));
+            videoSurface = IgnorePointer(AddElement(Root, "comic-video"));
             IgnorePointer(LocalizedLabel(Root, "comic.skip", "comic-skip"));
             Root.RegisterCallback<PointerDownEvent>(_ => skipped = true);
             Show(Root, false);
@@ -73,9 +78,10 @@ namespace Unice
                 Playing = wanted; Show(Root, wanted);
                 if (wanted) Begin();
             }
-            if (!Playing) return;
+            if (!Playing) { StopVideo(); return; }
 
             time += dt;
+            UpdateVideo(dt);
             SetText(countdown, Localization.Get("comic.countdown", Mathf.CeilToInt(game.timeLeft)));
             int shown = HideComic.PanelsShown(panels.Count, game.hideTime, game.timeLeft);
             for (int i = 0; i < panels.Count; i++) AnimatePanel(panels[i], i < shown, dt);
@@ -87,10 +93,56 @@ namespace Unice
         {
             var story = Stories.ForMap(game.mapId);
             if (story == null) return;
-            if (builtForStory != story.id) BuildPage(story);
+            if (story.hasComic && builtForStory != story.id) BuildPage(story);
+            StartVideo(story);
             foreach (var panel in panels) { panel.Age = 0; panel.Frame.style.opacity = 0; }
             time = 0;
             if (!markedSeen) { markedSeen = true; app.MarkComicSeen(story.id); Metrics.Log("comic_play", ("story", story.id), ("round", game.round)); }
+        }
+
+        /// <summary>The story's explainer video starts loading, if it has one and it has not failed before; until it plays, the screen shows the comic.</summary>
+        void StartVideo(Story story)
+        {
+            lastVideoState = IntroVideo.State.Idle;
+            if (HideComic.MediaFor(story, videoFailed) != IntroMedia.Video) { ShowVideo(false); return; }
+            video.Play(HideComic.VideoPath(story), muted: !app.sfx.Enabled);
+        }
+
+        /// <summary>Per frame: the video replaces the comic while it plays, and gives the page back when it ends or cannot play.</summary>
+        void UpdateVideo(float dt)
+        {
+            video.Tick(dt);
+            var state = video.Current;
+            if (state == lastVideoState) return;
+            lastVideoState = state;
+            string storyId = Stories.ForMap(game.mapId)?.id;
+            switch (state)
+            {
+                case IntroVideo.State.Playing:
+                    videoSurface.style.backgroundImage = Background.FromRenderTexture(video.Texture);
+                    ShowVideo(true);
+                    Metrics.Log("intro_video", ("story", storyId), ("result", "play"));
+                    break;
+                case IntroVideo.State.Failed:
+                    videoFailed = true; video.Stop(); ShowVideo(false);
+                    Metrics.Log("intro_video", ("story", storyId), ("result", "failed"));
+                    break;
+                case IntroVideo.State.Finished:
+                    ShowVideo(false);
+                    break;
+            }
+        }
+
+        void StopVideo()
+        {
+            if (video.Current != IntroVideo.State.Idle) video.Stop();
+            ShowVideo(false);
+        }
+
+        /// <summary>The video or the comic page fills the middle of the screen, never both.</summary>
+        void ShowVideo(bool visible)
+        {
+            Show(videoSurface, visible); Show(page, !visible);
         }
 
         /// <summary>A panel pops in (fade and grow) when its turn comes; it stays on the page after that.</summary>

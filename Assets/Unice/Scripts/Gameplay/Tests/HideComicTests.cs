@@ -93,5 +93,46 @@ namespace Unice
             Assert.AreEqual(1, HideComic.PanelsShown(3, 30, 30));
             Assert.AreEqual(3, HideComic.PanelsShown(3, 30, 5));
         }
+
+        // ---------- the intro video ----------
+
+        [Test]
+        public void MediaFor_TheDollStory_IsTheVideoUntilItFails()
+        {
+            var story = Stories.ForMap(game.mapId);
+
+            Assert.AreEqual(IntroMedia.Video, HideComic.MediaFor(story, videoFailed: false));
+            Assert.AreEqual(IntroMedia.Comic, HideComic.MediaFor(story, videoFailed: true), "a missing file falls back to the comic");
+        }
+
+        [Test]
+        public void MediaFor_NoStory_IsNothing()
+        {
+            Assert.AreEqual(IntroMedia.None, HideComic.MediaFor(null, videoFailed: false));
+        }
+
+        [Test]
+        public void MediaFor_ComicOnlyStory_IsTheComic()
+        {
+            var story = new Story("x", MapHouse.Id, released: true, comic: new[] { new ComicPanel(null) });
+
+            Assert.AreEqual(IntroMedia.Comic, HideComic.MediaFor(story, videoFailed: false));
+        }
+
+        [Test]
+        public void MediaFor_StoryWithNeither_IsNothing()
+        {
+            var story = new Story("x", MapHouse.Id, released: true);
+
+            Assert.AreEqual(IntroMedia.None, HideComic.MediaFor(story, videoFailed: false));
+            Assert.IsNull(HideComic.VideoPath(story));
+        }
+
+        [Test]
+        public void VideoPath_IsUnderTheVideosFolder()
+        {
+            Assert.AreEqual("Videos/doll.mp4", HideComic.VideoPath(Stories.ForMap(game.mapId)));
+            Assert.IsNull(HideComic.VideoPath(null));
+        }
     }
 }
