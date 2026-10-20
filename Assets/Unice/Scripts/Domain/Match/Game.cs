@@ -61,6 +61,14 @@ namespace Unice
 
         /// <summary>A round is being played (hiding or hunting).</summary>
         public bool IsLive => phase == Phase.Hide || phase == Phase.Hunt;
+        /// <summary>
+        /// True while the opening video plays: the first hiding phase starts with the story's intro seconds on top of <see cref="hideTime"/>,
+        /// and nobody moves and no clock but this one runs until only the hiding time is left. It is derived from the synced
+        /// <see cref="timeLeft"/>, so every device agrees without a new field in the snapshot.
+        /// </summary>
+        public bool InIntro => phase == Phase.Hide && timeLeft > hideTime;
+        /// <summary>Seconds of the opening video still to go (0 outside it).</summary>
+        public float IntroTimeLeft => InIntro ? timeLeft - hideTime : 0;
         public Character CharacterAt(int index) => index >= 0 && index < characters.Count ? characters[index] : null;
 
         // ---------- events ----------
@@ -286,7 +294,8 @@ namespace Unice
                 hiders[i].targetX = hiders[i].x; hiders[i].targetY = hiders[i].y;
             }
             doll.holder = GameRandom.Pick(EligibleForDraw(hiders)); doll.giggleTimer = giggleInterval; doll.hasLastGiggle = false; doll.lastGiggleSpot = null;
-            phase = Phase.Hide; timeLeft = hideTime; roundClock = 0; roundResult = null;
+            phase = Phase.Hide; roundClock = 0; roundResult = null;
+            timeLeft = hideTime + (round == 1 ? Stories.ForMap(mapId)?.introSeconds ?? 0 : 0);   // round 1 opens with the story video
             AddEvent(GameEventType.Start, actor: newUnice.index, target: doll.holder.index, value: round);
         }
 
@@ -338,6 +347,7 @@ namespace Unice
         /// <summary>One step of a live round: timers, bots, noise, touch catches and the doll's giggle.</summary>
         public void Simulate(float dt)
         {
+            if (InIntro) { timeLeft -= dt; return; }   // the opening video: everyone waits
             roundClock += dt;
             timeLeft -= dt;
             if (phase == Phase.Hide)

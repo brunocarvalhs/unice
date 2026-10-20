@@ -39,7 +39,7 @@ namespace Unice
         {
             game.hostClock += dt;
             if (peers != null) ApplyPeerInputs(peers, myPlayerId, dt);
-            if (game.IsLive) { moveMyCharacter?.Invoke(dt); game.Simulate(dt); }
+            if (game.IsLive) { if (!game.InIntro) moveMyCharacter?.Invoke(dt); game.Simulate(dt); }
             else if (game.phase == Phase.Result)
             {
                 game.timeLeft -= dt;
