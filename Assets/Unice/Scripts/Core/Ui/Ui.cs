@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using static Unice.UiKit;
 
@@ -23,6 +24,8 @@ namespace Unice
         const float HudRefreshSeconds = .2f;
         /// <summary>Width / height from which the panel counts as <c>wide</c> (20:9 phones, ultrawide monitors) and up to which as <c>boxy</c> (tablets, 4:3).</summary>
         const float WideAspect = 1.9f, BoxyAspect = 1.45f;
+        /// <summary>Height in inches of a phone held sideways, the size the 960x540 layout is drawn for; taller screens (tablets, TVs) get proportionally more panel units, up to <see cref="MaxPhysicalScale"/>, so the buttons keep a hand's size instead of growing with the screen.</summary>
+        const float PhoneHeightInches = 3f, MaxPhysicalScale = 2f;
         /// <summary>Padding of <c>.overlay</c> in unice.uss (panel pixels), kept around the pause sheet on top of the safe-area insets.</summary>
         const float OverlayPadding = 16;
 
@@ -39,12 +42,17 @@ namespace Unice
         /// <summary>The part of the screen not covered by notches and system bars; HUD and messages live inside it.</summary>
         internal readonly VisualElement safeArea;
         /// <summary>Touch input (on-screen controls) or keyboard and mouse (key hints); follows the last device used, see <see cref="InputMode"/>.</summary>
-        internal bool isTouch = Application.isMobilePlatform;
+        /// <summary>A TV (Android without a touch screen) is the one place that starts without touch although the platform is mobile.</summary>
+        static bool IsTelevision => Application.platform == RuntimePlatform.Android && Touchscreen.current == null;
+
+        internal bool isTouch = Application.isMobilePlatform && !IsTelevision;
         readonly InputMode inputMode;
         internal UiScreen currentScreen = UiScreen.None;
         float hudRefreshTimer;
         Rect lastSafeRect;
         string aspectClass;
+        readonly PanelSettings panelSettings;
+        int scaledForHeight; float scaledForDpi;
 
         internal readonly Messages messages;
         /// <summary>The intro comic on the Unice's screen while the others hide; <see cref="Messages"/> hides its black screen while it plays.</summary>
@@ -69,7 +77,7 @@ namespace Unice
             this.app = app;
             inputMode = new InputMode(isTouch);
             // The panel asset made by Unice > Configurar projeto keeps the UI shaders in the build; the fallback is for the editor.
-            var panelSettings = Resources.Load<PanelSettings>("UI/UnicePanel");
+            panelSettings = Resources.Load<PanelSettings>("UI/UnicePanel");
             if (panelSettings == null) panelSettings = ScriptableObject.CreateInstance<PanelSettings>();
             panelSettings.scaleMode = PanelScaleMode.ScaleWithScreenSize; panelSettings.referenceResolution = ReferenceResolution;
             panelSettings.screenMatchMode = PanelScreenMatchMode.MatchWidthOrHeight; panelSettings.match = 1;
@@ -198,10 +206,12 @@ namespace Unice
         {
             if (root.panel == null) return;
             if (inputMode.Update()) ApplyInputMode();
+            if (inputMode.Gamepad) KeepPadFocus();
             ApplySafeArea(); homeKeyboardLift.Update(); lobbyKeyboardLift.Update();
             float panelHeight = root.layout.height;
             if (float.IsNaN(panelHeight) || panelHeight < 1) return;   // no layout yet
             ApplyAspectClass(root.layout.width / panelHeight);
+            ApplyPhysicalScale();
             messages.Frame(dt);
             worldLabels.Frame(dt, camera);
             soundCues.Frame(dt, camera);
@@ -218,8 +228,34 @@ namespace Unice
             Show(backdrop.Root, currentScreen == UiScreen.Lobby || currentScreen == UiScreen.Result || currentScreen == UiScreen.Final || currentScreen == UiScreen.Home);
         }
 
+        /// <summary>
+        /// With a gamepad the menus are walked by focus (the d-pad and stick move it, A presses, B goes back), so one visible button
+        /// must always hold it; when a screen changes and the focused button is gone, the first visible one takes it.
+        /// </summary>
+        void KeepPadFocus()
+        {
+            if (currentScreen == UiScreen.Game && !app.paused) return;   // playing: the buttons are not in the way
+            var focused = root.panel?.focusController?.focusedElement as VisualElement;
+            if (focused != null && focused.resolvedStyle.display != DisplayStyle.None && focused.resolvedStyle.visibility == Visibility.Visible && focused.worldBound.width > 0) return;
+            if (Typing) return;
+            var first = root.Query<Button>().Where(button => button.resolvedStyle.display != DisplayStyle.None && button.worldBound.width > 0 && button.enabledInHierarchy && button.focusable).First();
+            first?.Focus();
+        }
+
         /// <summary>Pretends the player uses touch or keyboard/mouse (layout screenshots).</summary>
         internal void ForceTouch(bool touch) { inputMode.Force(touch); ApplyInputMode(); }
+
+        /// <summary>On phones and tablets (and TVs, which run Android) the panel gets more units on bigger screens: its size follows the screen's physical height, not just its pixels.</summary>
+        void ApplyPhysicalScale()
+        {
+            if (!Application.isMobilePlatform && Application.platform != RuntimePlatform.Android) return;
+            if (Screen.height == scaledForHeight && Screen.dpi == scaledForDpi) return;
+            scaledForHeight = Screen.height; scaledForDpi = Screen.dpi;
+            // a TV reports a made-up dpi and is watched from afar: it always gets the largest scale, so its buttons stay modest
+            float inches = Screen.dpi > 1 ? Screen.height / Screen.dpi : PhoneHeightInches;
+            float scale = IsTelevision ? MaxPhysicalScale : Mathf.Clamp(inches / PhoneHeightInches, 1, MaxPhysicalScale);
+            panelSettings.referenceResolution = new Vector2Int(Mathf.RoundToInt(ReferenceResolution.x * scale), Mathf.RoundToInt(ReferenceResolution.y * scale));
+        }
 
         /// <summary>
         /// Layout classes on the root for unice.uss: <c>touch</c> or <c>pointer</c> (the input in use) and <c>wide</c>, <c>normal</c> or <c>boxy</c> (the aspect).
@@ -238,6 +274,7 @@ namespace Unice
         {
             isTouch = inputMode.Touch;
             root.EnableInClassList("touch", isTouch); root.EnableInClassList("pointer", !isTouch);
+            root.EnableInClassList("pad", inputMode.Gamepad);
             hud.SetDocked(!isTouch);
             Show(controls.Root, currentScreen == UiScreen.Game && isTouch);
             messages.SetTouchLayout(isTouch);

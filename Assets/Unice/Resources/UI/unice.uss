@@ -555,4 +555,8 @@
 .boxy .lobby-side { width: 280px; padding: 14px 14px; }
 .boxy .pcard { width: 118px; min-height: 170px; margin: 5px; }
 .boxy .menu-grid { width: 100%; }
-.boxy .menu-grid .mbtn { width: 280px; }
+/* 4:3 is only 720 wide at the panel's fixed height: the cacti shrink and go to the edges, the subtitle and the buttons narrow, so nothing overlaps */
+.boxy .decor-cactus-l { left: 0; width: 90px; height: 235px; }
+.boxy .decor-cactus-r { right: 0; width: 110px; height: 290px; }
+.boxy .menu-grid .mbtn { width: 230px; }
+.boxy .menu-sub { font-size: 14px; letter-spacing: 2px; }
