@@ -1,7 +1,8 @@
 name: Release
 
 # Every push to master builds the Android AAB and uploads it to Google Play (internal track, draft).
-# Promotion to production stays manual in the Play Console.
+# Promotion to production stays manual in the Play Console. iOS (Xcode project), Windows, macOS and Linux builds are kept as
+# artifacts of the run: there is no store upload for them.
 "on":
   push:
     branches:
@@ -151,3 +152,23 @@ jobs:
       contents: read
       pages: write
       id-token: write
+
+  # iOS and desktop builds, one Unity run at a time (a second concurrent run hits the Unity Personal activation limit).
+  # They start after the Android build so a broken Android build stops the line early.
+  build-platforms:
+    name: Release build (${{ matrix.name }})
+    needs: [targets, tests, build-release]
+    if: ${{ !cancelled() && needs.tests.result == 'success' && needs.targets.outputs.platforms != '[]' && (needs.build-release.result == 'success' || needs.build-release.result == 'skipped') }}
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        include: ${{ fromJSON(needs.targets.outputs.platforms) }}
+    uses: ./.github/workflows/build-platform.yml
+    secrets: inherit
+    permissions:
+      contents: read
+    with:
+      name: ${{ matrix.name }}
+      target: ${{ matrix.target }}
+      release: true

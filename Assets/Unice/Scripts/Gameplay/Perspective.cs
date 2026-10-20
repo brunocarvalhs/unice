@@ -1,0 +1,88 @@
+using System;
+using System.Linq;
+
+namespace Unice
+{
+    /// <summary>Where this device looks from and how far it sees.</summary>
+    public struct ViewInfo
+    {
+        public float x, y, radius;
+        /// <summary>Walls block the view (false for spectators, who see a plain circle).</summary>
+        public bool usesLineOfSight;
+        public bool spectating;
+    }
+
+    /// <summary>
+    /// This device's point of view: where it looks from and how far it sees (its own character, or whoever it spectates),
+    /// what is visible from there, and how to call each character to this player ("você" vs. their name).
+    /// </summary>
+    public sealed class Perspective
+    {
+        readonly Game game;
+        readonly Func<Character> myCharacter;
+        Character me => myCharacter();
+
+        public ViewInfo view;
+        /// <summary>The character the view is on (this player's, or the spectated one), or null (the middle of the map).</summary>
+        Character followed;
+        /// <summary>False until there is something to look at (stays false at home before the first match).</summary>
+        public bool hasView;
+        /// <summary>While spectating, who to follow (their playerId) — null means auto (the doll holder). A stale id just falls back.</summary>
+        public string spectateTargetId;
+
+        public Perspective(Game game, Func<Character> myCharacter) { this.game = game; this.myCharacter = myCharacter; }
+
+        /// <summary>Per step: follows the player (or the spectated one) once there's something to look at.</summary>
+        public void Update()
+        {
+            if (me == null && game.phase == Phase.Home) return;
+            view = ComputeView(); hasView = true;
+        }
+
+        /// <summary>The view, moved to where the followed character is drawn this frame (see <see cref="Character.DrawX"/>).</summary>
+        public ViewInfo DrawnView(float stepBlend)
+        {
+            var drawn = view;
+            if (followed != null) { drawn.x = followed.DrawX(stepBlend); drawn.y = followed.DrawY(stepBlend); }
+            return drawn;
+        }
+
+        /// <summary>False only for the Unice while a round is live: then the hiders' information (who has the doll, who is hidden) stays secret.</summary>
+        public bool ShowsTeamInfo => me == null || me.outOfRound || !me.IsUnice || !game.IsLive;
+
+        ViewInfo ComputeView()
+        {
+            if (me == null || me.outOfRound)
+            {
+                // spectating: follow the chosen player, else the doll holder
+                var target = spectateTargetId != null ? game.characters.FirstOrDefault(character => character.playerId == spectateTargetId && !character.outOfRound) : null;
+                target ??= game.doll.holder;
+                bool onMap = target != null && target.x > 0;
+                followed = onMap ? target : null;
+                return new ViewInfo
+                {
+                    x = onMap ? target.x : Map.WorldW / 2, y = onMap ? target.y : Map.WorldH / 2,   // no one to follow: the middle of the map
+                    radius = Rules.SpectatorViewRange, usesLineOfSight = false, spectating = true,
+                };
+            }
+            followed = me;
+            float radius = me.hidingSpot != null ? Rules.HiddenViewRange : me.IsUnice ? Rules.UniceViewRange : Rules.HiderViewRange;
+            return new ViewInfo { x = me.x, y = me.y, radius = radius, usesLineOfSight = true };
+        }
+
+        /// <summary>Whether (x, y) is within view: close enough and, unless spectating, with no wall in between.</summary>
+        public bool CanSee(float x, float y)
+        {
+            if (!hasView || Geometry.Distance(x, y, view.x, view.y) > view.radius) return false;
+            return !view.usesLineOfSight || Map.HasLineOfSight(view.x, view.y, x, y);
+        }
+
+        /// <summary>"você" for this player, the name for others, "alguém" for nobody (mid-sentence).</summary>
+        public string NameFor(Character character) =>
+            character == null ? Localization.Get("app.someone") : character == me ? Localization.Get("app.you") : character.name;
+
+        /// <summary>Same as <see cref="NameFor"/>, capitalized for the start of a sentence.</summary>
+        public string NameForCapitalized(Character character) =>
+            character == null ? Localization.Get("app.someone.up") : character == me ? Localization.Get("app.you.up") : character.name;
+    }
+}

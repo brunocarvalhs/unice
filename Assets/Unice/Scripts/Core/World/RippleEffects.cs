@@ -3,19 +3,6 @@ using UnityEngine;
 
 namespace Unice
 {
-    /// <summary>What made a ripple: each kind has its color, size and duration.</summary>
-    public enum RippleKind
-    {
-        /// <summary>The doll's giggle (or a laugh): big pink ring.</summary>
-        Giggle,
-        /// <summary>A catch: short red ring.</summary>
-        Catch,
-        /// <summary>Running footsteps the Unice hears.</summary>
-        Step,
-        /// <summary>The player's own running steps (faint).</summary>
-        Own,
-    }
-
     /// <summary>Expanding rings on the floor that show where a sound came from. Sprites are pooled and reused.</summary>
     sealed class RippleEffects
     {

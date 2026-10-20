@@ -72,6 +72,7 @@ namespace Unice
             Instance = this; DontDestroyOnLoad(gameObject);
             Application.targetFrameRate = 60; Screen.sleepTimeout = SleepTimeout.NeverSleep;
             Metrics.Init();
+            Localization.LanguageChanged += Metrics.SetLanguageProperty;
             profile = new ProfileStore();
             UsePlayGamesName();
             cameraRig = new CameraRig();
@@ -82,9 +83,13 @@ namespace Unice
             }
             worldView = new WorldView(transform);
             sfx = new Sfx(transform);
-            perspective = new Perspective(this);
-            soundscape = new Soundscape(this); heartbeat = new Heartbeat(this); eventFeed = new EventFeed(this);
-            room = new RoomSession(this); player = new PlayerControl(this);
+            var stage = new AppStage(this);
+            perspective = new Perspective(game, () => myCharacter);
+            soundscape = new Soundscape(game, () => myCharacter, perspective, stage, stage);
+            heartbeat = new Heartbeat(game, () => myCharacter, stage);
+            eventFeed = new EventFeed(game, () => myCharacter, perspective, stage, stage);
+            room = new RoomSession(this);
+            player = new PlayerControl(this, new PlayerController(game, () => myCharacter, stage, () => paused, () => room.sync.PublishSoon()));
             voice = VoiceRegistry.Factory?.Invoke();   // before the UI: its settings buttons only show voice controls with voice
             ui = new Ui(this);
             moveMyCharacter = stepDt => { if (myCharacter != null) player.Move(stepDt); };
@@ -175,6 +180,7 @@ namespace Unice
             bool followView = inGame && perspective.hasView;
             var drawnView = perspective.DrawnView(stepBlend);   // the camera and the fog move with the drawn character, not in steps
             cameraRig.Follow(dt, followView, drawnView);
+            cameraRig.ShowWorld(game.IsLive);
             worldView.SyncCharacters(game, myCharacter, canSee, perspective.ShowsTeamInfo, time, stepBlend);
             worldView.UpdateOcclusion(myCharacter, game.IsLive);
             worldView.Tick(dt);
@@ -225,6 +231,9 @@ namespace Unice
         public void SaveProfile() => profile.Save();
         internal int AddOnlineWin() => profile.AddOnlineWin();
         internal bool MarkFirstMatchEnd() => profile.MarkFirstMatchEnd();
+        internal bool MarkStorySeen() => profile.MarkStorySeen();
+        internal bool ComicSeen(string storyId) => profile.ComicSeen(storyId);
+        internal void MarkComicSeen(string storyId) => profile.MarkComicSeen(storyId);
         public void SetKit(int[] newKit) { profile.SetKit(newKit); room.sync.PublishSoon(); }
 
         public bool MicOn { get => voice != null && voice.MicOn; set { if (voice != null) voice.MicOn = value; } }

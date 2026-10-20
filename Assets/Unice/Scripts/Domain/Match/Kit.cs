@@ -14,8 +14,8 @@ namespace Unice
         public static readonly string[] HairColors = { "#20150f", "#5b3a22", "#b5532a", "#e0b95a", "#4a6fb5" };
         public static readonly string[] Outfits = { "Lisa", "Listrada", "Bolinhas", "Vestido", "Capa" };
         public static readonly string[] OutfitColors = { "#e9795f", "#6fa8dc", "#9fcf7a", "#f2c14e", "#b98ad8", "#5fc9b8", "#ef8fb4", "#e6e0d4" };
-        public static readonly string[] Hats = { "Nenhum", "Boné", "Gorro", "Laço", "Coroa", "Orelhinhas" };
-        public static readonly string[] Accessories = { "Nenhum", "Mochila", "Óculos", "Ursinho" };
+        public static readonly string[] Hats = { "Nenhum", "Boné", "Gorro", "Chapéu de palha", "Chapéu de couro", "Orelhinhas" };
+        public static readonly string[] Accessories = { "Nenhum", "Bornal", "Óculos", "Boneca de pano" };
         /// <summary>How many options each slot has, in slot order.</summary>
         public static readonly int[] OptionCount = { 4, 4, 5, 5, 8, 6, 4 };
 

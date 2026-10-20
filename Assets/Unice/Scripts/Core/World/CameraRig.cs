@@ -28,6 +28,9 @@ namespace Unice
             Camera = camera;
         }
 
+        /// <summary>Off on every screen but the match, which have their own full-screen backdrop: the camera then draws nothing instead of the house under them.</summary>
+        public void ShowWorld(bool show) => Camera.cullingMask = show ? ~0 : 0;
+
         /// <param name="magnitude">How far it shakes at first, in house pixels.</param>
         public void Shake(float magnitude) { shakeTimeLeft = ShakeDuration; shakeMagnitude = magnitude; }
 

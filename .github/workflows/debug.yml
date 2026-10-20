@@ -89,3 +89,23 @@ jobs:
           name: Unice-debug-apk
           path: build/Debug/**/*.apk
           if-no-files-found: error
+
+  # iOS and desktop builds, one Unity run at a time (a second concurrent run hits the Unity Personal activation limit).
+  # They start after the APK so a broken Android build stops the line early.
+  build-platforms:
+    name: Debug build (${{ matrix.name }})
+    needs: [targets, tests, build-debug-apk]
+    if: ${{ !cancelled() && needs.tests.result == 'success' && needs.targets.outputs.platforms != '[]' && (needs.build-debug-apk.result == 'success' || needs.build-debug-apk.result == 'skipped') }}
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        include: ${{ fromJSON(needs.targets.outputs.platforms) }}
+    uses: ./.github/workflows/build-platform.yml
+    secrets: inherit
+    permissions:
+      contents: read
+    with:
+      name: ${{ matrix.name }}
+      target: ${{ matrix.target }}
+      release: false

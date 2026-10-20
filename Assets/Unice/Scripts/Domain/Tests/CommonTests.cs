@@ -121,17 +121,5 @@ namespace Unice
             GameRandom.Shuffle(list);
             CollectionAssert.AreEquivalent(original, list);
         }
-
-        [Test]
-        public void OfflineCode_HasExpectedLengthAndAlphabet()
-        {
-            const string alphabet = "23456789ABCDEFGHJKMNPQRSTUVWXYZ";
-            for (int i = 0; i < 50; i++)
-            {
-                string code = TextFormat.RandomRoomCode();
-                Assert.AreEqual(5, code.Length);
-                foreach (char c in code) Assert.That(alphabet, Does.Contain(c));
-            }
-        }
     }
 }

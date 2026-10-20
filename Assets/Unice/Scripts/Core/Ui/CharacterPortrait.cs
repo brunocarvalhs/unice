@@ -45,12 +45,12 @@ namespace Unice
             style.scale = new Scale(new Vector3(flip ? -1 : 1, 1, 1));
         }
 
-        /// <summary>Shows the Unice (one sprite) instead of a child.</summary>
-        public void SetUnice()
+        /// <summary>Shows the Unice (one sprite) instead of a child; <paramref name="frameFile"/> picks the pose ("unice_m_s_3" = walking, frame 3).</summary>
+        public void SetUnice(string frameFile = "unice_i_s_0")
         {
             for (int i = 1; i < layers.Length; i++) layers[i].style.display = DisplayStyle.None;
             layers[0].style.display = DisplayStyle.Flex;
-            layers[0].style.backgroundImage = new StyleBackground(Art.UniceFrame("unice_i_s_0"));
+            layers[0].style.backgroundImage = new StyleBackground(Art.UniceFrame(frameFile));
             layers[0].style.unityBackgroundImageTintColor = Color.white;
         }
     }
