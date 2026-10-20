@@ -125,6 +125,27 @@ namespace Unice
                     ComicFigure.Sprite("furn_22", 80, .25f, .8f), ComicFigure.Sprite("furn_26", 45, .78f, .8f),
                     ComicFigure.Sprite("dot", 60, .5f, .55f), ComicFigure.Unice(.5f, .92f), ComicFigure.Kid(1, .2f, .86f)),
             }),
+            new Story("rua", MapRua.Id, released: false, comic: new[]
+            {
+                // in front of grandma's house: the kids get together
+                new ComicPanel(null,
+                    ComicFigure.Kid(0, .2f, .9f), ComicFigure.Kid(1, .38f, .84f), ComicFigure.Kid(2, .55f, .92f, flip: true), ComicFigure.Kid(3, .72f, .86f, flip: true), ComicFigure.Kid(4, .88f, .92f, flip: true)),
+                // one counts with closed eyes (facing the "wall"), the rest run off
+                new ComicPanel(null,
+                    ComicFigure.Sprite("furn_1", 70, .2f, .85f), ComicFigure.Kid(3, .2f, .92f),
+                    ComicFigure.Kid(0, .5f, .86f), ComicFigure.Kid(1, .68f, .92f), ComicFigure.Kid(2, .85f, .84f)),
+                // running to and fro
+                new ComicPanel(null,
+                    ComicFigure.Sprite("furn_26", 45, .22f, .8f), ComicFigure.Sprite("furn_22", 80, .78f, .8f),
+                    ComicFigure.Kid(0, .4f, .9f), ComicFigure.Kid(4, .6f, .86f, flip: true), ComicFigure.Kid(1, .5f, .78f)),
+                // the aunt shouts where someone is hiding
+                new ComicPanel(null,
+                    ComicFigure.Sprite("furn_26", 45, .8f, .82f), ComicFigure.Sprite("furn_22", 80, .22f, .82f),
+                    ComicFigure.Unice(.5f, .92f), ComicFigure.Kid(2, .8f, .72f), ComicFigure.Kid(4, .22f, .7f)),
+                // your turn
+                new ComicPanel(null,
+                    ComicFigure.Unice(.5f, .92f), ComicFigure.Kid(0, .2f, .86f), ComicFigure.Kid(3, .8f, .88f, flip: true), ComicFigure.Sprite("furn_22", 80, .72f, .62f)),
+            }),
         };
 
         /// <summary>The story told on <paramref name="mapId"/>, or null for an unknown map.</summary>

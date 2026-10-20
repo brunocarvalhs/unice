@@ -176,6 +176,33 @@ namespace Unice
             }
         }
 
+        // ---------- the street story: houses and the church are walls ----------
+
+        [Test]
+        public void Rua_TheChurchAndTheHouses_AreNotWalkable()
+        {
+            Map.Load(Maps.ById(MapRua.Id));
+            var church = MapRua.Church;
+
+            Assert.IsFalse(Map.IsWalkable(church.x + church.w / 2, church.y + church.h / 2, 0), "inside the church");
+            Assert.IsFalse(Map.IsWalkable(400, 100, 0), "the houses north of the Rua do Mocambo");
+            Assert.IsFalse(Map.IsWalkable(600, 1000, 0), "the houses south of the Rua Monsenhor José Magalhães");
+        }
+
+        [Test]
+        public void Rua_TheChurchBlocksSight_AndNoAreaCoversIt()
+        {
+            Map.Load(Maps.ById(MapRua.Id));
+            var church = MapRua.Church;
+
+            Assert.IsFalse(Map.HasLineOfSight(1480, 600, 1660, 600), "the square to the far side of the church");
+            foreach (var room in Map.Rooms)
+            {
+                bool overlaps = room.x < church.x + church.w && room.x + room.w > church.x && room.y < church.y + church.h && room.y + room.h > church.y;
+                Assert.IsFalse(overlaps, room.id + " covers the church");
+            }
+        }
+
         [Test]
         public void WorldSize_House_CenterIs860_590()
         {
