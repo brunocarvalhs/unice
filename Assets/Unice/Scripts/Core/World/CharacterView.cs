@@ -36,10 +36,9 @@ namespace Unice
             for (int i = 0; i < KidSprites.LayerOrder.Length; i++)
             {
                 var layer = Art.CreateSpriteRenderer(KidSprites.LayerOrder[i], root.transform, null, 10 + i);
-                layer.sharedMaterial = Art.PixelMat;
                 kidLayers[i] = layer;
             }
-            uniceSprite = Art.CreateSpriteRenderer("unice", root.transform, null, 40); uniceSprite.sharedMaterial = Art.PixelMat;
+            uniceSprite = Art.CreateSpriteRenderer("unice", root.transform, null, 40);
             dollIcon = Art.CreateSpriteRenderer("doll", root.transform, Art.Centered("doll", Art.Manifest.charScale), 50);
             dollIcon.transform.localPosition = new Vector3(.12f, .46f, 0);
             root.SetActive(false);
