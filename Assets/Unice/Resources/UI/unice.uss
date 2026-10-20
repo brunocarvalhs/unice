@@ -24,6 +24,7 @@
     --areia: #f0c093;
     --areia-escura: #e6aa78;
     --nanquim: #1a1210;
+    --areia-88: rgba(240, 192, 147, 0.88);
     --anil: #2f5d8c;
     --anil-claro: #7fb0e0;
     /* touch targets: ≥ 64 px on the 540 px panel ≈ 50 dp on a 1080p phone */
@@ -483,3 +484,55 @@
 .cordel .lobby-title { font-size: 28px; }
 .cordel .mbtn-go { font-size: 30px; }
 .cordel .mbtn-top, .cordel .mexit { font-size: 20px; }
+
+/* ---------- cordel for the pause sheet and the match HUD: paper, black ink, stamped shadow (right and bottom edges), Rye lettering ---------- */
+.overlay { background-color: var(--areia-88); }
+.sheet { border-color: var(--nanquim); border-width: 3px; border-right-width: 7px; border-bottom-width: 7px; border-radius: 6px; }
+.sheet .title, .sheet .eyebrow { -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); color: var(--nanquim); }
+.sheet .title-md { font-size: 36px; }
+.sheet .btn { background-color: var(--sol); color: var(--nanquim); border-color: var(--nanquim); border-width: 3px; border-right-width: 6px; border-bottom-width: 6px; border-radius: 6px; -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); font-size: 22px; letter-spacing: 0px; }
+.sheet .btn:hover { background-color: var(--chita-claro); }
+.sheet .btn:active { background-color: var(--chita-escuro); color: var(--papel); }
+.sheet .btn-ghost { background-color: var(--cal); font-size: 18px; -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); }
+.sheet .btn-link { background-color: var(--transp); border-width: 0; color: var(--chita-escuro); font-size: 20px; }
+.sheet .btn-link:hover { background-color: var(--transp); color: var(--nanquim); }
+
+.hud-card { background-color: var(--papel); border-color: var(--nanquim); border-width: 2px; border-right-width: 5px; border-bottom-width: 5px; border-radius: 6px; color: var(--nanquim); }
+.hud-lbl, .phase, .note, .plst, .tag { color: var(--tinta-mudo); }
+.tag { border-color: var(--tinta-mudo); }
+.clock { -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); color: var(--nanquim); font-size: 34px; }
+.clock-low { color: var(--chita-escuro); }
+.where, .plname { color: var(--nanquim); }
+.roomline { color: var(--chita-escuro); }
+.role-t { -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); font-size: 20px; }
+.role-unice .role-t { color: var(--chita-escuro); }
+.role-holder .role-t { color: var(--mandacaru-escuro); }
+.role-out .role-t { color: var(--tinta-mudo); }
+.role-g { color: var(--tinta); }
+.meter { background-color: var(--cal-suave); border-color: var(--nanquim); border-width: 2px; }
+.meter-fill { background-color: var(--chita-escuro); }
+.meter-noise .meter-fill { background-color: var(--sol); }
+.mini { background-color: var(--nanquim); border-radius: 3px; }
+.hud-btn { background-color: var(--papel); color: var(--nanquim); border-color: var(--nanquim); border-width: 2px; border-right-width: 5px; border-bottom-width: 5px; border-radius: 6px; }
+.hud-btn:hover, .hud-btn:focus { background-color: var(--sol); color: var(--nanquim); border-color: var(--nanquim); border-width: 2px; border-right-width: 5px; border-bottom-width: 5px; }
+.hud-btn:active { background-color: var(--chita-claro); }
+.plrow-pick { background-color: var(--tinta-10); }
+.plrow-pick:hover { background-color: var(--sol-25); }
+.plrow-on { background-color: var(--chita-claro-45); }
+
+.banner { -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); font-size: 34px; left: 12%; right: 12%; padding: 8px 16px; background-color: var(--papel); border-color: var(--nanquim); border-width: 3px; border-right-width: 7px; border-bottom-width: 7px; border-radius: 6px; }
+.banner-info { color: var(--nanquim); }
+.banner-rose, .banner-blood { color: var(--chita-escuro); }
+.banner-moss { color: var(--mandacaru-escuro); }
+.banner-candle { color: var(--nanquim); background-color: var(--sol); }
+.toast { background-color: var(--papel); color: var(--nanquim); border-color: var(--nanquim); border-width: 2px; border-left-width: 6px; border-right-width: 4px; border-bottom-width: 4px; border-radius: 4px; }
+.prompt-in { background-color: var(--papel); color: var(--nanquim); border-color: var(--nanquim); border-width: 2px; border-right-width: 4px; border-bottom-width: 4px; border-radius: 6px; -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); }
+.pill-in { background-color: var(--papel); color: var(--chita-escuro); border-color: var(--nanquim); border-width: 2px; border-right-width: 4px; border-bottom-width: 4px; border-radius: 6px; -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); font-size: 18px; }
+.caption-in { background-color: var(--papel); color: var(--nanquim); border-color: var(--nanquim); border-width: 2px; border-right-width: 4px; border-bottom-width: 4px; border-radius: 6px; }
+.joy { background-color: var(--areia-88); border-color: var(--nanquim); border-width: 3px; }
+.joy-knob { background-color: var(--papel); border-color: var(--nanquim); border-width: 3px; }
+.act { background-color: var(--papel); color: var(--nanquim); border-color: var(--nanquim); border-width: 3px; border-right-width: 5px; border-bottom-width: 5px; }
+.act-q { background-color: var(--chita-claro); color: var(--nanquim); border-color: var(--nanquim); }
+.act-r { background-color: var(--sol); color: var(--nanquim); border-color: var(--nanquim); }
+.act-on { background-color: var(--sol); color: var(--nanquim); }
+.act:focus { border-color: var(--nanquim); color: var(--nanquim); }
