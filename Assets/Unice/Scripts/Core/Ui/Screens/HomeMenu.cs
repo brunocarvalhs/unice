@@ -132,7 +132,6 @@ namespace Unice
         public void OnShow()
         {
             currentPage = Page.Main;   // the phase's screen_view ("home") already counted the main page
-            if (app.MarkStorySeen()) { ShowPage(Page.Story); return; }   // first run: the story first
             ShowPage(app.netStatusIsError && app.netStatusText.Length > 0 ? Page.Online : Page.Main);
         }
 
