@@ -72,7 +72,7 @@ namespace Unice
             IgnorePointer(AddLabel(nameLine, character.name + (character == me ? Localization.Get("hud.you_suffix") : ""), "plname"));
             if (character.isBot) IgnorePointer(AddLabel(nameLine, Localization.Get("hud.bot_tag"), "tag"));
             if (app.IsOnline && character.playerId == hostId) IgnorePointer(AddLabel(nameLine, Localization.Get("hud.host_tag"), "tag"));
-            IgnorePointer(AddLabel(column, Localization.Get(StatusKey(character, teamInfo)), "plst"));
+            IgnorePointer(AddLabel(column, Localization.Get(HudModels.PlayerStatusKey(character, teamInfo)), "plst"));
 
             if (teamInfo && character == holder)
             {
@@ -81,17 +81,6 @@ namespace Unice
             }
             if (!character.isBot && character != me) MuteButton.Add(row, app, character.playerId, Invalidate);
             IgnorePointer(AddLabel(row, character.score.ToString(), "pts")).style.marginLeft = 8;
-        }
-
-        /// <summary>What each one is doing; the Unice's player only gets "somewhere" for the hiders.</summary>
-        static string StatusKey(Character character, bool teamInfo)
-        {
-            if (character.IsUnice) return "hud.st_unice";
-            if (character.outOfRound) return "hud.st_out";
-            if (!teamInfo) return "hud.st_somewhere";
-            if (character.hidingSpot != null) return "hud.st_hidden";
-            if (!character.moving) return "hud.st_still";
-            return character.sneaking ? "hud.st_sneaking" : "hud.st_running";
         }
     }
 }

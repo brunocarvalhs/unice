@@ -12,7 +12,7 @@ namespace Unice
     sealed class MatchOptions : UiPart
     {
         static readonly int[] RoundChoices = { 3, 5, 7 };
-        /// <summary>Quintal/praça are a work in progress (flat-tint placeholder art) — only selectable in the Editor or a dev build.</summary>
+        /// <summary>Maps of stories that are not released yet (flat-tint placeholder art) are only selectable in the Editor or a dev build.</summary>
         static readonly string[] PlayableMapIds = Debug.isDebugBuild ? Maps.AllIds : new[] { MapHouse.Id };
 
         readonly VisualElement hostSteppers;

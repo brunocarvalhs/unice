@@ -4,7 +4,9 @@ using System.Linq;
 #if !UNITY_WEBGL
 using Firebase;
 using Firebase.Analytics;
+#if UNITY_ANDROID || UNITY_IOS
 using Firebase.Crashlytics;
+#endif
 #endif
 using UnityEngine;
 
@@ -22,7 +24,7 @@ namespace Unice
     }
 #else
     /// <summary>
-    /// Google Analytics (GA4) and Crashlytics through Firebase. Events and errors logged before Firebase is ready are queued, never lost;
+    /// Google Analytics (GA4) and Crashlytics (Android and iOS only) through Firebase. Events and errors logged before Firebase is ready are queued, never lost;
     /// if Firebase can't start, everything is a no-op so the game never depends on it. Off in the Editor.
     /// Every analytics event is also a Crashlytics breadcrumb, so a crash report shows what the player was doing.
     /// </summary>
@@ -42,8 +44,10 @@ namespace Unice
                     return;
                 }
                 _ = FirebaseApp.DefaultInstance;   // Crashlytics starts with the default app
+#if UNITY_ANDROID || UNITY_IOS
                 Crashlytics.IsCrashlyticsCollectionEnabled = !Application.isEditor;
                 Crashlytics.ReportUncaughtExceptionsAsFatal = true;
+#endif
                 FirebaseAnalytics.SetAnalyticsCollectionEnabled(!Application.isEditor);
                 ready = true;
                 SetLanguageProperty();
@@ -60,27 +64,49 @@ namespace Unice
             var parameters = new Parameter[args.Length];
             for (int i = 0; i < args.Length; i++) parameters[i] = ToParameter(args[i].key, args[i].value);
             string breadcrumb = args.Length == 0 ? name : name + " " + string.Join(" ", args.Select(arg => arg.key + "=" + arg.value));
-            RunWhenReady(() => { FirebaseAnalytics.LogEvent(name, parameters); Crashlytics.Log(breadcrumb); });
+            RunWhenReady(() => { FirebaseAnalytics.LogEvent(name, parameters); CrashLog(breadcrumb); });
         }
 
         /// <summary>A screen view (GA's "screen_view"), and the current screen as a Crashlytics key.</summary>
         public static void Screen(string name)
         {
             Log(FirebaseAnalytics.EventScreenView, (FirebaseAnalytics.ParameterScreenName, name), (FirebaseAnalytics.ParameterScreenClass, name));
-            RunWhenReady(() => Crashlytics.SetCustomKey("phase", name));
+            RunWhenReady(() => CrashKey("phase", name));
         }
 
         /// <summary>A handled exception: logged locally and sent to Crashlytics as non-fatal, so it shows up in Firebase without crashing the game.</summary>
         public static void Error(Exception error, string where = null)
         {
             Debug.LogWarning(where == null ? error.ToString() : where + ": " + error);
-            RunWhenReady(() => { if (where != null) Crashlytics.Log("error in " + where); Crashlytics.LogException(error); });
+            RunWhenReady(() => { if (where != null) CrashLog("error in " + where); CrashException(error); });
         }
 
         /// <summary>The in-game language as a GA user property (GA already knows the device's).</summary>
         public static void SetLanguageProperty()
         {
             if (ready) FirebaseAnalytics.SetUserProperty("game_lang", Localization.Current.ToString().ToLowerInvariant());
+        }
+
+        // Crashlytics exists only on Android and iOS; on desktop the Firebase SDK offers Analytics alone, so these do nothing there.
+        static void CrashLog(string message)
+        {
+#if UNITY_ANDROID || UNITY_IOS
+            Crashlytics.Log(message);
+#endif
+        }
+
+        static void CrashKey(string key, string value)
+        {
+#if UNITY_ANDROID || UNITY_IOS
+            Crashlytics.SetCustomKey(key, value);
+#endif
+        }
+
+        static void CrashException(Exception error)
+        {
+#if UNITY_ANDROID || UNITY_IOS
+            Crashlytics.LogException(error);
+#endif
         }
 
         /// <summary>Runs now if Firebase is ready, queues it if it is still starting, drops it if Firebase failed.</summary>

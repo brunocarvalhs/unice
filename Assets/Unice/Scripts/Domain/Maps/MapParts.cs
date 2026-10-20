@@ -1,11 +1,16 @@
 namespace Unice
 {
-    /// <summary>A room. Its display name and phrase ("na cozinha") live in Core's Localization table, keyed by <see cref="id"/>.</summary>
+    /// <summary>
+    /// A room, or an open area of a yard (areas may overlap by 60 px or so to join them without a door).
+    /// Its display name and phrase ("na cozinha") live in Core's Localization table, keyed by <see cref="id"/>.
+    /// </summary>
     public sealed class Room
     {
         public string id;
         public float x, y, w, h;
-        public Room(string id, float x, float y, float w, float h) { this.id = id; this.x = x; this.y = y; this.w = w; this.h = h; }
+        /// <summary>Floor color ("#rrggbb") when it differs from the map's ground color (a lit balcony in a dark yard); null = the ground color.</summary>
+        public string tint;
+        public Room(string id, float x, float y, float w, float h, string tint = null) { this.id = id; this.x = x; this.y = y; this.w = w; this.h = h; this.tint = tint; }
     }
 
     /// <summary>An axis-aligned rectangle (x, y = top-left corner).</summary>

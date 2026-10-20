@@ -8,7 +8,7 @@ namespace Unice
     {
         /// <summary>The full-screen dim; <see cref="Ui"/> pads it so the sheet stays inside the safe area.</summary>
         public readonly VisualElement Root;
-        readonly Label titleLabel, noteLabel;
+        readonly Label titleLabel, noteLabel, roomLabel;
         readonly Button leaveButton;
 
         public PauseMenu(Ui ui) : base(ui)
@@ -16,6 +16,7 @@ namespace Unice
             var sheet = AddSheet(ui.root, out Root);
             titleLabel = AddLabel(sheet, "", "title", "title-md");
             noteLabel = AddLabel(sheet, "", "muted");
+            roomLabel = AddLabel(sheet, "", "roomline");
             LocalizedButton(sheet, "pause.continue", () => app.TogglePause(), "btn", "gap");
             var settingsRow = AddElement(sheet, "row", "gap", "wrap");
             ui.settings.AddSoundButton(settingsRow, "btn", "btn-ghost");
@@ -30,6 +31,9 @@ namespace Unice
             UiKit.Show(Root, visible);
             titleLabel.text = Localization.Get(online ? "pause.online_title" : "pause.title");
             noteLabel.text = Localization.Get(online ? "pause.note_online" : "pause.note_local");
+            roomLabel.text = online
+                ? Localization.Get("hud.room_online", app.roomCode) + (app.game.isHost ? Localization.Get("hud.room_host_suffix") : "")
+                : Localization.Get("hud.room_solo");
             leaveButton.text = Localization.Get(online ? "res.leave_room" : "pause.leave_match");
         }
     }

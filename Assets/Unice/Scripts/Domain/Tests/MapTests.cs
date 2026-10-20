@@ -135,13 +135,72 @@ namespace Unice
             Assert.AreEqual(182f, Map.Clock.CenterY, "y");
         }
 
-        [TestCase("quintal")]
-        [TestCase("praca")]
-        public void Clock_MapWithoutClock_IsNull(string mapId)
-        {
-            Map.Load(Maps.ById(mapId));
+        // ---------- the werewolf yard: the house is a hole you can neither enter nor see through ----------
 
-            Assert.IsNull(Map.Clock);
+        [Test]
+        public void Lobisomem_InsideTheHouse_IsNotWalkable()
+        {
+            Map.Load(Maps.ById(MapLobisomem.Id));
+
+            Assert.IsFalse(Map.IsWalkable(880, 430, 0));
+        }
+
+        [Test]
+        public void Lobisomem_TheLitBalconyBelowTheHouse_IsWalkable()
+        {
+            Map.Load(Maps.ById(MapLobisomem.Id));
+
+            Assert.IsTrue(Map.CanStand(880, 600));
+            Assert.AreEqual("sacada", Map.RoomAt(880, 600).id);
+        }
+
+        [Test]
+        public void Lobisomem_TheHouseBlocksSight_ButTheYardAroundItDoesNot()
+        {
+            Map.Load(Maps.ById(MapLobisomem.Id));
+
+            Assert.IsFalse(Map.HasLineOfSight(880, 250, 880, 600), "north yard to the balcony, straight through the house");
+            Assert.IsTrue(Map.HasLineOfSight(300, 600, 1400, 600), "along the balcony and the yard beside it");
+        }
+
+        [Test]
+        public void Lobisomem_TheHouseHoleIsNotCoveredByAnyArea()
+        {
+            Map.Load(Maps.ById(MapLobisomem.Id));
+            var house = MapLobisomem.House;
+
+            foreach (var room in Map.Rooms)
+            {
+                bool overlaps = room.x < house.x + house.w && room.x + room.w > house.x && room.y < house.y + house.h && room.y + room.h > house.y;
+                Assert.IsFalse(overlaps, room.id + " covers the house");
+            }
+        }
+
+        // ---------- the street story: houses and the church are walls ----------
+
+        [Test]
+        public void Rua_TheChurchAndTheHouses_AreNotWalkable()
+        {
+            Map.Load(Maps.ById(MapRua.Id));
+            var church = MapRua.Church;
+
+            Assert.IsFalse(Map.IsWalkable(church.x + church.w / 2, church.y + church.h / 2, 0), "inside the church");
+            Assert.IsFalse(Map.IsWalkable(400, 100, 0), "the houses north of the Rua do Mocambo");
+            Assert.IsFalse(Map.IsWalkable(600, 1000, 0), "the houses south of the Rua Monsenhor José Magalhães");
+        }
+
+        [Test]
+        public void Rua_TheChurchBlocksSight_AndNoAreaCoversIt()
+        {
+            Map.Load(Maps.ById(MapRua.Id));
+            var church = MapRua.Church;
+
+            Assert.IsFalse(Map.HasLineOfSight(1480, 600, 1660, 600), "the square to the far side of the church");
+            foreach (var room in Map.Rooms)
+            {
+                bool overlaps = room.x < church.x + church.w && room.x + room.w > church.x && room.y < church.y + church.h && room.y + room.h > church.y;
+                Assert.IsFalse(overlaps, room.id + " covers the church");
+            }
         }
 
         [TestCase(MapHouse.Id)]

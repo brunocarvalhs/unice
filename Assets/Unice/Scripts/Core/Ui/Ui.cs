@@ -36,12 +36,16 @@ namespace Unice
         internal readonly VisualElement root;
         /// <summary>The part of the screen not covered by notches and system bars; HUD and messages live inside it.</summary>
         internal readonly VisualElement safeArea;
-        internal readonly bool isMobile = Application.isMobilePlatform;
+        /// <summary>Touch input (on-screen controls) or keyboard and mouse (key hints); follows the last device used, see <see cref="InputMode"/>.</summary>
+        internal bool isTouch = Application.isMobilePlatform;
+        readonly InputMode inputMode;
         internal UiScreen currentScreen = UiScreen.None;
         float hudRefreshTimer;
         Rect lastSafeRect;
 
         internal readonly Messages messages;
+        /// <summary>The intro comic on the Unice's screen while the others hide; <see cref="Messages"/> hides its black screen while it plays.</summary>
+        internal readonly HideComicView comic;
         internal readonly KidCustomizer kidCustomizer;
         internal readonly SettingToggles settings;
         readonly ScreenEffects screenEffects;
@@ -49,6 +53,8 @@ namespace Unice
         readonly SoundCues soundCues;
         readonly Hud hud;
         readonly TouchControls controls;
+        /// <summary>The cordel poster behind the main menu and the waiting room (not the intro story, not a match).</summary>
+        readonly CordelBackdrop backdrop;
         readonly HomeMenu homeMenu;
         readonly LobbyScreen lobbyScreen;
         readonly ResultScreen resultScreen;
@@ -58,6 +64,7 @@ namespace Unice
         public Ui(App app)
         {
             this.app = app;
+            inputMode = new InputMode(isTouch);
             // The panel asset made by Unice > Configurar projeto keeps the UI shaders in the build; the fallback is for the editor.
             var panelSettings = Resources.Load<PanelSettings>("UI/UnicePanel");
             if (panelSettings == null) panelSettings = ScriptableObject.CreateInstance<PanelSettings>();
@@ -77,9 +84,11 @@ namespace Unice
             safeArea = IgnorePointer(AddElement(root, "layer"));
             hud = new Hud(this);
             controls = new TouchControls(this);
+            comic = new HideComicView(this);   // before Messages: banners and toasts stay on top of the comic
             messages = new Messages(this);
             settings = new SettingToggles(this, Relocalize);
             kidCustomizer = new KidCustomizer(this);
+            backdrop = new CordelBackdrop(this, root);   // under every screen, and outside their safe-area insets: it bleeds to the screen edges
             homeMenu = new HomeMenu(this); lobbyScreen = new LobbyScreen(this); resultScreen = new ResultScreen(this); pauseMenu = new PauseMenu(this);
             // the screens with text fields: room code and name (My child) at home, name (Appearance tab) in the waiting room
             homeKeyboardLift = new KeyboardLift(this, homeMenu.Root); lobbyKeyboardLift = new KeyboardLift(this, lobbyScreen.Root);
@@ -142,9 +151,9 @@ namespace Unice
             SyncScreens();
             hudRefreshTimer -= dt;
             if (hudRefreshTimer <= 0 && currentScreen == UiScreen.Game) { hudRefreshTimer = HudRefreshSeconds; hud.Tick(); }
-            var hints = ActionHints.For(game, app.myCharacter, showKeys: !isMobile);
+            var hints = ActionHints.For(game, app.myCharacter, showKeys: !isTouch);
             messages.SetPrompt(hints.text);
-            if (isMobile) controls.ShowAvailable(hints);
+            if (isTouch) controls.ShowAvailable(hints);
         }
 
         static UiScreen ScreenFor(Phase phase) => phase switch
@@ -165,7 +174,8 @@ namespace Unice
             {
                 var previous = currentScreen; currentScreen = wanted;
                 Show(homeMenu.Root, wanted == UiScreen.Home); Show(lobbyScreen.Root, wanted == UiScreen.Lobby); Show(resultScreen.Root, resultLike);
-                Show(hud.Root, wanted == UiScreen.Game); Show(controls.Root, wanted == UiScreen.Game && isMobile);
+                Show(hud.Root, wanted == UiScreen.Game); Show(controls.Root, wanted == UiScreen.Game && isTouch);
+                UpdateBackdrop();
                 if (wanted == UiScreen.Home) homeMenu.OnShow();
                 if (wanted == UiScreen.Lobby) lobbyScreen.OnShow(cameFromFinal: previous == UiScreen.Final);
                 if (resultLike) resultScreen.Render(wanted == UiScreen.Final);
@@ -183,6 +193,7 @@ namespace Unice
         public void Frame(float dt, Camera camera)
         {
             if (root.panel == null) return;
+            if (inputMode.Update()) ApplyInputMode();
             ApplySafeArea(); homeKeyboardLift.Update(); lobbyKeyboardLift.Update();
             float panelHeight = root.layout.height;
             if (float.IsNaN(panelHeight) || panelHeight < 1) return;   // no layout yet
@@ -190,7 +201,28 @@ namespace Unice
             worldLabels.Frame(dt, camera);
             soundCues.Frame(dt, camera);
             screenEffects.Frame(dt);
+            comic.Frame(dt);
             if (currentScreen == UiScreen.Home) homeMenu.Frame();
+            if (backdrop.Root.style.display != DisplayStyle.None) backdrop.Frame();
+        }
+
+        /// <summary>Shows the backdrop on every screen but the match itself (and the intro story).</summary>
+        internal void UpdateBackdrop()
+        {
+            if (homeMenu == null) return;   // the menu's own constructor shows its first page before it is assigned
+            Show(backdrop.Root, currentScreen == UiScreen.Lobby || currentScreen == UiScreen.Result || currentScreen == UiScreen.Final || (currentScreen == UiScreen.Home && !homeMenu.PlayingStory));
+        }
+
+        /// <summary>Pretends the player uses touch or keyboard/mouse (layout screenshots).</summary>
+        internal void ForceTouch(bool touch) { inputMode.Force(touch); ApplyInputMode(); }
+
+        /// <summary>The player switched between touch and keyboard/mouse: shows the matching controls and spacing.</summary>
+        void ApplyInputMode()
+        {
+            isTouch = inputMode.Touch;
+            Show(controls.Root, currentScreen == UiScreen.Game && isTouch);
+            messages.SetTouchLayout(isTouch);
+            if (!isTouch) controls.Release();   // a held joystick or the sneak toggle must not keep driving the character
         }
 
         /// <summary>Keeps the HUD and the full screens inside Screen.safeArea (notches, rounded corners, system bars).</summary>
