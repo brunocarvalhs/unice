@@ -25,6 +25,16 @@ namespace Unice
         /// <summary>Up to this many panels go in a single row; more are split over two rows.</summary>
         const int MaxPanelsInOneRow = 3;
 
+        /// <summary>The cousins of the comic: skin, hair, hair color, outfit, outfit color, hat, accessory.</summary>
+        static readonly int[][] Cousins =
+        {
+            new[] { 2, 0, 0, 2, 0, 3, 1 },   // Márcio: straw hat and satchel
+            new[] { 1, 2, 1, 3, 3, 0, 3 },   // pigtails and a rag doll
+            new[] { 3, 1, 3, 1, 1, 4, 0 },   // leather hat
+            new[] { 0, 3, 2, 0, 5, 1, 2 },   // cap and glasses
+            new[] { 2, 0, 4, 4, 2, 0, 0 },   // cape
+        };
+
         public readonly VisualElement Root;
         readonly Label title, countdown;
         readonly VisualElement page, videoSurface;
@@ -188,7 +198,7 @@ namespace Unice
         {
             switch (figure.kind)
             {
-                case ComicFigureKind.Kid: AddKid(art, StoryScreen.Cousins[figure.cousin % StoryScreen.Cousins.Length], figure.x, figure.y, figure.flip); break;
+                case ComicFigureKind.Kid: AddKid(art, Cousins[figure.cousin % Cousins.Length], figure.x, figure.y, figure.flip); break;
                 case ComicFigureKind.Unice: AddUnice(art, figure.x, figure.y, figure.flip); break;
                 default: AddSprite(art, figure.art, figure.width, figure.x, figure.y, figure.bob); break;
             }

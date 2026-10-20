@@ -332,26 +332,16 @@
 .btn:focus, .btn-ghost:focus, .btn-link:focus, .tabbtn:focus, .cy-btn:focus:focus, .sw:focus { border-width: 3px; border-color: var(--anil); }
 .lobby-side .btn-ghost:focus, .lobby-side .cy-btn:focus, .lobby-side .sw:focus { border-color: var(--sol); }
 
-/* ---------- the story: a full-screen animation (StoryScreen) ---------- */
-.story { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: var(--noite-0); }
-.story-stage { position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; }
-.story-backdrop { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-size: cover; background-position: center; -unity-background-image-tint-color: rgb(190, 175, 160); }
-.story-world { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
-.story-prop { position: absolute; }
-.story-sepia { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: var(--papel); opacity: 0; }
-.story-vignette { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-image: resource("Art/vignette"); background-size: 100% 100%; -unity-background-image-tint-color: var(--noite-0-88); }
-.story-flash { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: var(--branco); opacity: 0; }
-.story-title { position: absolute; left: 0; right: 0; top: 10px; -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 40px; color: var(--cal); -unity-text-align: middle-center; text-shadow: 0px 0px 14px var(--noite-0-95); }
-.story-dots { position: absolute; left: 0; right: 0; top: 62px; flex-direction: row; justify-content: center; }
-.story-dot { width: 10px; height: 10px; border-radius: 5px; margin: 0 5px; background-color: var(--cal-35); }
-.story-dot-on { background-color: var(--sol); }
-.story-bubble { position: absolute; background-color: var(--papel); color: var(--tinta); border-width: 2px; border-color: var(--tinta); border-radius: 12px; padding: 3px 12px; font-size: 20px; -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); white-space: nowrap; }
-.story-cardrow { position: absolute; left: 0; right: 0; bottom: 14px; align-items: center; }
-.story-card { background-color: var(--papel); border-width: 2px; border-color: var(--tinta); border-radius: 6px; padding: 10px 28px; min-width: 420px; max-width: 94%; align-items: center; }
-.story-line { color: var(--tinta); font-size: 19px; -unity-text-align: middle-center; white-space: normal; transition-property: opacity; transition-duration: 0.35s; }
-.story-hint { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 14px; color: var(--tinta-mudo); margin-top: 4px; white-space: normal; -unity-text-align: middle-center; }
-.story-card .mbtn-back { margin: 8px 0 0 0; border-color: var(--tinta); color: var(--tinta); background-color: var(--sol); }
-.story-card .mbtn-back:focus, .story-card .mbtn-back:hover { color: var(--noite); border-color: var(--noite); }
+/* ---------- credits: scrolls by itself inside a menu panel (CreditsPage) ---------- */
+.credits-scroll { max-height: 380px; }
+.credits { align-items: center; padding: 10px 0 40px 0; }
+.credits-photo { width: 280px; height: 389px; margin-bottom: 14px; background-size: 100% 100%; }
+.credits-name { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 34px; color: var(--sol); white-space: normal; -unity-text-align: middle-center; }
+.credits-role { font-size: 16px; color: var(--cal-suave); margin-top: 10px; white-space: normal; -unity-text-align: middle-center; }
+.credits-text { font-size: 20px; color: var(--cal-suave); white-space: normal; -unity-text-align: middle-center; max-width: 520px; margin-top: 4px; }
+.credits-rule { width: 120px; height: 2px; background-color: var(--cal-35); margin: 22px 0 8px 0; }
+.cordel .credits-name { color: var(--nanquim); -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); font-size: 28px; }
+.cordel .credits-role, .cordel .credits-text { color: var(--tinta-mudo); }
 
 /* ---------- story picker (StoryPicker): one card per story ---------- */
 .scards { width: 100%; flex-direction: row; justify-content: center; align-items: stretch; margin-top: 8px; }
@@ -524,3 +514,13 @@
 
 /* the intro video on the Unice screen, in place of the comic page */
 .comic-video { flex-grow: 1; margin: 4px 0; background-color: var(--preto); background-size: contain; background-position: center; background-repeat: no-repeat; border-width: 3px; border-color: var(--nanquim); }
+
+/* ---------- scrollbars: a slim rounded track and thumb instead of the editor's default look ---------- */
+.unity-scroll-view__vertical-scroller { width: 12px; margin: 2px 2px 2px 6px; background-color: var(--transp); border-width: 0; }
+.unity-scroll-view__vertical-scroller .unity-scroller__low-button, .unity-scroll-view__vertical-scroller .unity-scroller__high-button { display: none; }
+.unity-scroll-view__vertical-scroller .unity-scroller__slider { margin: 0; }
+.unity-scroll-view__vertical-scroller .unity-base-slider__tracker { width: 6px; margin-left: 3px; background-color: var(--cal-35); border-width: 0; border-radius: 3px; }
+.unity-scroll-view__vertical-scroller .unity-base-slider__dragger { width: 10px; margin-left: 1px; background-color: var(--sol); border-width: 2px; border-color: var(--tinta); border-radius: 5px; }
+.unity-scroll-view__vertical-scroller .unity-base-slider__dragger:hover { background-color: var(--chita-claro); }
+.cordel .unity-scroll-view__vertical-scroller .unity-base-slider__tracker { background-color: var(--tinta-10); }
+.cordel .unity-scroll-view__vertical-scroller .unity-base-slider__dragger { background-color: var(--chita-escuro); border-color: var(--nanquim); }

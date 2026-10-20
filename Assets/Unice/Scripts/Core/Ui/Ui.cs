@@ -210,7 +210,7 @@ namespace Unice
         internal void UpdateBackdrop()
         {
             if (homeMenu == null) return;   // the menu's own constructor shows its first page before it is assigned
-            Show(backdrop.Root, currentScreen == UiScreen.Lobby || currentScreen == UiScreen.Result || currentScreen == UiScreen.Final || (currentScreen == UiScreen.Home && !homeMenu.PlayingStory));
+            Show(backdrop.Root, currentScreen == UiScreen.Lobby || currentScreen == UiScreen.Result || currentScreen == UiScreen.Final || currentScreen == UiScreen.Home);
         }
 
         /// <summary>Pretends the player uses touch or keyboard/mouse (layout screenshots).</summary>
