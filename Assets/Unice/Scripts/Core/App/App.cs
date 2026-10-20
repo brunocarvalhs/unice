@@ -173,11 +173,8 @@ namespace Unice
             ui.Step(dt);
         }
 
-        /// <summary>The menu theme in the home and the lobby, the soundtrack while a round is played; silence when paused, muted or while the opening video plays.</summary>
-        MusicTrack WantedMusic =>
-            !sfx.Enabled || paused && game.IsLive || game.InIntro ? MusicTrack.None
-            : game.IsLive ? MusicTrack.Match
-            : game.phase <= Phase.Lobby ? MusicTrack.Menu : MusicTrack.None;
+        /// <summary>The menu theme in the home and the lobby; no music once the match starts, or when muted.</summary>
+        MusicTrack WantedMusic => sfx.Enabled && game.phase <= Phase.Lobby ? MusicTrack.Menu : MusicTrack.None;
 
         /// <summary>Every frame: camera, characters, fog, UI.</summary>
         void RenderFrame(float dt)
