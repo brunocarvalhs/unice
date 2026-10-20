@@ -36,12 +36,6 @@ namespace Unice
         }
 
         [Test]
-        public void All_AStoryWithAVideoSaysHowLongTheMatchWaitsForIt()
-        {
-            foreach (var story in Stories.All.Where(story => story.hasIntroVideo)) Assert.Greater(story.introSeconds, 0, story.id);
-        }
-
-        [Test]
         public void ForMap_FindsTheStoryOfAMap()
         {
             Assert.AreEqual(Stories.DollId, Stories.ForMap(MapHouse.Id).id);

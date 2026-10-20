@@ -54,7 +54,6 @@ namespace Unice
         float hudRefreshTimer;
         Rect lastSafeRect;
         string aspectClass;
-        readonly PanelSettings panelSettings;
         int scaledForHeight; float scaledForDpi;
 
         internal readonly Messages messages;
