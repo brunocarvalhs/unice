@@ -1,7 +1,9 @@
 {
     "name": "Unice.Editor",
     "rootNamespace": "Unice",
-    "references": [],
+    "references": [
+        "GUID:af3af4280b1f348ad8ce3cd22345fd64"
+    ],
     "includePlatforms": [
         "Editor"
     ],
