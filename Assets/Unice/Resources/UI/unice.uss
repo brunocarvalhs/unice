@@ -424,33 +424,62 @@
 .menu-version { color: var(--nanquim); }
 .menu-title { color: var(--nanquim); text-shadow: 4px 4px 0px var(--chita-escuro); }
 .menu-sub { color: var(--nanquim); }
-.menu .mbtn, .menu .mpill, .menu .mpanel { background-color: var(--papel); color: var(--nanquim); border-color: var(--nanquim); border-width: 3px; border-right-width: 7px; border-bottom-width: 7px; border-radius: 6px; }
-.menu .mbtn:hover, .menu .mpill:hover, .menu .mbtn:focus, .menu .mpill:focus { background-color: var(--sol); color: var(--nanquim); border-color: var(--nanquim); border-width: 3px; border-right-width: 7px; border-bottom-width: 7px; }
-.menu .mbtn:active, .menu .mpill:active { background-color: var(--chita-claro); }
-.menu .mpill { border-radius: 6px; }
-.menu .mbtn-back, .menu .mbtn-quit { border-width: 2px; border-right-width: 5px; border-bottom-width: 5px; }
-.menu .mpanel { background-color: var(--papel); }
-.menu .mpanel-t, .menu .mrule-t { color: var(--nanquim); }
-.menu .mrule-rose { color: var(--chita-escuro); }
-.menu .mrule-moss { color: var(--mandacaru-escuro); }
-.menu .mnote { color: var(--tinta-mudo); }
-.menu .mnet, .menu .menu-or { color: var(--tinta-mudo); }
-.menu .mnet.net-err { color: var(--chita-escuro); }
-.menu .mfield .unity-base-text-field__input { background-color: var(--branco-40); border-color: var(--nanquim); color: var(--nanquim); }
-.menu .scard { background-color: var(--cal); border-color: var(--nanquim); border-width: 3px; border-right-width: 6px; border-bottom-width: 6px; border-radius: 6px; }
-.menu .scard:hover { background-color: var(--sol); border-color: var(--nanquim); }
-.menu .scard-art { border-color: var(--nanquim); border-radius: 3px; background-color: var(--areia-escura); }
-.menu .scard-name { color: var(--nanquim); }
-.menu .scard-blurb { color: var(--tinta-mudo); }
+.cordel .mbtn, .cordel .mpill, .cordel .mpanel { background-color: var(--papel); color: var(--nanquim); border-color: var(--nanquim); border-width: 3px; border-right-width: 7px; border-bottom-width: 7px; border-radius: 6px; }
+.cordel .mbtn:hover, .cordel .mpill:hover, .cordel .mbtn:focus, .cordel .mpill:focus { background-color: var(--sol); color: var(--nanquim); border-color: var(--nanquim); border-width: 3px; border-right-width: 7px; border-bottom-width: 7px; }
+.cordel .mbtn:active, .cordel .mpill:active { background-color: var(--chita-claro); }
+.cordel .mpill { border-radius: 6px; }
+.cordel .mbtn-back, .cordel .mbtn-quit { border-width: 2px; border-right-width: 5px; border-bottom-width: 5px; }
+.cordel .mpanel { background-color: var(--papel); }
+.cordel .mpanel-t, .cordel .mrule-t { color: var(--nanquim); }
+.cordel .mrule-rose { color: var(--chita-escuro); }
+.cordel .mrule-moss { color: var(--mandacaru-escuro); }
+.cordel .mnote { color: var(--tinta-mudo); }
+.cordel .mnet, .cordel .menu-or { color: var(--tinta-mudo); }
+.cordel .mnet.net-err { color: var(--chita-escuro); }
+.cordel .mfield .unity-base-text-field__input { background-color: var(--branco-40); border-color: var(--nanquim); color: var(--nanquim); }
+.cordel .scard { background-color: var(--cal); border-color: var(--nanquim); border-width: 3px; border-right-width: 6px; border-bottom-width: 6px; border-radius: 6px; }
+.cordel .scard:hover { background-color: var(--sol); border-color: var(--nanquim); }
+.cordel .scard-art { border-color: var(--nanquim); border-radius: 3px; background-color: var(--areia-escura); }
+.cordel .scard-name { color: var(--nanquim); }
+.cordel .scard-blurb { color: var(--tinta-mudo); }
 
 /* cordel lettering (Rye, OFL): titles and buttons of the menu */
-.menu .menu-title, .menu .mpanel-t, .menu .scard-name, .menu .mbtn, .menu .mrule-t { -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); }
-.menu .menu-title { font-size: 96px; }
-.menu .mpanel-t { font-size: 40px; }
-.menu .scard-name { font-size: 22px; }
-.menu .mbtn { font-size: 38px; }
-.menu .mbtn-sm { font-size: 24px; }
-.menu .mbtn-wide { font-size: 34px; }
-.menu .mbtn-join { font-size: 26px; }
-.menu .mbtn-back, .menu .mbtn-quit { font-size: 22px; }
-.menu .mrule-t { font-size: 22px; }
+.cordel .menu-title, .cordel .mpanel-t, .cordel .scard-name, .cordel .mbtn, .cordel .mrule-t { -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); }
+.cordel .menu-title { font-size: 96px; }
+.cordel .mpanel-t { font-size: 40px; }
+.cordel .scard-name { font-size: 22px; }
+.cordel .mbtn { font-size: 38px; }
+.cordel .mbtn-sm { font-size: 24px; }
+.cordel .mbtn-wide { font-size: 34px; }
+.cordel .mbtn-join { font-size: 26px; }
+.cordel .mbtn-back, .cordel .mbtn-quit { font-size: 22px; }
+.cordel .mrule-t { font-size: 22px; }
+
+/* the waiting room on the same poster: paper cards and ink instead of the dark panel and cream text */
+.cordel .lobby-title { color: var(--nanquim); text-shadow: 0px 0px 0px var(--transp); }
+.cordel .lobby-code { color: var(--chita-escuro); text-shadow: 0px 0px 0px var(--transp); }
+.cordel .lobby-count { color: var(--chita-escuro); }
+.cordel .lobby-note, .cordel .mstep-l, .cordel .pcard-st { color: var(--tinta-mudo); }
+.cordel .pcard { background-color: var(--papel); border-color: var(--nanquim); border-width: 3px; border-right-width: 6px; border-bottom-width: 6px; border-radius: 6px; }
+.cordel .pcard-me { border-color: var(--chita-escuro); }
+.cordel .pcard-bots { background-color: var(--areia-escura); border-color: var(--nanquim); }
+.cordel .pcard-name, .cordel .pcard-plus, .cordel .mstep-v { color: var(--nanquim); }
+.cordel .pcard-ok { color: var(--mandacaru-escuro); }
+.cordel .mbtn-on, .cordel .mbtn-on:focus { border-color: var(--mandacaru-escuro); color: var(--mandacaru-escuro); }
+.cordel .mstep-btn { background-color: var(--cal); border-color: var(--nanquim); color: var(--nanquim); border-radius: 6px; }
+.cordel .mstep-btn:hover { background-color: var(--sol); color: var(--nanquim); border-color: var(--nanquim); }
+.cordel .tabbtn { background-color: var(--cal-suave); color: var(--tinta-mudo); border-radius: 4px; }
+.cordel .tabbtn-on { background-color: var(--sol); color: var(--nanquim); }
+.cordel .lobby-side .lbl, .cordel .lobby-side .opt-l { color: var(--tinta-mudo); }
+.cordel .lobby-side .field { background-color: var(--branco-40); border-color: var(--tinta-40); }
+.cordel .lobby-side .field .unity-base-text-field__input { color: var(--tinta); }
+.cordel .lobby-side .cy { background-color: var(--branco-35); }
+.cordel .lobby-side .cy-btn, .cordel .lobby-side .cy-val { color: var(--tinta); }
+.cordel .lobby-side .btn-ghost { color: var(--tinta); border-color: var(--tinta); }
+.cordel .lobby-side .btn-ghost:hover { background-color: var(--tinta-10); }
+.cordel .lobby-side .sw { border-color: var(--tinta-25); }
+.cordel .lobby-side .sw-on { border-color: var(--tinta); }
+.cordel .lobby-title, .cordel .lobby-count { -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); }
+.cordel .lobby-title { font-size: 28px; }
+.cordel .mbtn-go { font-size: 30px; }
+.cordel .mbtn-top, .cordel .mexit { font-size: 20px; }

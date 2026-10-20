@@ -53,6 +53,8 @@ namespace Unice
         readonly SoundCues soundCues;
         readonly Hud hud;
         readonly TouchControls controls;
+        /// <summary>The cordel poster behind the main menu and the waiting room (not the intro story, not a match).</summary>
+        readonly CordelBackdrop backdrop;
         readonly HomeMenu homeMenu;
         readonly LobbyScreen lobbyScreen;
         readonly ResultScreen resultScreen;
@@ -86,6 +88,7 @@ namespace Unice
             messages = new Messages(this);
             settings = new SettingToggles(this, Relocalize);
             kidCustomizer = new KidCustomizer(this);
+            backdrop = new CordelBackdrop(this, root);   // under every screen, and outside their safe-area insets: it bleeds to the screen edges
             homeMenu = new HomeMenu(this); lobbyScreen = new LobbyScreen(this); resultScreen = new ResultScreen(this); pauseMenu = new PauseMenu(this);
             // the screens with text fields: room code and name (My child) at home, name (Appearance tab) in the waiting room
             homeKeyboardLift = new KeyboardLift(this, homeMenu.Root); lobbyKeyboardLift = new KeyboardLift(this, lobbyScreen.Root);
@@ -170,8 +173,9 @@ namespace Unice
             if (wanted != currentScreen)
             {
                 var previous = currentScreen; currentScreen = wanted;
-                homeMenu.SetVisible(wanted == UiScreen.Home); Show(lobbyScreen.Root, wanted == UiScreen.Lobby); Show(resultScreen.Root, resultLike);
+                Show(homeMenu.Root, wanted == UiScreen.Home); Show(lobbyScreen.Root, wanted == UiScreen.Lobby); Show(resultScreen.Root, resultLike);
                 Show(hud.Root, wanted == UiScreen.Game); Show(controls.Root, wanted == UiScreen.Game && isTouch);
+                UpdateBackdrop();
                 if (wanted == UiScreen.Home) homeMenu.OnShow();
                 if (wanted == UiScreen.Lobby) lobbyScreen.OnShow(cameFromFinal: previous == UiScreen.Final);
                 if (resultLike) resultScreen.Render(wanted == UiScreen.Final);
@@ -199,6 +203,14 @@ namespace Unice
             screenEffects.Frame(dt);
             comic.Frame(dt);
             if (currentScreen == UiScreen.Home) homeMenu.Frame();
+            if (backdrop.Root.style.display != DisplayStyle.None) backdrop.Frame();
+        }
+
+        /// <summary>Shows the backdrop on the main menu (not while its story plays) and in the waiting room.</summary>
+        internal void UpdateBackdrop()
+        {
+            if (homeMenu == null) return;   // the menu's own constructor shows its first page before it is assigned
+            Show(backdrop.Root, currentScreen == UiScreen.Lobby || (currentScreen == UiScreen.Home && !homeMenu.PlayingStory));
         }
 
         /// <summary>Pretends the player uses touch or keyboard/mouse (layout screenshots).</summary>

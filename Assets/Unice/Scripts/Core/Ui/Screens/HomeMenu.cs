@@ -17,7 +17,6 @@ namespace Unice
         readonly VisualElement mainPage, onlinePage, myKidPage, storiesPage, kidCustomizerSlot;
         VisualElement howToPlayPage;   // set by BuildHowToPlay
         readonly StoryScreen story;
-        readonly CordelBackdrop backdrop;
         /// <summary>Version label, settings pills and quit button: hidden while the story plays full screen.</summary>
         readonly VisualElement[] chrome;
         readonly TextField roomCodeField;
@@ -30,8 +29,7 @@ namespace Unice
 
         public HomeMenu(Ui ui) : base(ui)
         {
-            backdrop = new CordelBackdrop(ui, ui.root);   // before the menu: under it, and outside its safe-area insets so it bleeds to the screen edges
-            Root = AddElement(ui.root, "menu");
+            Root = AddElement(ui.root, "menu", "cordel");
             var versionLabel = AddLabel(Root, "v" + Application.version, "menu-version");
 
             // main page
@@ -88,12 +86,8 @@ namespace Unice
             ShowPage(Page.Main);
         }
 
-        /// <summary>The menu screen appears or goes away; its backdrop lives outside <see cref="Root"/>, so it follows by hand.</summary>
-        public void SetVisible(bool visible)
-        {
-            Show(Root, visible);
-            Show(backdrop.Root, visible && currentPage != Page.Story);
-        }
+        /// <summary>The intro story is playing full screen (no backdrop, no chrome).</summary>
+        public bool PlayingStory => currentPage == Page.Story;
 
         /// <summary>Opens the story picker; <paramref name="start"/> runs once a story is chosen, with <paramref name="pageWhileStarting"/> showing meanwhile (where a connection error can be read).</summary>
         void ChooseStory(Action start, Page pageWhileStarting)
@@ -156,7 +150,6 @@ namespace Unice
         /// <summary>Per frame while showing.</summary>
         public void Frame()
         {
-            backdrop.Frame();
             if (currentPage == Page.MyKid) ui.kidCustomizer.AnimatePreview();
             if (currentPage == Page.Story) story.Frame(Time.unscaledDeltaTime);
         }
@@ -183,7 +176,7 @@ namespace Unice
             Show(mainPage, page == Page.Main); Show(onlinePage, page == Page.Online);
             Show(howToPlayPage, page == Page.HowToPlay); Show(myKidPage, page == Page.MyKid); Show(storiesPage, page == Page.Stories); Show(story.Root, page == Page.Story);
             foreach (var element in chrome) Show(element, page != Page.Story);
-            Show(backdrop.Root, ui.currentScreen == UiScreen.Home && page != Page.Story);
+            ui.UpdateBackdrop();
             if (page == Page.Story) story.Begin();
             if (page == Page.MyKid) ui.kidCustomizer.ShowIn(kidCustomizerSlot);
         }
