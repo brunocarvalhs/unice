@@ -79,15 +79,14 @@ namespace Unice
         }
 
         [Test]
-        public void ApplyPeerInputs_PeerLeftWhileTalking_BotIsSilent()
+        public void ApplyPeerInputs_PeerLeft_BotDropsTheHumanInput()
         {
             var g = NewLiveGameWithGuest(out var guest);
-            guest.talking = true; guest.sneaking = true; guest.speed = 100;
+            guest.sneaking = true; guest.speed = 100;
 
             g.host.ApplyPeerInputs(new List<PeerInfo>(), "h1", 0.05f);
 
             Assert.IsTrue(guest.isBot, "the guest left, so a bot plays for them");
-            Assert.IsFalse(guest.talking, "a bot never talks");
             Assert.IsFalse(guest.sneaking, "the human's sneak toggle is not the bot's");
             Assert.AreEqual(0, guest.speed, "the speed estimated from the human's updates no longer applies");
         }

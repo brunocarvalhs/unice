@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="../unice.uss" />
+    <!-- A player's card in the waiting room (one per player; the code repeats it). The portrait is drawn by the code inside "portrait";
+         the mute button is added after the state when the player can be muted. -->
+    <ui:VisualElement name="root" class="pcard">
+        <ui:VisualElement name="portrait" />
+        <ui:Label name="name" text="Nova" class="pcard-name" />
+        <ui:Label name="state" text="ANFITRIÃO" class="pcard-st pcard-ok" />
+    </ui:VisualElement>
+</ui:UXML>

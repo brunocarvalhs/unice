@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Unice
 {
     /// <summary>
-    /// What this player can do right now (E use a spot, Q pass the doll, R laugh), as the key-hints line and as the state
+    /// What this player can do right now (E use a spot, Q pass the doll, R laugh; A, X and Y on a gamepad), as the key-hints line and as the state
     /// of the touch buttons. Computed every step from the game state.
     /// </summary>
     struct ActionHints
@@ -20,12 +20,13 @@ namespace Unice
         /// <summary>The hints line ("E hide under the bed    Q pass to Bia").</summary>
         public string text;
 
-        /// <param name="showKeys">Prefix each hint with its keyboard key (not on touch screens).</param>
-        public static ActionHints For(Game game, Character me, bool showKeys)
+        /// <param name="showKeys">Prefix each hint with its key (not on touch screens).</param>
+        /// <param name="gamepad">The prefix is the gamepad button instead of the keyboard key (A, X, Y).</param>
+        public static ActionHints For(Game game, Character me, bool showKeys, bool gamepad = false)
         {
             var hints = new ActionHints();
             var parts = new List<string>();
-            string Key(string key) => showKeys ? $"<b>{key}</b> " : "";
+            string Key(string key) => showKeys ? $"<b>{(gamepad ? PadButton(key) : key)}</b> " : "";
             hints.active = me != null && game.IsLive && !me.outOfRound;
             hints.isUnice = me != null && me.IsUnice;
             if (hints.active)
@@ -73,5 +74,8 @@ namespace Unice
             hints.text = string.Join("    ", parts);
             return hints;
         }
+
+        /// <summary>The gamepad button that does what this key does (see <c>PlayerControl.ReadGamepad</c>).</summary>
+        static string PadButton(string key) => key == "E" ? "A" : key == "Q" ? "X" : "Y";
     }
 }

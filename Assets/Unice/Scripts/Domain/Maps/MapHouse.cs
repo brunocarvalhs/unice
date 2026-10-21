@@ -1,9 +1,10 @@
 namespace Unice
 {
     /// <summary>
+    /// Written by the map editor (Unice &gt; Editor de mapas) and still fine to edit by hand: the editor reads the compiled map (Maps.ById), not this file, so a hand edit shows up next time it opens.
     /// The house: the original 12-room layout. The original 30 furniture entries keep their exact
     /// array order/coordinates — Art/manifest.json's furn[].i indexes into Map.Furniture positionally,
-    /// so reordering or inserting among them would point existing art at the wrong piece.
+    /// so reordering or inserting among them would point existing art at the wrong piece (new pieces go at the end).
     /// Some originally-decorative pieces (dresser, dollhouse, shelves, armchair, commode, fireplace,
     /// cabinet, ktable, planters, pshelves, tank) gained a hiding side; sink/stove didn't (too small).
     /// </summary>
@@ -37,18 +38,16 @@ namespace Unice
             verticalDoors = new[]
             {
                 new MapDoor(260, 390), new MapDoor(614, 390), new MapDoor(958, 390), new MapDoor(1436, 390),
-                new MapDoor(300, 534), new MapDoor(824, 534), new MapDoor(1384, 534),
-                new MapDoor(300, 900), new MapDoor(824, 900), new MapDoor(1238, 900), new MapDoor(1546, 900),
+                new MapDoor(300, 534), new MapDoor(824, 534), new MapDoor(1384, 534), new MapDoor(300, 900),
+                new MapDoor(824, 900), new MapDoor(1238, 900), new MapDoor(1546, 900),
             },
             horizontalDoors = new[]
             {
-                new MapDoor(480, 215), new MapDoor(1168, 215),
-                new MapDoor(560, 729), new MapDoor(1064, 729),
+                new MapDoor(480, 215), new MapDoor(1168, 215), new MapDoor(560, 729), new MapDoor(1064, 729),
                 new MapDoor(560, 1032), new MapDoor(1064, 1032), new MapDoor(1388, 1032),
             },
             furniture = new[]
             {
-                // --- original 30, same order/coordinates as before (manifest furn[].i depends on this) ---
                 new MapProp("bed", 170, 40, 150, 175, 's'),
                 new MapProp("wardrobe", 40, 240, 58, 120, 'e'),
                 new MapProp("dresser", 390, 40, 80, 42, 's'),

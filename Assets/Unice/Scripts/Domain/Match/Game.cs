@@ -69,6 +69,8 @@ namespace Unice
         public bool InIntro => phase == Phase.Hide && timeLeft > hideTime;
         /// <summary>Seconds of the opening video still to go (0 outside it).</summary>
         public float IntroTimeLeft => InIntro ? timeLeft - hideTime : 0;
+        /// <summary>The opening video already played in this session: it opens the first match only, not the next ones or the later rounds.</summary>
+        public bool introPlayed;
         public Character CharacterAt(int index) => index >= 0 && index < characters.Count ? characters[index] : null;
 
         // ---------- events ----------
@@ -295,7 +297,9 @@ namespace Unice
             }
             doll.holder = GameRandom.Pick(EligibleForDraw(hiders)); doll.giggleTimer = giggleInterval; doll.hasLastGiggle = false; doll.lastGiggleSpot = null;
             phase = Phase.Hide; roundClock = 0; roundResult = null;
-            timeLeft = hideTime + (round == 1 ? Stories.ForMap(mapId)?.introSeconds ?? 0 : 0);   // round 1 opens with the story video
+            float introSeconds = round == 1 && !introPlayed ? Stories.ForMap(mapId)?.introSeconds ?? 0 : 0;   // the first match opens with the story video
+            if (introSeconds > 0) introPlayed = true;
+            timeLeft = hideTime + introSeconds;
             AddEvent(GameEventType.Start, actor: newUnice.index, target: doll.holder.index, value: round);
         }
 
@@ -371,9 +375,9 @@ namespace Unice
                 character.loud = !character.IsUnice && character.moving && !character.sneaking;
             }
 
-            // running and talking hiders attract the Unice bot
+            // running hiders attract the Unice bot
             foreach (var character in characters)
-                if (!character.IsUnice && !character.outOfRound && character.hidingSpot == null && (character.loud || character.talking))
+                if (!character.IsUnice && !character.outOfRound && character.hidingSpot == null && character.loud)
                 {
                     character.noiseTimer -= dt;
                     if (character.noiseTimer <= 0) { character.noiseTimer = .42f; uniceBot.HearNoise(character); }

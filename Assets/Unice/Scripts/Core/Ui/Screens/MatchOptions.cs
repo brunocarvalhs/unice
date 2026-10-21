@@ -22,22 +22,24 @@ namespace Unice
         public MatchOptions(Ui ui, VisualElement parent, Action onChanged) : base(ui)
         {
             this.onChanged = onChanged;
-            hostSteppers = AddElement(parent);
-            botsValue = AddStepper("lobby.bots_plural", step => game.botCount = Mathf.Clamp(Math.Min(game.botCount, MaxBots) + step, 0, MaxBots));
-            roundsValue = AddStepper("lobby.rounds_label", step =>
+            // laid out in Resources/UI/Screens/MatchOptions.uxml (UI Builder), each row from Stepper.uxml
+            var panel = ui.LoadScreen("MatchOptions", parent);
+            hostSteppers = panel.Q("steppers");
+            botsValue = BindStepper("bots", "lobby.bots_plural", step => game.botCount = Mathf.Clamp(Math.Min(game.botCount, MaxBots) + step, 0, MaxBots));
+            roundsValue = BindStepper("rounds", "lobby.rounds_label", step =>
             {
                 int index = Array.IndexOf(RoundChoices, game.totalRounds); if (index < 0) index = 1;
                 game.totalRounds = RoundChoices[Mathf.Clamp(index + step, 0, RoundChoices.Length - 1)];
             });
-            hideTimeValue = AddStepper("lobby.hide_label", step => game.hideTime = Mathf.Clamp(game.hideTime + step * 5, 15, 60));
-            huntTimeValue = AddStepper("lobby.hunt_label", step => game.huntTime = Mathf.Clamp(game.huntTime + step * 15, 60, 240));
-            giggleValue = AddStepper("lobby.giggle_label", step => game.giggleInterval = Mathf.Clamp(game.giggleInterval + step * 5, 5, 20));
-            mapValue = AddStepper("lobby.map_label", step =>
+            hideTimeValue = BindStepper("hide", "lobby.hide_label", step => game.hideTime = Mathf.Clamp(game.hideTime + step * 5, 15, 60));
+            huntTimeValue = BindStepper("hunt", "lobby.hunt_label", step => game.huntTime = Mathf.Clamp(game.huntTime + step * 15, 60, 240));
+            giggleValue = BindStepper("giggle", "lobby.giggle_label", step => game.giggleInterval = Mathf.Clamp(game.giggleInterval + step * 5, 5, 20));
+            mapValue = BindStepper("map", "lobby.map_label", step =>
             {
                 int index = Array.IndexOf(PlayableMapIds, game.mapId); if (index < 0) index = 0;
                 game.mapId = PlayableMapIds[(index + step + PlayableMapIds.Length) % PlayableMapIds.Length];   // wraps around
             });
-            summaryLabel = AddLabel(parent, "", "mnote");
+            summaryLabel = panel.Q<Label>("summary"); summaryLabel.text = "";
         }
 
         /// <summary>Bots fill the free seats, up to <see cref="Rules.MaxPlayers"/> in total.</summary>
@@ -46,14 +48,14 @@ namespace Unice
         /// <summary>The bots that will actually play (the setting, capped by the free seats).</summary>
         public int BotsInMatch => Math.Min(game.botCount, MaxBots);
 
-        /// <summary>A "label  ‹ value ›" row; returns the value label.</summary>
-        Label AddStepper(string labelKey, Action<int> change)
+        /// <summary>Wires the "label  ‹ value ›" row named <paramref name="rowName"/> (a Stepper.uxml instance); returns its value label.</summary>
+        Label BindStepper(string rowName, string labelKey, Action<int> change)
         {
-            var stepper = AddElement(hostSteppers, "mstep");
-            LocalizedLabel(stepper, labelKey, "mstep-l");
-            AddButton(stepper, "‹", () => { change(-1); onChanged(); }, "mstep-btn");
-            var value = AddLabel(stepper, "", "mstep-v");
-            AddButton(stepper, "›", () => { change(1); onChanged(); }, "mstep-btn");
+            var stepper = hostSteppers.Q(rowName);
+            ui.Localize(stepper.Q<Label>("label"), labelKey);
+            stepper.Q<Button>("less").clicked += () => { change(-1); onChanged(); };
+            stepper.Q<Button>("more").clicked += () => { change(1); onChanged(); };
+            var value = stepper.Q<Label>("value"); value.text = "";
             return value;
         }
 

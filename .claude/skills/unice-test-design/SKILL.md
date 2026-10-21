@@ -19,7 +19,7 @@ deliberately keeps its rules in a Unity-free assembly tested in Edit Mode.
 |---|---|---|
 | Rules, bots, maps, snapshot/presence bytes, host election, text helpers (`Unice.Domain`) | `Assets/Unice/Scripts/Domain/Tests` (`Unice.Domain.Tests`) | Edit Mode — the code has no Unity dependency, so this is fast and exact |
 | Core code that can run without a scene (e.g. `ProfileStore` with `PlayerPrefs`) | `Assets/Unice/Scripts/Core/Tests` (`Unice.Core.Tests`) | Edit Mode |
-| UI Toolkit screens, rendering, audio, Netcode/Vivox | — | **Manual** for now (see "Manual checks") |
+| UI Toolkit screens, rendering, audio, Netcode | — | **Manual** for now (see "Manual checks") |
 
 Prefer moving logic into Domain over writing a Play Mode test for it: if a rule is hard to test, it is usually in the wrong layer.
 

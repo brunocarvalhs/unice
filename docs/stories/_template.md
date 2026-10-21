@@ -32,26 +32,18 @@ Peças só decorativas (sem lado): …
 ## 4. Vídeo de abertura (opcional)
 Até 30 s, mostrado a todos quando a partida começa (`introVideo`/`introSeconds` em `Stories.cs`; ver o README desta pasta). Sem vídeo, a HQ ocupa o tempo.
 
-## 5. HQ de introdução (3 a 6 quadros, ideal 5)
-Mostrada à Unice durante o tempo de esconder. Cada quadro: cenário (chão), figuras (x, y de 0 a 1; y = pés) e legenda curta (≤ 70 caracteres).
-
-| # | Cenário (`Art/…` ou chão do mapa) | Quem aparece | Legenda (pt) |
-|---|---|---|---|
-| 1 | … | … | … |
-
-## 6. Textos
+## 5. Textos
 - `map.<mapa>.name`: …
 - `stories.<id>.name`: …  /  `stories.<id>.blurb` (1 frase para o cartão): …
 - en e es de tudo acima: …
 
-## 7. Tarefas
+## 6. Tarefas
 - [ ] `Domain/Maps/Map<Nome>.cs` e registro em `Maps.InOrder`
 - [ ] Entrada em `Stories.All`
 - [ ] Textos pt/en/es em `Localization.Strings.cs`
 - [ ] Testes Edit Mode verdes
 - [ ] `CHANGELOG.md` e tabela de histórias em `docs/stories/README.md`
 
-## 8. Critérios de aceite
+## 7. Critérios de aceite
 - [ ] Testes verdes (`MapDefinitionsTests`, `LocalizationTests`, `StoryContentTests`)
 - [ ] Rodada solo jogável no mapa (checagem manual)
-- [ ] HQ aparece para a Unice na rodada 1 e some com um toque

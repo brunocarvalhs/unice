@@ -19,7 +19,7 @@ plus the Unity 6 API guidance in `resources/unity-modern-guidelines.md`.
    - **Rules, game state, bots, maps, wire formats** → `Assets/Unice/Scripts/Domain/` (assembly `Unice.Domain`,
      `noEngineReferences: true`). No `UnityEngine` here — if you need it, the code belongs in Core.
    - **Anything Unity** (MonoBehaviour, UI Toolkit, sprites, audio, PlayerPrefs, Firebase) → `Core/<topic>/`.
-   - **Netcode / Unity Services / Vivox** → `Net/`, behind the `INetBackend` / `IVoiceChat` ports in Domain.
+   - **Netcode / Unity Services** → `Net/`, behind the `INetBackend` port in Domain.
    - Match the existing topic folders (`Match/`, `Match/Bots/`, `Maps/`, `Online/`, `Ui/Screens/`, `Ui/InGame/`, …).
 
 ## Rules

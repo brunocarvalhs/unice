@@ -13,7 +13,6 @@ namespace Unice
     {
         enum SideTab { Match, Appearance }
 
-        const float SidePanelMaxHeight = 320;
         const int CopiedFeedbackMs = 1800;
 
         public readonly VisualElement Root;
@@ -28,41 +27,29 @@ namespace Unice
 
         public LobbyScreen(Ui ui) : base(ui)
         {
-            Root = AddElement(ui.root, "lobby", "cordel");
+            // laid out in Resources/UI/Screens/LobbyScreen.uxml (UI Builder); here the buttons, the cards and the options
+            Root = ui.LoadScreen("LobbyScreen", ui.root);
 
-            // top bar: leave, room code, voice buttons, player count
-            var top = AddElement(Root, "lobby-top");
-            leaveButton = AddButton(top, "", () => app.LeaveRoom(), "mbtn", "mbtn-top");
-            var header = AddElement(top, "lobby-head");
-            titleLabel = AddLabel(header, "", "lobby-title"); codeLabel = AddLabel(header, "", "lobby-code");
-            copyCodeButton = LocalizedButton(header, "lobby.copy_code", CopyCode, "mpill");
-            ui.settings.AddMicButton(top, "mpill");
-            ui.settings.AddWhisperButton(top, "mpill");
-            countLabel = AddLabel(top, "", "lobby-count");
+            // top bar: leave, room code, player count
+            var top = Root.Q("top");
+            leaveButton = Root.Q<Button>("leave"); leaveButton.clicked += () => app.LeaveRoom();
+            titleLabel = Root.Q<Label>("title"); codeLabel = Root.Q<Label>("code");
+            copyCodeButton = ui.Localize(Root.Q<Button>("copy"), "lobby.copy_code"); copyCodeButton.clicked += CopyCode;
+            countLabel = Root.Q<Label>("count"); countLabel.BringToFront();
 
             // body: player cards, and the side panel
-            var body = AddElement(Root, "lobby-body");
-            playerCards = AddScroll(body, "lobby-players", "lobby-cards");
-            var side = AddElement(body, "mpanel", "lobby-side");
-            var tabBar = AddElement(side, "tabbar");
-            matchTabButton = LocalizedButton(tabBar, "tab.match", () => ShowSideTab(SideTab.Match), "tabbtn");
-            appearanceTabButton = LocalizedButton(tabBar, "tab.appearance", () => ShowSideTab(SideTab.Appearance), "tabbtn");
-            matchTab = AddScrollTab(side);
+            playerCards = Root.Q<ScrollView>("players").contentContainer;
+            playerCards.AddToClassList("lobby-cards");
+            var matchButton = ui.Localize(Root.Q<Button>("tab-match"), "tab.match"); matchButton.clicked += () => ShowSideTab(SideTab.Match); matchTabButton = matchButton;
+            var appearanceButton = ui.Localize(Root.Q<Button>("tab-appearance"), "tab.appearance"); appearanceButton.clicked += () => ShowSideTab(SideTab.Appearance); appearanceTabButton = appearanceButton;
+            matchTab = Root.Q<ScrollView>("match-tab");
             matchOptions = new MatchOptions(ui, matchTab, Invalidate);
-            appearanceTab = AddScrollTab(side);
-            statusLabel = AddLabel(side, "", "mnote", "lobby-status");
-            readyOrStartButton = AddButton(side, "", OnReadyOrStart, "mbtn", "mbtn-go");
+            appearanceTab = Root.Q<ScrollView>("appearance-tab");
+            statusLabel = Root.Q<Label>("status");
+            readyOrStartButton = Root.Q<Button>("ready"); readyOrStartButton.clicked += OnReadyOrStart;
 
-            noteLabel = AddLabel(Root, "", "lobby-note");
+            noteLabel = Root.Q<Label>("note");
             ShowSideTab(SideTab.Match);
-        }
-
-        static ScrollView AddScrollTab(VisualElement parent)
-        {
-            var scroll = new ScrollView(ScrollViewMode.Vertical) { horizontalScrollerVisibility = ScrollerVisibility.Hidden };
-            scroll.style.flexGrow = 1; scroll.style.maxHeight = SidePanelMaxHeight;
-            parent.Add(scroll);
-            return scroll;
         }
 
         /// <summary>Forces the next <see cref="Render"/> to rebuild (it skips when nothing it shows changed).</summary>
@@ -106,7 +93,7 @@ namespace Unice
             var host = app.IsOnline ? app.FindHost() : null;
             string hostId = host != null ? host.id : app.IsOnline ? null : app.myPlayerId;
             int bots = matchOptions.BotsInMatch;
-            string signature = string.Join("|", players.Select(player => player.id + player.name + Kit.Pack(player.kit) + player.ready + app.CanMutePlayer(player.id) + app.IsPlayerMuted(player.id)))
+            string signature = string.Join("|", players.Select(player => player.id + player.name + Kit.Pack(player.kit) + player.ready))
                              + hostId + game.isHost + bots + game.totalRounds + game.hideTime + game.huntTime + game.giggleInterval + game.mapId + app.ready + app.roomCode;
             if (signature == renderedSignature) return;
             renderedSignature = signature;
@@ -120,19 +107,18 @@ namespace Unice
             playerCards.Clear();
             foreach (var player in players)
             {
-                var card = AddElement(playerCards, "pcard"); if (player.isMe) card.AddToClassList("pcard-me");
-                var portrait = new CharacterPortrait(62); portrait.ShowKit(player.kit); card.Add(portrait);
-                AddLabel(card, player.name, "pcard-name");
+                var card = ui.LoadScreen("LobbyCard", playerCards); if (player.isMe) card.AddToClassList("pcard-me");
+                var portrait = new CharacterPortrait(62); portrait.ShowKit(player.kit); card.Q("portrait").Add(portrait);
+                card.Q<Label>("name").text = player.name;
                 bool isHost = player.id == hostId;
-                var stateLabel = AddLabel(card, Localization.Get(isHost ? "lobby.host" : player.ready ? "lobby.ready" : "lobby.waiting"), "pcard-st");
-                if (isHost || player.ready) stateLabel.AddToClassList("pcard-ok");
-                if (!player.isMe) MuteButton.Add(card, app, player.id, Invalidate);
+                var stateLabel = card.Q<Label>("state"); stateLabel.text = Localization.Get(isHost ? "lobby.host" : player.ready ? "lobby.ready" : "lobby.waiting");
+                stateLabel.EnableInClassList("pcard-ok", isHost || player.ready);
             }
             if (bots > 0)
             {
-                var botCard = AddElement(playerCards, "pcard", "pcard-bots");
-                AddLabel(botCard, "+" + bots, "pcard-plus");
-                AddLabel(botCard, Localization.Get(bots > 1 ? "lobby.bots_plural" : "lobby.bot_singular"), "pcard-st");
+                var botCard = ui.LoadScreen("BotsCard", playerCards);
+                botCard.Q<Label>("plus").text = "+" + bots;
+                botCard.Q<Label>("state").text = Localization.Get(bots > 1 ? "lobby.bots_plural" : "lobby.bot_singular");
             }
 
             matchOptions.Render();

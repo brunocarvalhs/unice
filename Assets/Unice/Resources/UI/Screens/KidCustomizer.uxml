@@ -1,0 +1,25 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="../unice.uss" />
+    <!-- The player's name, the animated preview of their child and the look options ("Minha criança" and the waiting room's appearance tab).
+         The preview and the option rows are drawn by the code (KidCustomizer.cs, KitOptionPicker.cs). -->
+    <ui:VisualElement name="root">
+        <ui:Label name="name-lbl" text="SEU NOME" class="lbl" />
+        <ui:TextField name="name" class="field" />
+        <ui:Label name="kid-lbl" text="SUA CRIANÇA" class="lbl" style="margin-top: 10px;" />
+        <ui:VisualElement class="row">
+            <ui:VisualElement name="preview" class="preview" style="align-items: center; justify-content: center;" />
+            <ui:Button name="randomize" text="Sortear visual" class="btn btn-ghost" />
+        </ui:VisualElement>
+        <ui:VisualElement name="options" style="margin-top: 10px;">
+            <ui:VisualElement name="tabbar" class="tabbar">
+                <ui:Button name="color" text="COR" class="tabbtn" />
+                <ui:Button name="hair" text="CABELO" class="tabbtn" />
+                <ui:Button name="outfit" text="ROUPA" class="tabbtn" />
+                <ui:Button name="hat" text="CHAPÉU" class="tabbtn" />
+                <ui:Button name="accessory" text="ACESSÓRIO" class="tabbtn" />
+            </ui:VisualElement>
+            <!-- the option rows (swatches and ‹ › cycles) are added here by the code -->
+            <ui:VisualElement name="rows" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

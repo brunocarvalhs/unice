@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="../unice.uss" />
+    <!-- One "label  ‹ value ›" row of the match options. MatchOptions.uxml uses it once per option, each with its own label. -->
+    <ui:VisualElement name="stepper" class="mstep">
+        <ui:Label name="label" text="OPÇÃO" class="mstep-l" />
+        <ui:Button name="less" text="‹" class="mstep-btn" />
+        <ui:Label name="value" text="3" class="mstep-v" />
+        <ui:Button name="more" text="›" class="mstep-btn" />
+    </ui:VisualElement>
+</ui:UXML>

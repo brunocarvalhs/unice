@@ -92,7 +92,7 @@
 
 /* ---------- paper sheets ---------- */
 .overlay { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: var(--noite-0-88); align-items: center; justify-content: center; padding: 16px; }
-.sheet-scroll { max-width: 1100px; width: 100%; max-height: 100%; }
+.sheet-scroll { max-width: 640px; width: 100%; max-height: 100%; }
 .sheet { background-color: var(--papel); color: var(--tinta); border-radius: 4px; border-width: 1px; border-color: var(--tinta-40); padding: 26px 32px; }
 .title { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 64px; color: var(--tinta); margin-bottom: 6px; }
 .title-md { font-size: 44px; }
@@ -226,15 +226,12 @@
 .mbtn-wide { width: auto; height: 90px; margin: 14px 0 6px 0; font-size: 48px; }
 .mbtn-join { width: 190px; height: 70px; margin: 0 0 0 12px; font-size: 36px; }
 .mbtn-back { width: 200px; height: 64px; margin: 16px 0 0 0; font-size: 28px; align-self: center; border-width: 2px; }
-/* the story's skip button: top right, over the story */
-.mexit { position: absolute; right: 18px; top: 12px; width: 130px; height: 64px; margin: 0; font-size: 30px; border-width: 2px; }
 .menu-top { position: absolute; right: 18px; top: 12px; flex-direction: row; align-items: center; }
 /* settings as icons: a round 64 px pill (the language one grows to fit its code) */
 .mpill-icon { min-width: var(--alvo); padding: 0 14px; align-items: center; justify-content: center; }
 .mpill-glyph { width: 40px; height: 40px; }
 .mpill-code { -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); font-size: 20px; margin-left: 6px; }
 .mbtn-quit { width: 130px; height: 64px; margin: 0 0 0 6px; font-size: 30px; border-width: 2px; }
-.menu-foot { position: absolute; left: 0; right: 0; bottom: 22px; flex-direction: row; justify-content: center; }
 .mpill { background-color: var(--noite-80); border-width: 2px; border-color: var(--cal-60); border-radius: 24px; color: var(--cal); font-size: 17px; -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); padding: 8px 20px; min-height: var(--alvo); margin: 0 6px; }
 .mpill:hover { border-color: var(--sol); color: var(--sol); }
 .mpanel { width: 700px; max-width: 100%; max-height: 640px; background-color: var(--noite-90); border-width: 3px; border-color: var(--cal); border-radius: 16px; padding: 22px 30px; }
@@ -311,10 +308,6 @@
 .res-count-n { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 46px; color: var(--sol); margin: 0 10px; }
 .res-rules { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 16px; color: var(--cal-mudo); white-space: normal; -unity-text-align: middle-center; margin-top: 12px; }
 
-/* "Mute"/"Unmute" for another player's voice (waiting room cards, in-game player list) */
-.mute-btn { font-size: 12px; letter-spacing: 1px; padding: 1px 10px; margin: 3px 0 0 0; min-height: var(--alvo); border-width: 1px; }
-.mute-btn-on { color: var(--chita-claro); border-color: var(--chita-claro); }
-
 /* ---------- button system: one feedback model for every button ----------
    Two surfaces: dark (.mbtn .mpill .mstep-btn .hud-btn .act) and paper (.btn .btn-ghost .btn-link .tabbtn .cy-btn).
    Hover is for mouse, :active is the press for touch and mouse, :focus is keyboard / gamepad (a gold ring on dark, an anil ring on paper). */
@@ -350,23 +343,15 @@
 .scards { width: 100%; flex-direction: row; justify-content: center; align-items: stretch; margin-top: 8px; }
 .scard { flex-grow: 1; flex-shrink: 1; flex-basis: 0; min-width: 0; margin: 0 6px; padding: 8px; background-color: var(--noite-80); border-width: 3px; border-color: var(--cal); border-radius: 14px; align-items: center; }
 .scard:hover { border-color: var(--sol); }
-.scard:disabled { opacity: 0.45; }
+.scard:disabled, .scard-off { opacity: 0.45; }
 .scard-art { width: 100%; height: 110px; background-color: var(--noite-3); background-size: cover; background-position: center; border-radius: 8px; border-width: 2px; border-color: var(--borda); }
 .scard-name { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 28px; color: var(--cal); -unity-text-align: middle-center; margin-top: 6px; white-space: normal; }
 .scard-blurb { -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); font-size: 16px; color: var(--cal-mudo); -unity-text-align: upper-center; white-space: normal; }
 
-/* ---------- the intro comic (HideComicView): a one-page comic over the Unice's black screen ---------- */
+/* ---------- the story's opening video (HideComicView), over the Unice's black screen ---------- */
 .comic { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: var(--noite-0); padding: 10px 16px 8px 16px; }
 .comic-head { flex-direction: row; justify-content: space-between; align-items: center; }
-.comic-title { -unity-font-definition: url("../Fonts/IMFellEnglishSC-Regular.ttf"); font-size: 34px; color: var(--sol); }
 .comic-count { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 18px; color: var(--cal); }
-.comic-page { flex-grow: 1; justify-content: space-around; }
-.comic-row { flex-grow: 1; flex-direction: row; justify-content: center; margin: 4px 0; }
-.comic-panel { flex-grow: 1; flex-basis: 0; max-width: 31%; margin: 0 8px; background-color: var(--papel); border-width: 3px; border-color: var(--tinta); overflow: hidden; opacity: 0; }
-.comic-panel-last { border-color: var(--sol); }
-.comic-art { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-size: cover; background-position: center; -unity-background-image-tint-color: rgb(190, 175, 160); }
-.comic-figure { position: absolute; }
-.comic-caption { position: absolute; left: 6px; right: 6px; top: 6px; padding: 3px 7px; background-color: var(--papel); border-width: 2px; border-color: var(--tinta); color: var(--tinta); font-size: 14px; -unity-font-definition: url("../Fonts/AlegreyaSans-Bold.ttf"); white-space: normal; -unity-text-align: upper-left; }
 .comic-skip { -unity-font-definition: url("../Fonts/CourierPrime-Bold.ttf"); font-size: 13px; color: var(--cal-mudo); -unity-text-align: middle-center; }
 
 /* ---------- the menu as a cordel poster: full-screen sand, black ink, paper cards with a stamped shadow (right and bottom edges) ---------- */
@@ -447,7 +432,7 @@
 .cordel .lobby-title, .cordel .lobby-count { -unity-font-definition: url("../Fonts/Rye-Regular.ttf"); }
 .cordel .lobby-title { font-size: 28px; }
 .cordel .mbtn-go { font-size: 30px; }
-.cordel .mbtn-top, .cordel .mexit { font-size: 20px; }
+.cordel .mbtn-top { font-size: 20px; }
 
 /* ---------- cordel for the pause sheet and the match HUD: paper, black ink, stamped shadow (right and bottom edges), Rye lettering ---------- */
 .overlay { background-color: var(--areia-88); }
@@ -515,5 +500,61 @@
 
 .hud-tl { max-width: 300px; }
 
-/* the intro video on the Unice screen, in place of the comic page */
+/* the intro video on the Unice screen */
 .comic-video { flex-grow: 1; margin: 4px 0; background-color: var(--preto); background-size: contain; background-position: center; background-repeat: no-repeat; border-width: 3px; border-color: var(--nanquim); }
+
+/* ---------- scrollbars: a slim rounded track and thumb instead of the editor's default look ---------- */
+.unity-scroll-view__vertical-scroller { width: 12px; margin: 2px 2px 2px 6px; background-color: var(--transp); border-width: 0; }
+.unity-scroll-view__vertical-scroller .unity-scroller__low-button, .unity-scroll-view__vertical-scroller .unity-scroller__high-button { display: none; }
+.unity-scroll-view__vertical-scroller .unity-scroller__slider { margin: 0; }
+.unity-scroll-view__vertical-scroller .unity-base-slider__tracker { width: 6px; margin-left: 3px; background-color: var(--cal-35); border-width: 0; border-radius: 3px; }
+.unity-scroll-view__vertical-scroller .unity-base-slider__dragger { width: 10px; margin-left: 1px; background-color: var(--sol); border-width: 2px; border-color: var(--tinta); border-radius: 5px; }
+.unity-scroll-view__vertical-scroller .unity-base-slider__dragger:hover { background-color: var(--chita-claro); }
+.cordel .unity-scroll-view__vertical-scroller .unity-base-slider__tracker { background-color: var(--tinta-10); }
+.cordel .unity-scroll-view__vertical-scroller .unity-base-slider__dragger { background-color: var(--chita-escuro); border-color: var(--nanquim); }
+
+/* ---------- layout by device: .touch / .pointer (input in use) and .wide / .normal / .boxy (aspect), set on the root by Ui ---------- */
+/* keyboard and mouse: smaller buttons, and the house plan and players docked under the match card instead of a toggled panel */
+.pointer .hud-icon { min-width: 44px; min-height: 44px; }
+.pointer .hud-glyph { width: 26px; height: 26px; }
+.pointer .hud-tr { top: 64px; }
+.pointer .plist { left: 14px; margin-left: 0; top: 170px; width: 260px; }
+.pointer .plist-rows { max-height: 150px; }
+.pointer .mini { height: 100px; }
+.pointer .plrow-pick { min-height: 44px; }
+/* wide screens: the HUD keeps clear of the corners' rounded edges */
+.wide .hud-tl, .wide .hud-btns, .wide .hud-tr { margin-left: 8px; margin-right: 8px; }
+
+/* step 2: touch targets by input. 64 px is for a finger (≥ 48 dp); with a mouse 40 px is enough and leaves room for content */
+.root.pointer { --alvo: 40px; }
+.pointer .sw { width: 40px; height: 40px; border-radius: 20px; }
+.pointer .cy-btn { width: 44px; }
+.pointer .mbtn-top, .pointer .mbtn-quit { height: 48px; }
+.pointer .mpill-glyph { width: 28px; height: 28px; }
+/* step 3: menu and waiting room by device */
+.pointer .menu-grid { width: 760px; }
+.pointer .menu-grid .mbtn { width: 240px; height: 84px; }
+.pointer .menu-grid .mbtn-sm { height: 60px; }
+.pointer .mpanel { width: 760px; }
+.pointer .pcard { width: 138px; min-height: 160px; }
+.pointer .lobby-side { width: 400px; }
+.wide .lobby-side { width: 380px; }
+.wide .lobby-cards { padding-right: 12px; }
+/* 4:3 tablets: the side panel and the cards are narrower so both keep their place side by side */
+.boxy .lobby { padding-left: 14px; padding-right: 14px; }
+.boxy .lobby-side { width: 280px; padding: 14px 14px; }
+.boxy .pcard { width: 118px; min-height: 170px; margin: 5px; }
+.boxy .menu-grid { width: 100%; }
+/* 4:3 is only 720 wide at the panel's fixed height: the cacti shrink and go to the edges, the subtitle and the buttons narrow, so nothing overlaps */
+.boxy .decor-cactus-l { left: 0; width: 90px; height: 235px; }
+.boxy .decor-cactus-r { right: 0; width: 110px; height: 290px; }
+.boxy .menu-grid .mbtn { width: 230px; }
+.boxy .menu-sub { font-size: 14px; letter-spacing: 2px; }
+
+/* ---------- fixes from the desktop screenshots ---------- */
+/* result: four player cards fit side by side beside the next-Unice panel instead of wrapping under it */
+.result .pcard { width: 108px; min-height: 150px; margin: 5px; }
+/* waiting room: the note sits above the dark ground of the poster instead of over it */
+.cordel .lobby { padding-bottom: 36px; }
+/* "Mi niño": long labels (COLOR DE CABELLO) keep their room before the swatches */
+.mpanel .opt-l { width: 150px; }

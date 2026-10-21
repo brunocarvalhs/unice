@@ -4,6 +4,9 @@ name: Web
 # app players share rooms (Relay over WebSockets). Called by release.yml (after tests, in parallel with the Android
 # build) when targets.web.webgl is on in .github/build-targets.yml; can also be run alone from the Actions tab.
 # Needs Settings > Pages > Source = "GitHub Actions" once.
+# The privacy policy and marketing landing page (docs/privacy.html, docs/landing.html, docs/store/) ride along on the
+# same Pages site, served next to the game at /privacy.html and /landing.html — that's the public URL Play Console
+# wants for the privacy policy.
 "on":
   workflow_call:
   workflow_dispatch:
@@ -61,6 +64,12 @@ jobs:
           buildsPath: build/Web
           versioning: Semantic
           allowDirtyBuild: true
+
+      - name: Add privacy policy and landing page
+        shell: bash
+        run: |
+          cp docs/privacy.html docs/landing.html build/Web/WebGL/Unice/
+          cp -r docs/store build/Web/WebGL/Unice/store
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4

@@ -5,7 +5,7 @@ using static Unice.UiKit;
 
 namespace Unice
 {
-    /// <summary>The main menu over the house map: the main page and its sub-pages (online, how to play, my child).</summary>
+    /// <summary>The main menu over the house map: the main page and its sub-pages (online, how to play, my child, credits).</summary>
     sealed class HomeMenu : UiPart
     {
         enum Page { Main, Online, HowToPlay, MyKid, Credits, Stories }
@@ -27,58 +27,58 @@ namespace Unice
 
         public HomeMenu(Ui ui) : base(ui)
         {
-            Root = AddElement(ui.root, "menu", "cordel");
-            AddLabel(Root, "v" + Application.version, "menu-version");
-
-            // main page
-            mainPage = AddElement(Root, "menu-page");
-            AddLabel(mainPage, "Unice", "menu-title");
-            LocalizedLabel(mainPage, "menu.sub", "menu-sub");
-            var grid = AddElement(mainPage, "menu-grid");
-            soloButton = LocalizedButton(grid, "menu.local", () => ChooseStory(app.PlaySolo, Page.Main), "mbtn");
-            onlineButton = LocalizedButton(grid, "menu.online", () => { app.SetNetStatus(""); ShowPage(Page.Online); }, "mbtn");
-            LocalizedButton(grid, "menu.howto", () => ShowPage(Page.HowToPlay), "mbtn", "mbtn-sm");
-            LocalizedButton(grid, "menu.mykid", () => ShowPage(Page.MyKid), "mbtn", "mbtn-sm");
-            LocalizedButton(grid, "menu.credits", () => ShowPage(Page.Credits), "mbtn", "mbtn-sm");
+            // main page: laid out in Resources/UI/Screens/HomeMenu.uxml (UI Builder); here only the texts and clicks
+            Root = ui.LoadScreen("HomeMenu", ui.root);
+            Root.Q<Label>("version").text = "v" + Application.version;
+            mainPage = Root.Q("main-page");
+            ui.Localize(Root.Q<Label>("sub"), "menu.sub");
+            soloButton = Root.Q<Button>("local"); onlineButton = Root.Q<Button>("online");
+            ui.Localize(soloButton, "menu.local").clicked += () => ChooseStory(app.PlaySolo, Page.Main);
+            ui.Localize(onlineButton, "menu.online").clicked += () => { app.SetNetStatus(""); ShowPage(Page.Online); };
+            ui.Localize(Root.Q<Button>("howto"), "menu.howto").clicked += () => ShowPage(Page.HowToPlay);
+            ui.Localize(Root.Q<Button>("mykid"), "menu.mykid").clicked += () => ShowPage(Page.MyKid);
+            ui.Localize(Root.Q<Button>("credits"), "menu.credits").clicked += () => ShowPage(Page.Credits);
 
             // online: create a room (the code is generated for you) or join one with a code
-            var online = AddPanelPage(out onlinePage, "menu.online_title");
-            LocalizedLabel(online, "menu.online_desc", "mnote");
-            createRoomButton = LocalizedButton(online, "menu.create_room", () => ChooseStory(() => app.EnterRoom(true, null), Page.Online), "mbtn", "mbtn-wide");
-            LocalizedLabel(online, "menu.or_join", "menu-or");
-            var joinRow = AddElement(online, "row");
-            roomCodeField = Add(joinRow, new TextField { maxLength = 10 }, new[] { "mfield", "grow" });
+            onlinePage = Root.Q("online-page");
+            ui.Localize(onlinePage.Q<Label>("title"), "menu.online_title");
+            ui.Localize(onlinePage.Q<Label>("desc"), "menu.online_desc");
+            createRoomButton = ui.Localize(onlinePage.Q<Button>("create"), "menu.create_room");
+            createRoomButton.clicked += () => ChooseStory(() => app.EnterRoom(true, null), Page.Online);
+            ui.Localize(onlinePage.Q<Label>("or"), "menu.or_join");
+            roomCodeField = onlinePage.Q<TextField>("room-code");
             // codes are A-Z/0-9: show them that way while typing
             roomCodeField.RegisterValueChangedCallback(e =>
             {
                 var clean = TextFormat.CleanCode(e.newValue);
                 if (clean != e.newValue) roomCodeField.SetValueWithoutNotify(clean);
             });
-            joinRoomButton = LocalizedButton(joinRow, "menu.join", JoinTypedRoom, "mbtn", "mbtn-join");
-            netStatusLabel = AddLabel(online, "", "mnote", "mnet");
-            LocalizedButton(online, "menu.back", () => ShowPage(Page.Main), "mbtn", "mbtn-back");
+            joinRoomButton = ui.Localize(onlinePage.Q<Button>("join"), "menu.join");
+            joinRoomButton.clicked += JoinTypedRoom;
+            netStatusLabel = onlinePage.Q<Label>("net");
+            BackToMain(onlinePage, "menu.back");
 
             // story picker: solo and "create room" come here first; the story decides the map
-            var stories = AddPanelPage(out storiesPage, "menu.stories_title");
-            LocalizedLabel(stories, "menu.stories_desc", "mnote");
+            storiesPage = Root.Q("stories-page");
+            var stories = storiesPage.Q("panel");
+            ui.Localize(stories.Q<Label>("title"), "menu.stories_title");
+            ui.Localize(stories.Q<Label>("desc"), "menu.stories_desc");
             new StoryPicker(ui, stories, PickStory, () => ShowPage(Page.Main));
 
             BuildHowToPlay();
 
             // my child: the same customization as in the waiting room
-            var myKid = AddPanelPage(out myKidPage, "menu.mykid_title");
-            var scroll = new ScrollView(ScrollViewMode.Vertical); scroll.AddToClassList("mscroll"); myKid.Add(scroll);
-            kidCustomizerSlot = AddElement(scroll, "mkid");
-            LocalizedButton(myKid, "menu.ready", () => ShowPage(Page.Main), "mbtn", "mbtn-back");
+            myKidPage = Root.Q("mykid-page");
+            ui.Localize(myKidPage.Q<Label>("title"), "menu.mykid_title");
+            kidCustomizerSlot = myKidPage.Q("kid-slot");
+            BackToMain(myKidPage, "menu.ready");
 
-            // top right: sound and language next to quit; the voice toggles stay at the bottom
-            var topRight = AddElement(Root, "menu-top");
+            // top right: sound and language next to quit
+            var topRight = Root.Q("top-right");
             ui.settings.AddSoundIconButton(topRight, "mpill"); ui.settings.AddLanguageIconButton(topRight, "mpill");
 #if !UNITY_WEBGL
             LocalizedButton(topRight, "menu.quit", () => Application.Quit(), "mbtn", "mbtn-quit");   // a browser tab can't quit itself
 #endif
-            var footer = AddElement(Root, "menu-foot");
-            ui.settings.AddMicButton(footer, "mpill"); ui.settings.AddWhisperButton(footer, "mpill");
             credits = new CreditsScreen(ui, Root, () => ShowPage(Page.Main));   // last: drawn over everything else on the menu
             ShowPage(Page.Main);
         }
@@ -101,8 +101,9 @@ namespace Unice
 
         void BuildHowToPlay()
         {
-            var panel = AddPanelPage(out howToPlayPage, "menu.howto_title");
-            var scroll = new ScrollView(ScrollViewMode.Vertical); scroll.AddToClassList("mscroll"); panel.Add(scroll);
+            howToPlayPage = Root.Q("howto-page");
+            ui.Localize(howToPlayPage.Q<Label>("title"), "menu.howto_title");
+            var scroll = howToPlayPage.Q<ScrollView>("rules");
             void Rule(string titleKey, string bodyKey, string titleClass)
             {
                 var rule = AddElement(scroll, "mrule");
@@ -119,7 +120,15 @@ namespace Unice
             Rule("rule.laugh.t", "rule.laugh.b", "mrule-rose");
             Rule("rule.rotation.t", "rule.rotation.b", null);
             Rule("rule.controls.t", "rule.controls.b", null);
-            LocalizedButton(panel, "menu.back", () => ShowPage(Page.Main), "mbtn", "mbtn-back");
+            BackToMain(howToPlayPage, "menu.back");
+        }
+
+        /// <summary>The page's back button (UXML name "back"), with its text key, going to the main page.</summary>
+        Button BackToMain(VisualElement page, string textKey)
+        {
+            var button = ui.Localize(page.Q<Button>("back"), textKey);
+            button.clicked += () => ShowPage(Page.Main);
+            return button;
         }
 
         /// <summary>Each time home appears: back to the main page, or to "online" if there's a connection error to read.</summary>
@@ -145,15 +154,6 @@ namespace Unice
         {
             if (currentPage == Page.MyKid) ui.kidCustomizer.AnimatePreview();
             if (currentPage == Page.Credits) credits.Frame(Time.unscaledDeltaTime);
-        }
-
-        /// <summary>A sub-page: a framed panel with a title. Returns the panel to fill.</summary>
-        VisualElement AddPanelPage(out VisualElement page, string titleKey)
-        {
-            page = AddElement(Root, "menu-page");
-            var panel = AddElement(page, "mpanel");
-            LocalizedLabel(panel, titleKey, "mpanel-t");
-            return panel;
         }
 
         /// <summary>Analytics screen name of each page; the main page is the phase's own "home".</summary>
