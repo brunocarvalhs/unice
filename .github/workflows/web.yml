@@ -68,6 +68,9 @@ jobs:
       - name: Add privacy policy and landing page
         shell: bash
         run: |
+          # game-ci/unity-builder runs Unity as root in a container, so the output dir it leaves behind
+          # isn't writable by the runner user: fix ownership before copying into it.
+          sudo chown -R "$(id -u):$(id -g)" build/Web/WebGL/Unice
           cp docs/privacy.html docs/landing.html build/Web/WebGL/Unice/
           cp -r docs/store build/Web/WebGL/Unice/store
 
