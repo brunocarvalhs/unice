@@ -4,6 +4,14 @@ Todas as alterações relevantes do projeto serão documentadas neste arquivo.
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-21
+
+### Commits
+* feat(audio): play the menu theme on the menu, lobby and results
+* ci(web): decouple landing page/privacy publish from the WebGL game build
+* fix(ci): fix landing page/privacy copy failing with Permission denied
+* CI: fix permission denied copying privacy/landing pages into the WebGL build
+
 ## [0.2.0] - 2026-10-21
 
 ### Commits
