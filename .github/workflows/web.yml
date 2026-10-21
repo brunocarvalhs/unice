@@ -1,15 +1,29 @@
 name: Web
 
-# WebGL build published to GitHub Pages. Same commit as the app = same assets, rules and wire protocol, so browser and
-# app players share rooms (Relay over WebSockets). Called by release.yml (after tests, in parallel with the Android
-# build) when targets.web.webgl is on in .github/build-targets.yml; can also be run alone from the Actions tab.
+# Publishes the privacy policy and marketing landing page (docs/privacy.html, docs/landing.html, docs/store/) to
+# GitHub Pages — that's the public URL Play Console wants for the privacy policy. Called by release.yml (after
+# tests, in parallel with the Android build); can also be run alone from the Actions tab.
 # Needs Settings > Pages > Source = "GitHub Actions" once.
-# The privacy policy and marketing landing page (docs/privacy.html, docs/landing.html, docs/store/) ride along on the
-# same Pages site, served next to the game at /privacy.html and /landing.html — that's the public URL Play Console
-# wants for the privacy policy.
+#
+# The WebGL game build is OFF (targets.web.webgl: false in .github/build-targets.yml) — it only slows the pipeline
+# down right now and isn't needed to ship the landing page/privacy policy. When targets.web.webgl is turned back
+# on, this workflow also builds the game and serves it at the Pages root, with the landing page/privacy policy
+# riding along next to it at /landing.html and /privacy.html.
 "on":
   workflow_call:
+    inputs:
+      webgl:
+        description: "Also build the WebGL game and publish it alongside the landing page"
+        required: false
+        type: boolean
+        default: false
   workflow_dispatch:
+    inputs:
+      webgl:
+        description: "Also build the WebGL game and publish it alongside the landing page"
+        required: false
+        type: boolean
+        default: false
 
 # One Pages deploy at a time; a newer one waits instead of cancelling a deploy halfway.
 concurrency:
@@ -17,8 +31,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build-webgl:
-    name: Build WebGL
+  build-pages:
+    name: Build Pages site
     runs-on: ubuntu-latest
     timeout-minutes: 120
     permissions:
@@ -26,6 +40,7 @@ jobs:
 
     steps:
       - name: Free disk space
+        if: inputs.webgl
         shell: bash
         run: |
           sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /usr/local/share/boost \
@@ -40,6 +55,7 @@ jobs:
           lfs: true
 
       - name: Cache Unity Library
+        if: inputs.webgl
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: |
@@ -51,6 +67,7 @@ jobs:
             unity-webgl-${{ runner.os }}-
 
       - name: Build WebGL
+        if: inputs.webgl
         uses: game-ci/unity-builder@4423ee75828dff56037d1d1cfdac6b68e3a6ba00 # v4
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
@@ -65,11 +82,19 @@ jobs:
           versioning: Semantic
           allowDirtyBuild: true
 
+      - name: Prepare Pages site (landing page only)
+        if: ${{ !inputs.webgl }}
+        shell: bash
+        run: |
+          mkdir -p build/Web/WebGL/Unice
+          cp docs/landing.html build/Web/WebGL/Unice/index.html
+
       - name: Add privacy policy and landing page
         shell: bash
         run: |
           # game-ci/unity-builder builds as root inside Docker, so the output dir is root-owned;
-          # hand it back to the runner user before writing into it.
+          # hand it back to the runner user before writing into it. Harmless when the dir was just
+          # created above as this same user.
           sudo chown -R "$(id -u):$(id -g)" build/Web/WebGL/Unice
           cp docs/privacy.html docs/landing.html build/Web/WebGL/Unice/
           cp -r docs/store build/Web/WebGL/Unice/store
@@ -81,7 +106,7 @@ jobs:
 
   publish-webgl:
     name: Publish to GitHub Pages
-    needs: build-webgl
+    needs: build-pages
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
