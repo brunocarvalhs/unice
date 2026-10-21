@@ -23,13 +23,17 @@ namespace Unice
         void AddCard(VisualElement row, Story story, Action<Story> onPick)
         {
             bool playable = story.released || Debug.isDebugBuild;
-            var card = AddButton(row, "", () => onPick(story), "scard");
+            // the card is laid out in Resources/UI/Screens/StoryCard.uxml (UI Builder)
+            var card = (Button)ui.LoadScreen("StoryCard", row);
+            card.clicked += () => onPick(story);
             card.SetEnabled(playable);
-            var picture = IgnorePointer(AddElement(card, "scard-art"));
+            // dimmed whenever the story isn't released, even in the Editor/dev builds where it stays clickable for testing
+            card.EnableInClassList("scard-off", !story.released);
+            var picture = IgnorePointer(card.Q("art"));
             string art = story.cardArt;
             if (art != null) picture.style.backgroundImage = new StyleBackground(Resources.Load<Texture2D>("Art/" + art));
-            IgnorePointer(LocalizedLabel(card, "stories." + story.id + ".name", "scard-name"));
-            IgnorePointer(LocalizedLabel(card, story.released ? "stories." + story.id + ".blurb" : "stories.soon", "scard-blurb"));
+            IgnorePointer(ui.Localize(card.Q<Label>("name"), "stories." + story.id + ".name"));
+            IgnorePointer(ui.Localize(card.Q<Label>("blurb"), story.released ? "stories." + story.id + ".blurb" : "stories.soon"));
         }
     }
 }

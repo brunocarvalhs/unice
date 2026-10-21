@@ -21,7 +21,7 @@ O histórico do que mudou está no fim ("O que foi feito desde a auditoria anter
 | O domínio não conhece Unity | `Unice.Domain.asmdef` com `noEngineReferences: true` e nenhuma referência | ✅ compilador |
 | O domínio não conhece os adapters (`App`, `Ui`, `WorldView`…) | `Unice.Domain` não referencia `Unice.Core` | ✅ compilador |
 | Adapters dependem do domínio, nunca o contrário | `Unice.Core` → `Unice.Domain`; `Unice.Net` → `Unice.Core` + `Unice.Domain` | ✅ |
-| O jogo compila sem os pacotes de rede/voz | Portas `INetBackend`/`IVoiceChat` no domínio; implementações em `Unice.Net`, registradas via `NetRegistry`/`VoiceRegistry` | ✅ |
+| O jogo compila sem o pacote de rede | Porta `INetBackend` no domínio; implementação em `Unice.Net`, registrada via `NetRegistry` | ✅ |
 
 A antiga violação #1 (`Game.HostStep` chamava `App.HumansNow()` estático) foi resolvida: hoje é um delegate
 injetado em `MatchHost.Step(..., Func<List<Game.Human>> humansNow)`, coberto por `MatchHostTests`.
@@ -35,7 +35,7 @@ injetado em `MatchHost.Step(..., Func<List<Game.Human>> humansNow)`, coberto por
 | `Match/` | `Game` (+ `Game.Snapshot`), `MatchHost`, `Character`, `Rules`, `Kit`, `GameEvent`, `RoundResult`, `DollState`, `Phase`, `PlayerAction` | Estado e regras da partida. `Game` = regras (port 1:1 da versão web); `MatchHost` = o que só o host faz (passo fixo, comandos dos outros jogadores, assumir como host); `Game.Snapshot` = formato de bytes host→convidados |
 | `Match/Bots/` | `HiderBot`, `UniceBot`, `BotBrain`, `BotGoal`, `BotPath` | IA dos bots, separada das regras; o estado de IA fica em `BotBrain`, não no `Character` |
 | `Maps/` | `Map`, `Navigation`, `MapParts`, `MapDefinition`, `MapHouse` (e um `Map<Nome>` por história nova), `Stories` | Geometria, colisão e linha de visão (`Map`); busca de caminho (`Navigation`); dados de cada mapa |
-| `Online/` | `INetBackend`, `IVoiceChat`, `Presence`/`PeerInfo`, `PresenceCodec`, `HostElection` | Portas de rede/voz, o que cada jogador envia, a regra de quem é o host (função pura, testada) |
+| `Online/` | `INetBackend`, `Presence`/`PeerInfo`, `PresenceCodec`, `HostElection` | Porta de rede, o que cada jogador envia, a regra de quem é o host (função pura, testada) |
 | `Common/` | `Point`, `Geometry`, `GameRandom`, `TextFormat` | Utilitários pequenos, um assunto por classe |
 
 **Use Cases:** continuam dentro do domínio (métodos públicos de `Game` e `MatchHost`). Uma camada separada de
@@ -63,15 +63,15 @@ independentes de como o resto está dividido.
 ### Frameworks & Drivers — `Assets/Unice/Scripts/Net/` (assembly `Unice.Net`) — **Good**
 
 `NgoBackend : INetBackend` (Netcode for GameObjects + Unity Multiplayer Services, autoridade distribuída),
-`NetPlayer : NetworkBehaviour` (envia presença e snapshots, valida o remetente e o tamanho), `VivoxVoice : IVoiceChat`
-(voz por proximidade). Firebase entra pelo `Metrics` (Core). Unity Input System, UI Toolkit e URP 2D completam a camada.
+`NetPlayer : NetworkBehaviour` (envia presença e snapshots, valida o remetente e o tamanho). Firebase entra pelo
+`Metrics` (Core). Unity Input System, UI Toolkit e URP 2D completam a camada.
 
 ## Test Coverage
 
 - **Atual:** 123 testes Edit Mode, todos passando. `com.unity.testtools.codecoverage` instalado; o workflow `tests.yml`
   gera o relatório de cobertura como artefato do PR.
   - `Domain/Tests`: `GameTests`, `GameAiTests`, `MatchHostTests`, `SnapshotTests`, `HostElectionTests`, `MapTests`,
-    `KitTests`, `CommonTests`, `VoiceRuleTests`.
+    `KitTests`, `CommonTests`.
   - `Core/Tests`: `ProfileStoreTests`.
 - **Natureza dos testes de `Game`/bots:** de caracterização — fixam o comportamento atual (paridade com a versão web).
   Eles pegaram a reorganização inteira (IA extraída, `GameEvent`/`RoundResult` com campos nomeados, `MatchHost`)

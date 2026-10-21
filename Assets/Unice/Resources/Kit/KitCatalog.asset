@@ -1,0 +1,237 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2386cda983ad4d8eae127a6cfc0e35c5, type: 3}
+  m_Name: KitCatalog
+  m_EditorClassIdentifier: Unice.Core::Unice.KitCatalogAsset
+  skins:
+  - id: light
+    hex: '#f3d3b8'
+    labelPt: 
+    labelEn: 
+    labelEs: 
+    special: 0
+  - id: tan
+    hex: '#dcaa82'
+    labelPt: 
+    labelEn: 
+    labelEs: 
+    special: 0
+  - id: brown
+    hex: '#b07a52'
+    labelPt: 
+    labelEn: 
+    labelEs: 
+    special: 0
+  - id: dark
+    hex: '#6f4a33'
+    labelPt: 
+    labelEn: 
+    labelEs: 
+    special: 0
+  hairs:
+  - id: short
+    hex: 
+    labelPt: Curto
+    labelEn: Short
+    labelEs: Corto
+    special: 0
+  - id: ponytail
+    hex: 
+    labelPt: Rabo de cavalo
+    labelEn: Ponytail
+    labelEs: Cola de caballo
+    special: 0
+  - id: pigtails
+    hex: 
+    labelPt: Maria-chiquinha
+    labelEn: Pigtails
+    labelEs: Colitas
+    special: 0
+  - id: bun
+    hex: 
+    labelPt: Coque
+    labelEn: Bun
+    labelEs: "Mo\xF1o"
+    special: 0
+  hairColors:
+  - id: black
+    hex: '#20150f'
+    labelPt: 
+    labelEn: 
+    labelEs: 
+    special: 0
+  - id: brown
+    hex: '#5b3a22'
+    labelPt: 
+    labelEn: 
+    labelEs: 
+    special: 0
+  - id: auburn
+    hex: '#b5532a'
+    labelPt: 
+    labelEn: 
+    labelEs: 
+    special: 0
+  - id: blonde
+    hex: '#e0b95a'
+    labelPt: 
+    labelEn: 
+    labelEs: 
+    special: 0
+  - id: blue
+    hex: '#4a6fb5'
+    labelPt: 
+    labelEn: 
+    labelEs: 
+    special: 0
+  outfits:
+  - id: plain
+    hex: 
+    labelPt: Lisa
+    labelEn: Plain
+    labelEs: Lisa
+    special: 0
+  - id: striped
+    hex: 
+    labelPt: Listrada
+    labelEn: Striped
+    labelEs: A rayas
+    special: 0
+  - id: polka
+    hex: 
+    labelPt: Bolinhas
+    labelEn: Polka dot
+    labelEs: A lunares
+    special: 0
+  - id: dress
+    hex: 
+    labelPt: Vestido
+    labelEn: Dress
+    labelEs: Vestido
+    special: 0
+  - id: cape
+    hex: 
+    labelPt: Capa
+    labelEn: Cape
+    labelEs: Capa
+    special: 1
+  outfitColors:
+  - id: coral
+    hex: '#e9795f'
+    labelPt: 
+    labelEn: 
+    labelEs: 
+    special: 0
+  - id: sky
+    hex: '#6fa8dc'
+    labelPt: 
+    labelEn: 
+    labelEs: 
+    special: 0
+  - id: mint
+    hex: '#9fcf7a'
+    labelPt: 
+    labelEn: 
+    labelEs: 
+    special: 0
+  - id: gold
+    hex: '#f2c14e'
+    labelPt: 
+    labelEn: 
+    labelEs: 
+    special: 0
+  - id: lilac
+    hex: '#b98ad8'
+    labelPt: 
+    labelEn: 
+    labelEs: 
+    special: 0
+  - id: teal
+    hex: '#5fc9b8'
+    labelPt: 
+    labelEn: 
+    labelEs: 
+    special: 0
+  - id: pink
+    hex: '#ef8fb4'
+    labelPt: 
+    labelEn: 
+    labelEs: 
+    special: 0
+  - id: sand
+    hex: '#e6e0d4'
+    labelPt: 
+    labelEn: 
+    labelEs: 
+    special: 0
+  hats:
+  - id: none
+    hex: 
+    labelPt: Nenhum
+    labelEn: None
+    labelEs: Ninguno
+    special: 0
+  - id: cap
+    hex: 
+    labelPt: "Bon\xE9"
+    labelEn: Cap
+    labelEs: Gorra
+    special: 5
+  - id: beanie
+    hex: 
+    labelPt: Gorro
+    labelEn: Beanie
+    labelEs: Gorro
+    special: 6
+  - id: straw
+    hex: 
+    labelPt: "Chap\xE9u de palha"
+    labelEn: Straw hat
+    labelEs: Sombrero de paja
+    special: 0
+  - id: leather
+    hex: 
+    labelPt: "Chap\xE9u de couro"
+    labelEn: Leather hat
+    labelEs: Sombrero de cuero
+    special: 0
+  - id: ears
+    hex: 
+    labelPt: Orelhinhas
+    labelEn: Little ears
+    labelEs: Orejitas
+    special: 7
+  accessories:
+  - id: none
+    hex: 
+    labelPt: Nenhum
+    labelEn: None
+    labelEs: Ninguno
+    special: 0
+  - id: backpack
+    hex: 
+    labelPt: Bornal
+    labelEn: Cloth bag
+    labelEs: Morral
+    special: 2
+  - id: glasses
+    hex: 
+    labelPt: "\xD3culos"
+    labelEn: Glasses
+    labelEs: Lentes
+    special: 3
+  - id: teddy
+    hex: 
+    labelPt: Boneca de pano
+    labelEn: Rag doll
+    labelEs: "Mu\xF1eca de trapo"
+    special: 4

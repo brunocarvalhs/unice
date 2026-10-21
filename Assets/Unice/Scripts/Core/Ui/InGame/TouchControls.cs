@@ -22,14 +22,15 @@ namespace Unice
 
         public TouchControls(Ui ui) : base(ui)
         {
-            Root = IgnorePointer(AddElement(ui.safeArea, "layer"));
+            // the round buttons are laid out in Resources/UI/Screens/TouchControls.uxml (UI Builder)
+            Root = IgnorePointer(ui.LoadScreen("TouchControls", ui.safeArea));
             joystick = new Joystick(Root);
 
-            var buttons = AddElement(Root, "acts");
-            sneakButton = AddActionButton(buttons, ActionIcon.Sneak, "act-s", () => { SneakToggled = !SneakToggled; sneakButton.EnableInClassList("act-on", SneakToggled); });
-            laughButton = AddActionButton(buttons, ActionIcon.Laugh, "act-r", () => app.TryLaugh());
-            passButton = AddActionButton(buttons, ActionIcon.Pass, "act-q", () => app.TryPassDoll());
-            useButton = AddActionButton(buttons, ActionIcon.Door, null, () => app.UseNearbySpot());
+            var buttons = Root.Q("acts"); buttons.BringToFront();   // the joystick was added after it: the buttons stay on top
+            sneakButton = BindActionButton(buttons.Q("sneak"), ActionIcon.Sneak, () => { SneakToggled = !SneakToggled; sneakButton.EnableInClassList("act-on", SneakToggled); });
+            laughButton = BindActionButton(buttons.Q("laugh"), ActionIcon.Laugh, () => app.TryLaugh());
+            passButton = BindActionButton(buttons.Q("pass"), ActionIcon.Pass, () => app.TryPassDoll());
+            useButton = BindActionButton(buttons.Q("use"), ActionIcon.Door, () => app.UseNearbySpot());
             // the use button's icon changes (door for hiders, eye for the Unice), so it is drawn from a field
             useButtonIcon = useButton.Q(className: "act-icon");
             useButtonIcon.generateVisualContent = context => ActionIcons.Draw(context, useButtonIconKind, useButton.resolvedStyle.color);
@@ -56,10 +57,9 @@ namespace Unice
         }
 
         /// <summary>A round touch button with a vector icon; it fires on touch down (not on release) so it feels immediate.</summary>
-        VisualElement AddActionButton(VisualElement parent, ActionIcon icon, string cssClass, Action onPress)
+        VisualElement BindActionButton(VisualElement button, ActionIcon icon, Action onPress)
         {
-            var button = AddElement(parent, "act"); if (cssClass != null) button.AddToClassList(cssClass);
-            var iconElement = IgnorePointer(AddElement(button, "act-icon"));
+            var iconElement = IgnorePointer(button.Q(className: "act-icon"));
             iconElement.generateVisualContent += context => ActionIcons.Draw(context, icon, button.resolvedStyle.color);
             button.RegisterCallback<PointerDownEvent>(e => { onPress(); e.StopPropagation(); });
             return button;

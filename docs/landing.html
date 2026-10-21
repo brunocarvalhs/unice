@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unice — o esconde-esconde que vira história de família</title>
+<meta name="description" content="Unice: esconde-esconde multijogador onde a tia Unice procura as crianças pelos cômodos da casa da vó. Jogue no navegador ou no Android.">
+<meta property="og:title" content="Unice">
+<meta property="og:description" content="O esconde-esconde que vira história de família. Jogue no navegador ou no Android.">
+<meta property="og:image" content="store/feature-graphic-1024x500.png">
+<link rel="icon" href="store/icon-512.png">
+<style>
+  :root{
+    --noite:#1d1410; --papel:#f3e6c8; --cal:#fbf4e2; --tinta:#2a1a12;
+    --sol:#f2b632; --barro:#b5532a; --barro-claro:#e08a5a; --barro-escuro:#8f3d1c;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--papel); color:var(--tinta);
+    font-family:Georgia,'Times New Roman',serif; line-height:1.6;
+  }
+  a{color:inherit}
+  .btn{
+    display:inline-block; padding:.85rem 1.6rem; border-radius:10px; font-weight:bold;
+    text-decoration:none; border:3px solid var(--tinta); margin:.3rem;
+  }
+  .btn-principal{background:var(--sol); color:var(--tinta)}
+  .btn-secundario{background:transparent; color:var(--cal); border-color:var(--cal)}
+  .btn-desabilitado{background:var(--cal); color:#9a8d76; border-color:#9a8d76; cursor:default}
+
+  header.hero{
+    background:var(--noite) url('store/feature-graphic-1024x500.png') center/cover no-repeat;
+    background-blend-mode:multiply;
+    color:var(--cal); text-align:center; padding:3.5rem 1.25rem 3rem;
+    border-bottom:6px solid var(--sol);
+  }
+  header.hero img{width:96px;height:96px;border-radius:20px;display:block;margin:0 auto 1rem;
+    box-shadow:0 6px 0 var(--tinta)}
+  header.hero h1{margin:0; font-size:2.6rem; letter-spacing:.05em}
+  header.hero p.tagline{font-size:1.15rem; color:var(--sol); margin:.5rem 0 1.6rem}
+  header.hero .ctas{margin-top:.5rem}
+
+  main{max-width:860px; margin:0 auto; padding:0 1.25rem}
+  section{padding:3rem 0}
+  section h2{
+    text-align:center; color:var(--barro-escuro); font-size:1.6rem; margin-bottom:1.6rem;
+  }
+  .lead{max-width:640px; margin:0 auto 1.5rem; text-align:center; font-size:1.05rem}
+
+  .grid{display:grid; gap:1.2rem; grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  .card{
+    background:var(--cal); border:2px solid var(--tinta); border-radius:14px; padding:1.3rem;
+  }
+  .card h3{margin:0 0 .4rem; color:var(--barro-escuro)}
+  .card p{margin:0; font-size:.95rem}
+
+  .historias .card{position:relative}
+  .badge{
+    position:absolute; top:-10px; right:14px; background:var(--sol); color:var(--tinta);
+    font-size:.72rem; font-weight:bold; padding:.2rem .6rem; border-radius:999px; border:2px solid var(--tinta);
+  }
+  .badge.em-breve{background:var(--cal); color:#9a8d76}
+
+  .plataformas{text-align:center}
+  .plataformas .grid{grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); max-width:600px; margin:0 auto}
+
+  .privacidade{background:var(--noite); color:var(--cal)}
+  .privacidade .lead{color:var(--cal)}
+  .privacidade h2{color:var(--sol)}
+
+  footer{text-align:center; padding:2.5rem 1rem; background:var(--noite); color:var(--cal); font-size:.9rem}
+  footer a{color:var(--sol); font-weight:bold}
+  footer .links{margin-bottom:.8rem}
+  footer .links a{margin:0 .6rem}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <img src="store/icon-512.png" alt="Ícone do Unice">
+  <h1>UNICE</h1>
+  <p class="tagline">O esconde-esconde que vira história de família</p>
+  <div class="ctas">
+    <a class="btn btn-principal" href="./">▶ Jogar agora no navegador</a>
+    <a class="btn btn-secundario btn-desabilitado">Google Play — em breve</a>
+  </div>
+</header>
+
+<main>
+
+  <section class="sobre">
+    <h2>O que é o Unice</h2>
+    <p class="lead">
+      Em Unice, um jogador vira <strong>a tia Unice</strong> e sai pelos cômodos da casa da vó procurando os
+      outros, que se escondem atrás de móveis, portas e cantos — até oito jogadores por partida, com bots
+      preenchendo os lugares vazios. Cada história do jogo nasce de uma lembrança real contada por quem joga:
+      o quintal, a rua, a casa — tudo vira mapa jogável, no estilo de cordel nordestino.
+    </p>
+  </section>
+
+  <section class="historias">
+    <h2>Histórias</h2>
+    <div class="grid">
+      <div class="card">
+        <span class="badge">Disponível</span>
+        <h3>A Boneca</h3>
+        <p>Na casa da vó, a boneca da tia Unice sumiu. Esconde, que ela vem!</p>
+      </div>
+      <div class="card">
+        <span class="badge em-breve">Em breve</span>
+        <h3>O Lobisomem</h3>
+        <p>No quintal, um uivo na escuridão… e a porta trancada! Esconde, que o lobisomem vem!</p>
+      </div>
+      <div class="card">
+        <span class="badge em-breve">Em breve</span>
+        <h3>A Rua da Vó</h3>
+        <p>A criançada corre pela praça e pela rua na frente da casa da vó. Esconde, que a tia Unice vem!</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="como-joga">
+    <h2>Como se joga</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Esconde-esconde por rodadas</h3>
+        <p>Um tempo para se esconder, depois a Unice sai à caça. Quem é pego vira plateia da rodada; o jogo
+          continua em várias rodadas até sair um vencedor.</p>
+      </div>
+      <div class="card">
+        <h3>Jogue com amigos ou sozinho</h3>
+        <p>Crie uma sala e jogue com quem quiser, ou jogue solo contra bots para treinar ou se divertir sem
+          esperar ninguém.</p>
+      </div>
+      <div class="card">
+        <h3>Três idiomas</h3>
+        <p>O jogo está em português, inglês e espanhol — escolha o seu no menu a qualquer momento.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="plataformas">
+    <h2>Onde jogar</h2>
+    <div class="grid">
+      <div class="card"><h3>📱 Android</h3><p>Em breve na Google Play.</p></div>
+      <div class="card"><h3>🌐 Navegador</h3><p>Jogue agora mesmo, sem instalar nada.</p></div>
+    </div>
+    <p class="lead" style="margin-top:1.2rem">
+      Quem joga pelo navegador e quem joga pelo celular entram <strong>na mesma sala</strong> — é o mesmo jogo
+      dos dois lados.
+    </p>
+  </section>
+
+  <section class="privacidade">
+    <h2>Privacidade em primeiro lugar</h2>
+    <p class="lead">
+      Sem anúncios, sem ID de publicidade, sem cadastro. O Unice usa seus dados só para entender como o jogo é
+      jogado e corrigir erros — nunca para vender ou rastrear você por aí.
+    </p>
+    <p style="text-align:center">
+      <a class="btn btn-secundario" href="privacy.html">Ler a política de privacidade completa</a>
+    </p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="links">
+    <a href="privacy.html">Política de privacidade</a>
+    <a href="https://github.com/brunocarvalhs/unice">Código no GitHub</a>
+    <a href="mailto:brunocarvalhs@outlook.com.br">Contato</a>
+  </div>
+  Unice — jogo independente de Bruno Carvalho
+</footer>
+
+</body>
+</html>

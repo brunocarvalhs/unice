@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="../unice.uss" />
+    <!-- A story card of the story picker (one per story; the code repeats it and sets the picture, name and text). -->
+    <ui:Button name="root" class="scard">
+        <ui:VisualElement name="art" class="scard-art" />
+        <ui:Label name="name" text="A Boneca" class="scard-name" />
+        <ui:Label name="blurb" text="Na casa da vó, a boneca da tia Unice sumiu. Esconda-se, que ela vem!" class="scard-blurb" />
+    </ui:Button>
+</ui:UXML>

@@ -61,10 +61,10 @@ namespace Unice
         /// Moves this player along <paramref name="direction"/> (a unit vector or zero). As the Unice on a guest device, also asks the
         /// host to catch whoever it touches.
         /// </summary>
-        public void Move(float dt, (float x, float y) direction, bool sneakInput, bool talking)
+        public void Move(float dt, (float x, float y) direction, bool sneakInput)
         {
             var character = me; character.moving = false;
-            if (!game.CanMove(character) || freezeTime > 0 || isPaused()) { character.loud = false; character.talking = false; return; }
+            if (!game.CanMove(character) || freezeTime > 0 || isPaused()) { character.loud = false; return; }
 
             character.sneaking = !character.IsUnice && sneakInput;
             if (direction.x != 0 || direction.y != 0)
@@ -76,7 +76,6 @@ namespace Unice
                 character.moving = Geometry.Distance(character.x, character.y, oldX, oldY) > MinMovement;
             }
             character.loud = !character.IsUnice && character.moving && !character.sneaking;
-            character.talking = talking;
 
             // the host catches by touch itself (Game.Simulate); a guest Unice asks for it
             if (character.IsUnice && game.phase == Phase.Hunt && !game.isHost && catchCooldown <= 0)

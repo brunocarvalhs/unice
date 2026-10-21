@@ -249,35 +249,14 @@ namespace Unice
         }
 
         [Test]
-        public void AiHear_TalkingWithoutLoud_AlsoRedirectsTheUnice()
+        public void AiHear_NotLoud_DoesNotRedirectTheUnice()
         {
-            // "normal" voice level counts as noise for the AI exactly like movement noise, even while standing still.
+            // standing still and quiet: the Unice must not be pulled toward the hider.
             var g = NewGameAfterMatch(1, Humans(("h1", "Ana")));
             var hider = g.characters.Find(e => !e.isBot);
             var unice = g.characters.Find(e => e.isBot); unice.role = Role.Unice; g.unice = unice;
             unice.brain.chaseTarget = null; unice.brain.checkTimer = 0; unice.brain.goal = null;
-            hider.role = Role.Hider; hider.outOfRound = false; hider.hidingSpot = null; hider.loud = false; hider.talking = true; hider.noiseTimer = 0.01f;
-            hider.x = 400; hider.y = 300; // master bedroom
-            unice.x = 650; unice.y = 300; // bath: 250 units away (within Rules.NoiseRange) but behind the dividing wall (no sightline)
-            g.phase = Phase.Hunt; g.timeLeft = 1000;
-
-            g.Simulate(0.02f);
-
-            Assert.IsNotNull(unice.brain.goal);
-            Assert.AreEqual(BotGoal.Kind.Position, unice.brain.goal.kind);
-            Assert.AreEqual(400, unice.brain.goal.x); Assert.AreEqual(300, unice.brain.goal.y);
-            Assert.AreEqual(1, unice.brain.goal.priority);
-        }
-
-        [Test]
-        public void AiHear_NeitherLoudNorTalking_DoesNotRedirectTheUnice()
-        {
-            // "sussurro" (whisper): no movement noise and no voice noise either, so the Unice must not be pulled toward the hider.
-            var g = NewGameAfterMatch(1, Humans(("h1", "Ana")));
-            var hider = g.characters.Find(e => !e.isBot);
-            var unice = g.characters.Find(e => e.isBot); unice.role = Role.Unice; g.unice = unice;
-            unice.brain.chaseTarget = null; unice.brain.checkTimer = 0; unice.brain.goal = null;
-            hider.role = Role.Hider; hider.outOfRound = false; hider.hidingSpot = null; hider.loud = false; hider.talking = false; hider.noiseTimer = 0.01f;
+            hider.role = Role.Hider; hider.outOfRound = false; hider.hidingSpot = null; hider.loud = false; hider.noiseTimer = 0.01f;
             hider.x = 400; hider.y = 300;
             unice.x = 650; unice.y = 300;
             g.phase = Phase.Hunt; g.timeLeft = 1000;
@@ -286,7 +265,7 @@ namespace Unice
 
             // UniceBot.HearNoise's signature is a Position goal at priority 1 placed exactly on the noise source; Patrol only ever sets priority 0.
             bool heardTheHider = unice.brain.goal != null && unice.brain.goal.kind == BotGoal.Kind.Position && unice.brain.goal.priority == 1 && unice.brain.goal.x == 400 && unice.brain.goal.y == 300;
-            Assert.IsFalse(heardTheHider, "with loud=false and talking=false, AiHear must not fire");
+            Assert.IsFalse(heardTheHider, "with loud=false, AiHear must not fire");
         }
 
         // ---------- Giggle (the doll giving away a hidden holder's position) ----------

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using static Unice.UiKit;
 
@@ -21,6 +22,10 @@ namespace Unice
             Blood = new Color32(226, 74, 82, 255), Moss = new Color32(143, 203, 156, 255), Ink = new Color32(241, 231, 216, 255);
 
         const float HudRefreshSeconds = .2f;
+        /// <summary>Width / height from which the panel counts as <c>wide</c> (20:9 phones, ultrawide monitors) and up to which as <c>boxy</c> (tablets, 4:3).</summary>
+        const float WideAspect = 1.9f, BoxyAspect = 1.45f;
+        /// <summary>Height in inches of a phone held sideways, the size the 960x540 layout is drawn for; taller screens (tablets, TVs) get proportionally more panel units, up to <see cref="MaxPhysicalScale"/>, so the buttons keep a hand's size instead of growing with the screen.</summary>
+        const float PhoneHeightInches = 3f, MaxPhysicalScale = 2f;
         /// <summary>Padding of <c>.overlay</c> in unice.uss (panel pixels), kept around the pause sheet on top of the safe-area insets.</summary>
         const float OverlayPadding = 16;
 
@@ -40,14 +45,19 @@ namespace Unice
         /// <summary>The part of the screen not covered by notches and system bars; HUD and messages live inside it.</summary>
         internal readonly VisualElement safeArea;
         /// <summary>Touch input (on-screen controls) or keyboard and mouse (key hints); follows the last device used, see <see cref="InputMode"/>.</summary>
-        internal bool isTouch = Application.isMobilePlatform;
+        /// <summary>A TV (Android without a touch screen) is the one place that starts without touch although the platform is mobile.</summary>
+        static bool IsTelevision => Application.platform == RuntimePlatform.Android && Touchscreen.current == null;
+
+        internal bool isTouch = Application.isMobilePlatform && !IsTelevision;
         readonly InputMode inputMode;
         internal UiScreen currentScreen = UiScreen.None;
         float hudRefreshTimer;
         Rect lastSafeRect;
+        string aspectClass;
+        int scaledForHeight; float scaledForDpi;
 
         internal readonly Messages messages;
-        /// <summary>The intro comic on the Unice's screen while the others hide; <see cref="Messages"/> hides its black screen while it plays.</summary>
+        /// <summary>The story's opening video on the Unice's screen while the others hide; <see cref="Messages"/> hides its black screen while it plays.</summary>
         internal readonly HideComicView comic;
         internal readonly KidCustomizer kidCustomizer;
         internal readonly SettingToggles settings;
@@ -95,6 +105,7 @@ namespace Unice
             homeMenu = new HomeMenu(this); lobbyScreen = new LobbyScreen(this); resultScreen = new ResultScreen(this); pauseMenu = new PauseMenu(this);
             // the screens with text fields: room code and name (My child) at home, name (Appearance tab) in the waiting room
             homeKeyboardLift = new KeyboardLift(this, homeMenu.Root); lobbyKeyboardLift = new KeyboardLift(this, lobbyScreen.Root);
+            ApplyInputMode();
             settings.Refresh();
         }
 
@@ -127,6 +138,7 @@ namespace Unice
         // change automatically. These two are for text built ONCE: they remember the key so a language switch
         // can re-apply it later via Relocalize().
         internal readonly List<Action> relocalizers = new List<Action>();
+        readonly Dictionary<string, VisualTreeAsset> screenAssets = new Dictionary<string, VisualTreeAsset>();
         internal Label LocalizedLabel(VisualElement parent, string key, params string[] classes)
         {
             var label = AddLabel(parent, Localization.Get(key), classes);
@@ -139,6 +151,27 @@ namespace Unice
             relocalizers.Add(() => button.text = Localization.Get(key));
             return button;
         }
+        /// <summary>
+        /// Builds a screen from its UXML (Resources/UI/Screens, editable in the UI Builder) under <paramref name="parent"/> and returns the file's root element.
+        /// The code then finds the elements by name (<c>Q</c>) and gives them their text keys (<see cref="Localize"/>) and clicks.
+        /// </summary>
+        internal VisualElement LoadScreen(string name, VisualElement parent)
+        {
+            if (!screenAssets.TryGetValue(name, out var asset)) screenAssets[name] = asset = Resources.Load<VisualTreeAsset>("UI/Screens/" + name);
+            var screen = asset.CloneTree().Q("root");
+            screen.styleSheets.Clear();   // the file links unice.uss so the UI Builder can preview it; the panel already has it
+            parent?.Add(screen);
+            return screen;
+        }
+
+        /// <summary>A UXML label or button whose text follows language changes: the UXML text is only a preview for the UI Builder.</summary>
+        internal T Localize<T>(T element, string key) where T : TextElement
+        {
+            element.text = Localization.Get(key);
+            relocalizers.Add(() => element.text = Localization.Get(key));
+            return element;
+        }
+
         void Relocalize()
         {
             foreach (var relocalize in relocalizers) relocalize();
@@ -154,7 +187,7 @@ namespace Unice
             SyncScreens();
             hudRefreshTimer -= dt;
             if (hudRefreshTimer <= 0 && currentScreen == UiScreen.Game) { hudRefreshTimer = HudRefreshSeconds; hud.Tick(); }
-            var hints = ActionHints.For(game, app.myCharacter, showKeys: !isTouch);
+            var hints = ActionHints.For(game, app.myCharacter, showKeys: !isTouch, gamepad: inputMode.Gamepad);
             messages.SetPrompt(hints.text);
             if (isTouch) controls.ShowAvailable(hints);
         }
@@ -197,10 +230,13 @@ namespace Unice
         {
             if (root.panel == null) return;
             if (inputMode.Update()) ApplyInputMode();
+            if (inputMode.Gamepad) KeepPadFocus();
             ApplyPanelScale();
             ApplySafeArea(); homeKeyboardLift.Update(); lobbyKeyboardLift.Update();
             float panelHeight = root.layout.height;
             if (float.IsNaN(panelHeight) || panelHeight < 1) return;   // no layout yet
+            ApplyAspectClass(root.layout.width / panelHeight);
+            ApplyPhysicalScale();
             messages.Frame(dt);
             worldLabels.Frame(dt, camera);
             soundCues.Frame(dt, camera);
@@ -217,6 +253,20 @@ namespace Unice
             Show(backdrop.Root, currentScreen == UiScreen.Lobby || currentScreen == UiScreen.Result || currentScreen == UiScreen.Final || currentScreen == UiScreen.Home);
         }
 
+        /// <summary>
+        /// With a gamepad the menus are walked by focus (the d-pad and stick move it, A presses, B goes back), so one visible button
+        /// must always hold it; when a screen changes and the focused button is gone, the first visible one takes it.
+        /// </summary>
+        void KeepPadFocus()
+        {
+            if (currentScreen == UiScreen.Game && !app.paused) return;   // playing: the buttons are not in the way
+            var focused = root.panel?.focusController?.focusedElement as VisualElement;
+            if (focused != null && focused.resolvedStyle.display != DisplayStyle.None && focused.resolvedStyle.visibility == Visibility.Visible && focused.worldBound.width > 0) return;
+            if (Typing) return;
+            var first = root.Query<Button>().Where(button => button.resolvedStyle.display != DisplayStyle.None && button.worldBound.width > 0 && button.enabledInHierarchy && button.focusable).First();
+            first?.Focus();
+        }
+
         /// <summary>Pretends the player uses touch or keyboard/mouse (layout screenshots).</summary>
         internal void ForceTouch(bool touch) { forcedHandheld = touch; inputMode.Force(touch); ApplyInputMode(); }
 
@@ -228,10 +278,37 @@ namespace Unice
             panelSettings.referenceResolution = new Vector2Int(ReferenceResolution.x * height / ReferenceResolution.y, height);
         }
 
+        /// <summary>On phones and tablets (and TVs, which run Android) the panel gets more units on bigger screens: its size follows the screen's physical height, not just its pixels.</summary>
+        void ApplyPhysicalScale()
+        {
+            if (!Application.isMobilePlatform && Application.platform != RuntimePlatform.Android) return;
+            if (Screen.height == scaledForHeight && Screen.dpi == scaledForDpi) return;
+            scaledForHeight = Screen.height; scaledForDpi = Screen.dpi;
+            // a TV reports a made-up dpi and is watched from afar: it always gets the largest scale, so its buttons stay modest
+            float inches = Screen.dpi > 1 ? Screen.height / Screen.dpi : PhoneHeightInches;
+            float scale = IsTelevision ? MaxPhysicalScale : Mathf.Clamp(inches / PhoneHeightInches, 1, MaxPhysicalScale);
+            panelSettings.referenceResolution = new Vector2Int(Mathf.RoundToInt(ReferenceResolution.x * scale), Mathf.RoundToInt(ReferenceResolution.y * scale));
+        }
+
+        /// <summary>
+        /// Layout classes on the root for unice.uss: <c>touch</c> or <c>pointer</c> (the input in use) and <c>wide</c>, <c>normal</c> or <c>boxy</c> (the aspect).
+        /// A rule written under one of them only applies to that kind of device.
+        /// </summary>
+        void ApplyAspectClass(float aspect)
+        {
+            string kind = aspect >= WideAspect ? "wide" : aspect <= BoxyAspect ? "boxy" : "normal";
+            if (kind == aspectClass) return;
+            if (aspectClass != null) root.RemoveFromClassList(aspectClass);
+            aspectClass = kind; root.AddToClassList(kind);
+        }
+
         /// <summary>The player switched between touch and keyboard/mouse: shows the matching controls and spacing.</summary>
         void ApplyInputMode()
         {
             isTouch = inputMode.Touch;
+            root.EnableInClassList("touch", isTouch); root.EnableInClassList("pointer", !isTouch);
+            root.EnableInClassList("pad", inputMode.Gamepad);
+            hud.SetDocked(!isTouch);
             Show(controls.Root, currentScreen == UiScreen.Game && isTouch);
             messages.SetTouchLayout(isTouch);
             if (!isTouch) controls.Release();   // a held joystick or the sneak toggle must not keep driving the character

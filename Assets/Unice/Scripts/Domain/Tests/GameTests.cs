@@ -425,6 +425,20 @@ namespace Unice
         }
 
         [Test]
+        public void StartRound_FirstRoundOfASecondMatch_HasNoOpeningVideo()
+        {
+            var g = NewGameAfterMatch(2, Humans(("h1", "Ana")));
+            Assert.IsTrue(g.introPlayed);
+
+            g.round = 0;   // a new match in the same session
+            g.StartRound(Humans(("h1", "Ana")));
+
+            Assert.AreEqual(1, g.round);
+            Assert.AreEqual(Rules.HideTime, g.timeLeft);
+            Assert.IsFalse(g.InIntro);
+        }
+
+        [Test]
         public void Simulate_DuringTheOpeningVideo_OnlyTheVideoClockRuns()
         {
             var g = NewGameAfterMatch(2, Humans(("h1", "Ana")));

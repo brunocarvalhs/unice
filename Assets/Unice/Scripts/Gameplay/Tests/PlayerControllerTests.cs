@@ -59,7 +59,7 @@ namespace Unice
             Map.Load(MapHouse.Build());
             float startX = me.x;
 
-            controller.Move(.05f, (1, 0), false, false);
+            controller.Move(.05f, (1, 0), false);
 
             Assert.IsTrue(me.moving, "moving");
             Assert.IsTrue(me.loud, "loud");
@@ -70,7 +70,7 @@ namespace Unice
         [Test]
         public void Move_HiderSneaking_MovesQuietly()
         {
-            controller.Move(.05f, (1, 0), true, false);
+            controller.Move(.05f, (1, 0), true);
 
             Assert.IsTrue(me.sneaking, "sneaking");
             Assert.IsFalse(me.loud, "not loud");
@@ -81,7 +81,7 @@ namespace Unice
         {
             float startX = me.x;
 
-            controller.Move(.05f, (0, 0), false, false);
+            controller.Move(.05f, (0, 0), false);
 
             Assert.IsFalse(me.moving, "moving");
             Assert.AreEqual(startX, me.x, "x");
@@ -93,19 +93,10 @@ namespace Unice
             paused = true; float startX = me.x;
             me.loud = true;
 
-            controller.Move(.05f, (1, 0), false, true);
+            controller.Move(.05f, (1, 0), false);
 
             Assert.AreEqual(startX, me.x, "x");
             Assert.IsFalse(me.loud, "loud");
-            Assert.IsFalse(me.talking, "talking");
-        }
-
-        [Test]
-        public void Move_Talking_IsCopiedToTheCharacter()
-        {
-            controller.Move(.05f, (0, 0), false, true);
-
-            Assert.IsTrue(me.talking);
         }
 
         [Test]
@@ -113,7 +104,7 @@ namespace Unice
         {
             me = game.unice;
 
-            controller.Move(.05f, (1, 0), true, false);
+            controller.Move(.05f, (1, 0), true);
 
             Assert.IsFalse(me.sneaking, "sneaking");
             Assert.IsFalse(me.loud, "loud");
@@ -126,11 +117,11 @@ namespace Unice
             me.hidingSpot = null;   // out again, but the freeze keeps the character still
             float x = me.x;
 
-            controller.Move(.05f, (1, 0), false, false);
+            controller.Move(.05f, (1, 0), false);
             Assert.AreEqual(x, me.x, "frozen");
 
             controller.TickCooldowns(PlayerController.HideFreezeSeconds + .01f);
-            controller.Move(.05f, (1, 0), false, false);
+            controller.Move(.05f, (1, 0), false);
             Assert.AreNotEqual(x, me.x, "free again");
         }
 
@@ -142,8 +133,8 @@ namespace Unice
             var hider = MatchFixture.PlainHider(game);
             hider.x = me.x; hider.y = me.y; hider.hidingSpot = null;
 
-            controller.Move(.05f, (0, 0), false, false);
-            controller.Move(.05f, (0, 0), false, false);
+            controller.Move(.05f, (0, 0), false);
+            controller.Move(.05f, (0, 0), false);
 
             Assert.AreEqual(PlayerAction.Catch, controller.action, "action");
             Assert.AreEqual(hider.index, controller.actionArg, "target");

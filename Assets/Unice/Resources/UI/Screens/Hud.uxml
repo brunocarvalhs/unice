@@ -1,0 +1,47 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="../unice.uss" />
+    <!-- The match HUD over the game: match card (top left), role card, map and menu buttons (top right), house plan and players.
+         Open in the UI Builder to move things; the code (Hud.cs and its cards) finds the elements by name. -->
+    <ui:VisualElement name="root" class="layer">
+        <ui:VisualElement name="match-card" class="hud-card hud-tl">
+            <ui:VisualElement class="row">
+                <ui:Label name="clock" text="0:30" class="clock" />
+                <ui:VisualElement class="hud-side">
+                    <ui:VisualElement class="row">
+                        <ui:Label name="round-lbl" text="RODADA" class="hud-lbl" />
+                        <ui:Label name="round" text="1/5" class="hud-lbl" />
+                    </ui:VisualElement>
+                    <ui:Label name="phase" text="Hora de esconder" class="phase" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="meter" class="meter">
+                <ui:VisualElement name="meter-fill" class="meter-fill" />
+            </ui:VisualElement>
+            <ui:Label name="note" text="" class="note" />
+        </ui:VisualElement>
+        <ui:VisualElement name="role-card" class="hud-card hud-tr">
+            <ui:Label name="role" text="Esconda-se" class="role-t" />
+            <ui:Label name="goal" text="" class="role-g" />
+            <ui:VisualElement name="noise-box" style="margin-top: 8px;">
+                <ui:VisualElement class="row wrap">
+                    <ui:Label name="noise-lbl" text="RUÍDO" class="hud-lbl" />
+                    <ui:Label name="noise" text="" class="hud-lbl" />
+                </ui:VisualElement>
+                <ui:VisualElement class="meter meter-noise">
+                    <ui:VisualElement name="noise-fill" class="meter-fill" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="buttons" class="hud-btns">
+            <ui:Button name="hud-map" class="hud-btn hud-icon" />
+            <ui:Button name="hud-menu" class="hud-btn hud-icon" />
+        </ui:VisualElement>
+        <ui:VisualElement name="plist" class="hud-card plist">
+            <ui:Label name="plan-lbl" text="PLANTA DA CASA" class="hud-lbl" />
+            <!-- the house plan is drawn here by the code -->
+            <ui:VisualElement name="minimap-slot" />
+            <ui:Label name="players-lbl" text="JOGADORES" class="hud-lbl" style="margin-top: 8px;" />
+            <ui:ScrollView name="rows" class="plist-rows" horizontal-scroller-visibility="Hidden" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

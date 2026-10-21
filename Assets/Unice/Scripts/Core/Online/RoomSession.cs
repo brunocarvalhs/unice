@@ -90,7 +90,6 @@ namespace Unice
 
             ResetRoomState();
             connection = backend; roomCode = backend.Code; myPlayerId = backend.LocalId;
-            if (app.voice != null) { try { await app.voice.JoinRoomAsync(roomCode); } catch (Exception error) { Metrics.Error(error); } }
             sync.Publish();
             if (create) { game.isHost = true; game.epoch = 1; game.phase = Phase.Lobby; }
             else
@@ -107,7 +106,7 @@ namespace Unice
                 sync.ApplyHostSnapshot();
             }
             isBusy = false; SetStatus("");
-            Metrics.Log(create ? "room_create" : "room_join", ("voice", app.voice != null));
+            Metrics.Log(create ? "room_create" : "room_join");
         }
 
         /// <summary>The connection dropped for good: back home, showing why.</summary>
@@ -127,7 +126,6 @@ namespace Unice
             Metrics.Log("room_leave", ("reason", reason.ToString().ToLowerInvariant()), ("phase", phase.ToString().ToLowerInvariant()), ("round", game.round),
                 ("online", leaving != null), ("lobby_wait_s", phase == Phase.Lobby ? LobbyWaitSeconds : 0));
             ResetRoomState(); myPlayerId = OfflinePlayerId; app.ui.ShowPause(false, false);
-            if (app.voice != null) { try { await app.voice.LeaveRoomAsync(); } catch (Exception error) { Metrics.Error(error); } }
             if (leaving == null) return;
             isBusy = true;
             try { await leaving.LeaveAsync(); } catch (Exception error) { Metrics.Error(error); }
@@ -168,14 +166,6 @@ namespace Unice
                 foreach (var peer in connection.Peers.Where(peer => !peer.isMe && peer.presence.name != null).OrderBy(peer => peer.presence.joinTime))
                     humans.Add(new Game.Human { id = peer.id, name = TextFormat.CleanName(peer.presence.name), kit = Kit.Unpack(peer.presence.kit), joinTime = peer.presence.joinTime });
             return humans;
-        }
-
-        /// <summary>The voice id another player sent in their presence (null if unknown or without voice).</summary>
-        public string VoiceIdOf(string playerId)
-        {
-            if (!IsOnline) return null;
-            var peer = connection.Peers.FirstOrDefault(candidate => candidate.id == playerId);
-            return peer?.presence.voiceId;
         }
 
         /// <summary>Host, in the waiting room: starts the match.</summary>

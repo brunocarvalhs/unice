@@ -3,6 +3,10 @@
 Revisão feita em 2026-10-02 antes do primeiro teste no Google Play. Mostra o que o app faz para proteger dados, o que foi
 corrigido e o que precisa ser preenchido no Play Console.
 
+**Atualização em 2026-10-20:** o chat de voz (Vivox) foi removido por completo — código, pacote, permissões e UI — em vez de
+só desligado. Motivo: a Lei 15.211/2025 (ECA Digital, "Lei Felca") exige verificação de idade e consentimento parental para
+chat de voz entre usuários menores de idade, que o jogo não implementa. O app não pede mais permissão de microfone.
+
 ## Resumo técnico
 
 | Tema | Estado |
@@ -11,7 +15,7 @@ corrigido e o que precisa ser preenchido no Play Console.
 | Dados guardados no aparelho | Só apelido, visual e idioma (`PlayerPrefs`) — nada sensível, sem necessidade de criptografia própria |
 | Build | IL2CPP + R8/minify no release, só ARM64, não depurável, targetSdk 37 |
 | Segredos | Keystore, senhas e conta de serviço do Play só nos *secrets* do GitHub; `.apk`/`.aab` fora do git |
-| Dados de outros jogadores | Validados: remetente, tamanho máximo (presença 512 B, snapshot 8 KB), versão do formato, NaN, nomes limpos de caracteres invisíveis, IDs de voz validados; o host rejeita teleporte e ações fora de alcance |
+| Dados de outros jogadores | Validados: remetente, tamanho máximo (presença 512 B, snapshot 8 KB), versão do formato, NaN, nomes limpos de caracteres invisíveis; o host rejeita teleporte e ações fora de alcance |
 | Limite conhecido | Não há servidor dedicado: um host modificado consegue trapacear na partida. Aceitável para teste; resolver exigiria um servidor autoritativo |
 
 ## O que foi corrigido nesta revisão
@@ -26,15 +30,14 @@ corrigido e o que precisa ser preenchido no Play Console.
   Firebase Analytics (`google_analytics_adid_collection_enabled=false`).
 - **Pacotes sem uso removidos:** Unity IAP (trazia a permissão `BILLING`) e Firebase App Check (não era inicializado e levava o
   provedor de *debug* para o build).
-- **Silenciar jogadores no chat de voz:** botão "Silenciar"/"Ouvir" nos cartões da sala de espera e na lista de jogadores da
-  partida (vale só neste aparelho). Atende à política de conteúdo gerado por usuários para comunicação por voz.
+- **Chat de voz (Vivox) removido por completo** (ver atualização de 2026-10-20 acima): pacote, código (`IVoiceChat`,
+  `VivoxVoice`), botões de microfone/sussurro/silenciar e os campos de voz no protocolo de presença.
 
 ## Permissões do app (build de release)
 
 | Permissão | Por quê |
 |---|---|
 | `INTERNET`, `ACCESS_NETWORK_STATE`, `ACCESS_WIFI_STATE`, `WAKE_LOCK` | Salas online, Firebase |
-| `RECORD_AUDIO`, `MODIFY_AUDIO_SETTINGS`, `BLUETOOTH`/`BLUETOOTH_CONNECT` | Chat de voz (Vivox); o microfone é pedido em tempo de execução ao entrar numa sala |
 | `BIND_GET_INSTALL_REFERRER_SERVICE` | Firebase Analytics (origem da instalação) |
 
 Depois de cada mudança em pacotes, confira o APK/AAB gerado:
@@ -84,9 +87,13 @@ os builds do CI falham com "Missing Unity License"):
 3. **Restringir a chave da API do Firebase** (Google Cloud Console → APIs e serviços → Credenciais): restrição "Apps Android"
    com o pacote `com.brunocarvalhs.unice` + SHA-1 da **chave de assinatura do Play** (Console → Integridade do app) e da chave
    de upload. A chave fica no repositório por design do Firebase — ela identifica o projeto, não é senha.
-4. **Política de privacidade (URL obrigatória):** o app usa microfone e coleta dados de uso e falhas.
-5. **Público-alvo:** recomendado **13+** (tema de terror + chat de voz entre jogadores). Abaixo de 13 entram as regras de
-   Famílias (voz entre estranhos, SDKs certificados).
+4. **Política de privacidade (URL obrigatória):** o app coleta dados de uso e falhas.
+   URL: `https://brunocarvalhs.github.io/unice/privacy.html` (`docs/privacy.html`, publicada pelo mesmo deploy do
+   jogo web — veja `.github/workflows/web.yml`). Landing page de divulgação: `docs/landing.html`
+   (`https://brunocarvalhs.github.io/unice/landing.html`).
+5. **Público-alvo:** o jogo não tem mais chat de voz nem anúncios; o único tema sensível é o suspense leve de
+   esconde-esconde. Responda o questionário IARC no Console para confirmar a faixa etária — sem voz entre jogadores,
+   as regras mais estritas de Famílias provavelmente não se aplicam, mas quem preenche é você.
 6. **ID de publicidade:** responder **"não usa"** (removido no manifesto).
 7. **Segurança dos dados (Data safety)** — respostas sugeridas:
 
@@ -95,11 +102,10 @@ os builds do CI falham com "Missing Unity License"):
 | Interações no app (eventos de jogo) | Sim | Não | Análise | Firebase Analytics (`docs/ANALYTICS.md`) |
 | Logs de falhas, diagnósticos | Sim | Não | Análise, desempenho | Firebase Crashlytics |
 | IDs do dispositivo ou outros (ID de instalação Firebase, ID anônimo Unity) | Sim | Não | Análise, funcionalidade do app | Sem ID de publicidade |
-| Gravações de voz ou som | Sim, **processado de forma efêmera** | Não | Funcionalidade do app | Chat de voz Vivox; não é gravado |
 | Nome (apelido escolhido no jogo) | Sim | Não | Funcionalidade do app | Visível só para quem está na mesma sala |
 
    - Dados **criptografados em trânsito: sim**.
-   - Coleta **obrigatória** para analytics/falhas (não há opção de recusar no app hoje); voz é opcional (microfone desligável).
+   - Coleta **obrigatória** para analytics/falhas (não há opção de recusar no app hoje).
    - Exclusão de dados: o app não tem conta; descreva na política de privacidade como pedir exclusão (os dados do Firebase
      podem ser apagados pelo ID de instalação).
 

@@ -46,7 +46,7 @@ O código é dividido em três assemblies, do mais puro para o mais ligado ao Un
   - `Online/` — o que trafega na rede (`Presence`, `PresenceCodec`) e quem é o host (`HostElection`)
   - `Common/` — utilitários (`Geometry`, `GameRandom`, `TextFormat`)
 - `Core/` (`Unice.Core`) — a parte Unity: `App` (loop principal), jogador, sala online, mundo, áudio, UI, idiomas e analytics
-- `Net/` (`Unice.Net`) — multiplayer (Netcode for GameObjects + Unity Multiplayer Services) e voz (Vivox)
+- `Net/` (`Unice.Net`) — multiplayer (Netcode for GameObjects + Unity Multiplayer Services)
 - `Editor/` — utilitários do editor (menu **Unice > Configurar projeto**)
 
 Pontos de entrada para quem chega no código:

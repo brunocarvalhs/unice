@@ -29,7 +29,6 @@ namespace Unice
 
         // ---------- parts ----------
         [NonSerialized] public Sfx sfx;
-        [NonSerialized] public Music music;
         [NonSerialized] public WorldView worldView;
         [NonSerialized] public Ui ui;
         internal RoomSession room;
@@ -39,8 +38,6 @@ namespace Unice
         internal Heartbeat heartbeat;
         internal EventFeed eventFeed;
         internal CameraRig cameraRig;
-        /// <summary>Proximity voice for the room; null if Vivox isn't installed.</summary>
-        internal IVoiceChat voice;
         ProfileStore profile;
 
         // ---------- state ----------
@@ -69,6 +66,7 @@ namespace Unice
 
         void Awake()
         {
+            KitCatalogLoader.LoadAndApply();   // before anything (profile included) reads Kit.OptionCount/Skins/etc.
             if (Instance != null && Instance != this) { Destroy(gameObject); return; }
             Instance = this; DontDestroyOnLoad(gameObject);
             Application.targetFrameRate = 60; Screen.sleepTimeout = SleepTimeout.NeverSleep;
@@ -84,7 +82,6 @@ namespace Unice
             }
             worldView = new WorldView(transform);
             sfx = new Sfx(transform);
-            music = new Music(transform);
             var stage = new AppStage(this);
             perspective = new Perspective(game, () => myCharacter);
             soundscape = new Soundscape(game, () => myCharacter, perspective, stage, stage);
@@ -92,7 +89,6 @@ namespace Unice
             eventFeed = new EventFeed(game, () => myCharacter, perspective, stage, stage);
             room = new RoomSession(this);
             player = new PlayerControl(this, new PlayerController(game, () => myCharacter, stage, () => paused, () => room.sync.PublishSoon()));
-            voice = VoiceRegistry.Factory?.Invoke();   // before the UI: its settings buttons only show voice controls with voice
             ui = new Ui(this);
             moveMyCharacter = stepDt => { if (myCharacter != null) player.Move(stepDt); };
             humansForNextRound = room.HumansForNextRound; canSee = perspective.CanSee;
@@ -166,15 +162,9 @@ namespace Unice
                 player.UpdateNoiseLevel(dt);
                 heartbeat.Tick(dt);
             }
-            music.Tick(dt, WantedMusic);
             if (IsOnline) room.sync.Tick(dt);
-            voice?.Tick(VoiceRule.CanSpeak(MicOn, myCharacter), myCharacter?.x ?? 0, myCharacter?.y ?? 0, myCharacter != null, Whisper);
-            if (voice != null) UpdateUnheard();
             ui.Step(dt);
         }
-
-        /// <summary>The menu theme in the main menu only; no music in the waiting room or the match, or when muted. The sound effects are separate (<see cref="sfx"/>).</summary>
-        MusicTrack WantedMusic => sfx.Enabled && game.phase == Phase.Home ? MusicTrack.Menu : MusicTrack.None;
 
         /// <summary>Every frame: camera, characters, fog, UI.</summary>
         void RenderFrame(float dt)
@@ -237,45 +227,7 @@ namespace Unice
         public void SaveProfile() => profile.Save();
         internal int AddOnlineWin() => profile.AddOnlineWin();
         internal bool MarkFirstMatchEnd() => profile.MarkFirstMatchEnd();
-        internal bool ComicSeen(string storyId) => profile.ComicSeen(storyId);
-        internal void MarkComicSeen(string storyId) => profile.MarkComicSeen(storyId);
         public void SetKit(int[] newKit) { profile.SetKit(newKit); room.sync.PublishSoon(); }
-
-        public bool MicOn { get => voice != null && voice.MicOn; set { if (voice != null) voice.MicOn = value; } }
-        /// <summary>Session-only: when on, talking doesn't count as noise for the Unice, and transmits quieter.</summary>
-        public bool Whisper { get; set; }
-        /// <summary>Real voice activity right now, gated by the whisper toggle — the same rule used locally and sent to the host.</summary>
-        internal bool IsTalking => voice != null && voice.IsSpeaking && !Whisper;
-
-        /// <summary>Another player in the room can be muted (they are online with voice, and it isn't this device).</summary>
-        public bool CanMutePlayer(string playerId) => voice != null && playerId != myPlayerId && room.VoiceIdOf(playerId) != null;
-        /// <summary>This device chose not to hear that player.</summary>
-        public bool IsPlayerMuted(string playerId) => voice != null && voice.IsPlayerMuted(room.VoiceIdOf(playerId));
-        /// <summary>Stops or resumes hearing a player, on this device only (the moderation the store requires for voice chat).</summary>
-        public void TogglePlayerMuted(string playerId)
-        {
-            var voiceId = room.VoiceIdOf(playerId);
-            if (voice == null || voiceId == null) return;
-            bool muted = !voice.IsPlayerMuted(voiceId);
-            voice.SetPlayerMuted(voiceId, muted);
-            Metrics.Log("player_muted", ("muted", muted));
-        }
-
-        /// <summary>Reused every step: voice ids this device must not hear right now.</summary>
-        readonly HashSet<string> unheard = new HashSet<string>();
-
-        /// <summary>Applies <see cref="VoiceRule.CanHear"/>: while this device is still playing, caught players go silent for it.</summary>
-        void UpdateUnheard()
-        {
-            unheard.Clear();
-            foreach (var character in game.characters)
-            {
-                if (VoiceRule.CanHear(game.IsLive, myCharacter, character)) continue;
-                var voiceId = room.VoiceIdOf(character.playerId);
-                if (voiceId != null) unheard.Add(voiceId);
-            }
-            voice.SetUnheard(unheard);
-        }
 
         /// <summary>A round or its result is on screen: the pause menu (with "leave") can open.</summary>
         bool InMatch => game.IsLive || game.phase == Phase.Result || game.phase == Phase.Final;

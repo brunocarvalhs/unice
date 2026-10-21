@@ -3,7 +3,7 @@ using static Unice.UiKit;
 
 namespace Unice
 {
-    /// <summary>The pause sheet: continue, sound/voice settings, leave. Solo it freezes the match; online it only covers the screen.</summary>
+    /// <summary>The pause sheet: continue, sound setting, leave. Solo it freezes the match; online it only covers the screen.</summary>
     sealed class PauseMenu : UiPart
     {
         /// <summary>The full-screen dim; <see cref="Ui"/> pads it so the sheet stays inside the safe area.</summary>
@@ -13,16 +13,13 @@ namespace Unice
 
         public PauseMenu(Ui ui) : base(ui)
         {
-            var sheet = AddSheet(ui.root, out Root);
-            titleLabel = AddLabel(sheet, "", "title", "title-md");
-            noteLabel = AddLabel(sheet, "", "muted");
-            roomLabel = AddLabel(sheet, "", "roomline");
-            LocalizedButton(sheet, "pause.continue", () => app.TogglePause(), "btn", "gap");
-            var settingsRow = AddElement(sheet, "row", "gap", "wrap");
+            // laid out in Resources/UI/Screens/PauseMenu.uxml (UI Builder)
+            Root = ui.LoadScreen("PauseMenu", ui.root);
+            titleLabel = Root.Q<Label>("title"); noteLabel = Root.Q<Label>("note"); roomLabel = Root.Q<Label>("room");
+            ui.Localize(Root.Q<Button>("continue"), "pause.continue").clicked += () => app.TogglePause();
+            var settingsRow = Root.Q("settings");
             ui.settings.AddSoundButton(settingsRow, "btn", "btn-ghost");
-            ui.settings.AddMicButton(settingsRow, "btn", "btn-ghost");
-            ui.settings.AddWhisperButton(settingsRow, "btn", "btn-ghost");
-            leaveButton = AddButton(sheet, "", () => app.LeaveRoom(), "btn", "btn-link", "gap");
+            leaveButton = Root.Q<Button>("leave"); leaveButton.clicked += () => app.LeaveRoom();
             UiKit.Show(Root, false);
         }
 
