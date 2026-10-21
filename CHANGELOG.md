@@ -4,6 +4,36 @@ Todas as alterações relevantes do projeto serão documentadas neste arquivo.
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-21
+
+### Commits
+* Fix duplicate panelSettings field and duplicate test after the develop merge
+* Remove voice chat (Vivox) entirely for Lei 15.211/2025 (ECA Digital) compliance
+* feat: create flow
+* Story cards: dim unreleased stories everywhere, not just in real builds — lobisomem and rua now look visibly "off" in the Editor/dev builds too, where they stay clickable for testing
+* Remove the intro comic (HQ): the 5-panel page the Unice read while the others hid is gone, no replacement — a story with no opening video now just shows the plain black "eyes closed" screen for the whole hiding phase
+* Dev tool (like LayoutShots): KitPreviewShots opens "Minha criança" and screenshots a handful of kits, one per special drawing behavior, to check the catalog migration visually without a human
+* docs/KIT_EDITOR.md: how to add a color, hairstyle, outfit, hat or accessory from the Inspector (no code), and the rules that keep it safe (8-per-slot cap, add at the end only)
+* Character kit (skin, hair, outfit, hat, accessory and their colors) moves from hardcoded Kit.cs literals to a KitCatalogAsset ScriptableObject, applied at boot — a new option (with its art dropped into Resources/Art and a row added to the asset in the Inspector) needs no code, no Localization.Strings.cs edit
+* Map editor, stage 4: docs/MAP_EDITOR.md (how to drag, validate and save) and the unice-new-story skill points to it once a new map is registered
+* Map editor, stage 3: live validation (MapValidation, shared with MapDefinitionsTests' rules) blocks Salvar on a broken map; the house's rooms stay synced to their painted floor in manifest.json on save, and the canvas shows the real floor art instead of flat rectangles
+* Map editor, stage 2: a draggable EditorWindow (Unice > Editor de mapas) — canvas with zoom/pan/select/drag/resize and 8px grid-snap, undo/redo, a properties panel, add/delete, and a save button that writes the map back through MapSourceFiles
+* Map editor, stage 1: MapCodeWriter turns a MapDefinition back into its Map<Name>.cs file; the three maps are regenerated (no data changes) via the new Unice > Mapas > Regerar código dos mapas menu item
+* Characters without the pixel look: mipmaps and trilinear filtering on the kid, Unice and doll sprites (their 156x204 textures were shrunk on screen with jagged edges)
+* Opening video for everyone in the first match (the match waits for it, skippable by tap, Enter, Space or gamepad A; the host's skip ends it for all); no comic over the video; later rounds and matches have none
+* Intro video: source set to Url, sound through an AudioSource (Direct output played silently), longer prepare timeout and logs of the path, size, audio tracks and failures
+* Match options (one Stepper template used per option) and the kid customizer in UXML, editable in the UI Builder
+* Player, bots and story cards in UXML (one file each, repeated by the code); the Editor opens the home menu in the UI Builder when the project opens
+* Story video for the doll (Videos/doll.mp4) brought from main, so the intro plays on this branch instead of the comic fallback
+* Menu pages, waiting room, result, pause, HUD and touch buttons laid out in UXML (editable in the UI Builder); the code binds names, texts and clicks
+* Home menu main page laid out in UXML (editable in the UI Builder); the code binds names, texts and clicks
+* Desktop layout fixes: pause sheet capped in width, four result cards per row, waiting-room note above the poster ground, room for long labels in My child
+* Gamepad buttons (A, X, Y) in the action hints instead of keyboard keys, and the controls rule mentions the gamepad
+* Buttons sized by the screen's physical height (min phone, max 2x; TVs at the max), 4:3 menu without overlaps, gamepad for play and menus
+* Layout by device: touch/pointer and wide/normal/boxy classes on the root; house plan and players docked under the match card with keyboard and mouse
+* Credits page with the aunt's photo replaces the animated story; new app icon and styled scrollbars
+* CI: turn off the runner's existing swap before creating ours (fallocate failed with 'Text file busy')
+
 ## [0.1.0] - 2026-10-20
 
 ### Commits
