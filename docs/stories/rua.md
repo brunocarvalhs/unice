@@ -41,6 +41,8 @@ Feito a partir de uma imagem de satélite da praça da cidade do autor (print em
 Não há.
 
 ## 5. HQ de introdução (5 quadros)
+> Removida do jogo (sem substituto por enquanto); fica aqui como registro de design e referência para um futuro vídeo.
+
 | # | Cenário | Quem aparece | Legenda (pt) |
 |---|---|---|---|
 | 1 | chão do mapa | cinco primos | Na frente da casa da vó, a criançada se juntava pra brincar. |
@@ -64,4 +66,3 @@ Não há.
 ## 8. Critérios de aceite
 - [ ] Testes verdes (`MapDefinitionsTests`, `LocalizationTests`, `StoryContentTests`, `StoriesTests`)
 - [ ] Rodada solo jogável (checagem manual): dá para correr pela rua e pela praça; as casas não deixam entrar
-- [ ] HQ aparece para a Unice na rodada 1 e some com um toque

@@ -74,7 +74,7 @@ namespace Unice
             Teleport(-600, -600); targetX = targetY = -600; faceX = 0; faceY = 1;
             role = Role.Hider; outOfRound = false; hidingSpot = null;
             passCooldown = 0; laughCooldown = 0;
-            moving = sneaking = loud = talking = false; speed = 0;
+            moving = sneaking = loud = false; speed = 0;
             noiseTimer = noiseLevel = stunTime = tiredTime = 0;
             brain.ResetForRound();
         }
@@ -92,11 +92,11 @@ namespace Unice
         /// <summary>Forget the bot's plans (a new host, or a human just became a bot).</summary>
         public void ResetBot() => brain.Reset();
 
-        /// <summary>The human left: a bot plays in their place, without the human's last input (talking, sneaking, speed).</summary>
+        /// <summary>The human left: a bot plays in their place, without the human's last input (sneaking, speed).</summary>
         public void BecomeBot()
         {
             isBot = true;
-            talking = sneaking = false; speed = 0;
+            sneaking = false; speed = 0;
             ResetBot();
         }
     }

@@ -46,7 +46,7 @@ namespace Unice
 
         IEnumerator Start()
         {
-            Directory.CreateDirectory(folder);
+            Directory.CreateDirectory(folder); Debug.Log("[LayoutShots] start");
             while (App.Instance == null || App.Instance.ui == null) yield return null;
             app = App.Instance; panel = Resources.Load<PanelSettings>("UI/UnicePanel");
             yield return Wait(2);
@@ -122,7 +122,7 @@ namespace Unice
                 worldPixels[i] = new Color32((byte)(top.r * alpha + back.r * (1 - alpha)), (byte)(top.g * alpha + back.g * (1 - alpha)), (byte)(top.b * alpha + back.b * (1 - alpha)), 255);
             }
             world.SetPixels32(worldPixels); world.Apply();
-            File.WriteAllBytes(Path.Combine(folder, state + "_" + device.name + ".png"), world.EncodeToPNG());
+            File.WriteAllBytes(Path.Combine(folder, state + "_" + device.name + ".png"), world.EncodeToPNG()); Debug.Log("[LayoutShots] saved " + state + "_" + device.name);
 
             panel.targetTexture = null; app.cameraRig.Camera.targetTexture = null;
             Destroy(ui); Destroy(world); uiTexture.Release(); worldTexture.Release();

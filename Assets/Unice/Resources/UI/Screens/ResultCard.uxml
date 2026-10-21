@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="../unice.uss" />
+    <!-- A player's card on the result screen: rank, portrait (drawn by the code in "portrait"), name and points. -->
+    <ui:VisualElement name="root" class="pcard">
+        <ui:Label name="rank" text="1º" class="pcard-rank" />
+        <ui:VisualElement name="portrait" />
+        <ui:Label name="name" text="Nova" class="pcard-name" />
+        <ui:Label name="points" text="3" class="pcard-pts" />
+    </ui:VisualElement>
+</ui:UXML>

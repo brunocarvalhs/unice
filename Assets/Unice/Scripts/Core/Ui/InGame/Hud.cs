@@ -19,14 +19,18 @@ namespace Unice
 
         public Hud(Ui ui) : base(ui)
         {
-            Root = IgnorePointer(AddElement(ui.safeArea, "layer"));
-            matchCard = new MatchCard(ui, Root);
-            roleCard = new RoleCard(ui, Root);
-            var buttons = IgnorePointer(AddElement(Root, "hud-btns"));
-            AddGlyphButton(buttons, ActionIcon.Map, () => playerList.Toggle(), "hud-btn", "hud-icon").name = MapButtonName;
-            AddGlyphButton(buttons, ActionIcon.Menu, () => app.TogglePause(), "hud-btn", "hud-icon").name = MenuButtonName;
-            playerList = new PlayerListPanel(ui, Root);
+            // laid out in Resources/UI/Screens/Hud.uxml (UI Builder)
+            Root = IgnorePointer(ui.LoadScreen("Hud", ui.safeArea));
+            matchCard = new MatchCard(ui, Root.Q("match-card"));
+            roleCard = new RoleCard(ui, Root.Q("role-card"));
+            IgnorePointer(Root.Q("buttons"));
+            BindGlyphButton(Root.Q<Button>(MapButtonName), ActionIcon.Map, () => playerList.Toggle());
+            BindGlyphButton(Root.Q<Button>(MenuButtonName), ActionIcon.Menu, () => app.TogglePause());
+            playerList = new PlayerListPanel(ui, Root.Q("plist"));
         }
+
+        /// <summary>With keyboard and mouse the house plan and the player list stay open on the side; on touch the map button opens them.</summary>
+        public void SetDocked(bool docked) => playerList.SetOpen(docked);
 
         /// <summary>Every 0.2 s while playing.</summary>
         public void Tick()

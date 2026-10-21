@@ -13,21 +13,20 @@ Valores em `Domain/Match/Rules.cs` (o host pode mudar tempo de esconder, de caç
 - **Próxima Unice:** quem foi pego com a boneca; se o tempo acabou, quem foi Unice menos vezes. Com 2+ pessoas na sala, só pessoas são sorteadas (bots não).
 
 ### Histórias (mapas)
-A ideia do projeto: **cada história que a pessoa conta vira um jogo de esconde-esconde** (o lugar vira o mapa, as pessoas viram os escondidos, quem procura vira "a Unice"). As regras da partida não mudam; muda o cenário, os nomes, os textos e a HQ.
+A ideia do projeto: **cada história que a pessoa conta vira um jogo de esconde-esconde** (o lugar vira o mapa, as pessoas viram os escondidos, quem procura vira "a Unice"). As regras da partida não mudam; muda o cenário, os nomes e os textos.
 Cada **história** (`Domain/Maps/Stories.cs`) é um mapa mais uma narrativa; o jogador escolhe a história antes de jogar. A escolha define `Game.mapId` (o host decide; os convidados recebem no snapshot).
 - **Menu:** "Jogar solo" e "Criar sala" abrem o seletor de histórias (`StoryPicker`, uma carta por história); entrar numa sala por código não passa por ele. O botão "CRÉDITOS" abre a tela de créditos (`CreditsScreen`): a história do jogo, a homenagem à tia Unice (com a foto dela, `Art/tia_moldura`) e quem fez o quê, em texto que rola sozinho (segurar acelera). Os textos são `credits.*` em `Localization.Strings`. A sala de espera mantém o seletor ‹ › de mapa para o host trocar.
-- **Histórias:** `doll` ("A Boneca", casa da vó — lançada, com HQ), as próximas histórias entram pelo processo SDD abaixo. Histórias com `released: false` aparecem como "Em breve" no seletor e só são jogáveis no Editor ou em build de desenvolvimento (`Debug.isDebugBuild`).
-- **HQ de introdução** (`HideComic` + `HideComicView`): na fase de esconder, quem é a Unice não pode se mexer; no lugar da tela preta vê uma HQ de 5 quadros (`comic.{história}.1…5`), um quadro a cada `hideTime / 5` s. Aparece sempre na rodada 1 e, depois, só se a pessoa nunca a viu (`unice.comic_seen.{história}`). Um toque pula.
-- **Vídeo de abertura** (`Story.introVideo`/`introSeconds`, `Game.InIntro`): na rodada 1, todos os jogadores veem o vídeo da história ao mesmo tempo (até 30 s) antes de a rodada começar; o host soma `introSeconds` ao `timeLeft` da primeira fase de esconder (nada novo no snapshot: `InIntro` = fase Hide com `timeLeft > hideTime`), e durante esse tempo só esse relógio corre — ninguém se mexe, bots incluídos. Sem o arquivo, a HQ ocupa o tempo. Os escondidos jogam sem interrupção.
-- **Criar uma história nova (SDD):** a pessoa conta a história e o Claude, com a skill `unice-new-story` (`.claude/skills/unice-new-story/`), segue o processo de `docs/stories/README.md`: (1) escreve a spec `docs/stories/<id>.md` (modelo em `_template.md`), (2) desenha o mapa (regras de geometria em `resources/map-design-guide.md`), (3) implementa `Domain/Maps/Map<Nome>.cs`, 1 linha em `Maps.InOrder`, 1 entrada em `Stories.All` (cartão + quadros da HQ como dados: `ComicPanel`/`ComicFigure`) e os textos pt/en/es, (4) roda os testes. `MapDefinitionsTests`, `LocalizationTests` e `StoryContentTests` varrem todo mapa/história registrado, então a história nova é validada sem escrever teste. Mapas novos usam arte lisa (cores) até a arte pintada existir; por isso nascem `released: false`, a não ser que a pessoa peça para lançar.
+- **Histórias:** `doll` ("A Boneca", casa da vó — lançada), as próximas histórias entram pelo processo SDD abaixo. Histórias com `released: false` aparecem como "Em breve" no seletor e só são jogáveis no Editor ou em build de desenvolvimento (`Debug.isDebugBuild`).
+- **Vídeo de abertura** (`Story.introVideo`/`introSeconds`, `Game.InIntro`): na rodada 1, todos os jogadores veem o vídeo da história ao mesmo tempo (até 30 s) antes de a rodada começar; o host soma `introSeconds` ao `timeLeft` da primeira fase de esconder (nada novo no snapshot: `InIntro` = fase Hide com `timeLeft > hideTime`), e durante esse tempo só esse relógio corre — ninguém se mexe, bots incluídos. Sem o arquivo, nada ocupa a espera: a partida simplesmente começa. Os escondidos jogam sem interrupção. A HQ de introdução que existia no lugar do vídeo foi removida, sem substituto por enquanto.
+- **Criar uma história nova (SDD):** a pessoa conta a história e o Claude, com a skill `unice-new-story` (`.claude/skills/unice-new-story/`), segue o processo de `docs/stories/README.md`: (1) escreve a spec `docs/stories/<id>.md` (modelo em `_template.md`), (2) desenha o mapa (regras de geometria em `resources/map-design-guide.md`), (3) implementa `Domain/Maps/Map<Nome>.cs`, 1 linha em `Maps.InOrder`, 1 entrada em `Stories.All` (cartão) e os textos pt/en/es, (4) roda os testes. `MapDefinitionsTests`, `LocalizationTests` e `StoryContentTests` varrem todo mapa/história registrado, então a história nova é validada sem escrever teste. Mapas novos usam arte lisa (cores) até a arte pintada existir; por isso nascem `released: false`, a não ser que a pessoa peça para lançar.
 
 Sucesso = paridade de regras com a versão web, build Android estável via CI, e baixa latência percebida no sync de posição/estado entre host e peers.
 
 ## Experiência do jogador (intuitividade)
 Quem abre o jogo pela primeira vez, sem ler regra nenhuma, deve conseguir jogar uma rodada inteira. Princípios (valem para toda tela e mudança nova):
 1. **Um objetivo por tela.** Cada tela tem uma ação principal óbvia (botão grande, com cor/realce); as secundárias ficam menores (`mbtn-sm`, `mbtn-back`). Nada de menu com mais de ~5 escolhas no mesmo nível.
-2. **O jogo ensina jogando.** O objetivo do papel aparece no cartão do papel (`RoleCard`, recolhe em 10 s); a dica de ação aparece só quando a ação existe (`ActionHints`: "E esconder embaixo da cama"); a história e a HQ explicam o porquê sem pedir leitura de regras. "Como jogar" é consulta, nunca obrigação.
-3. **Sempre dizer o que está acontecendo e o que fazer agora.** Cada fase tem um aviso claro (banner, contagem, legenda de sons ouvidos mas não vistos); quem espera (a Unice no esconder) tem algo para ver (a HQ), não uma tela morta.
+2. **O jogo ensina jogando.** O objetivo do papel aparece no cartão do papel (`RoleCard`, recolhe em 10 s); a dica de ação aparece só quando a ação existe (`ActionHints`: "E esconder embaixo da cama"); a história explica o porquê sem pedir leitura de regras. "Como jogar" é consulta, nunca obrigação.
+3. **Sempre dizer o que está acontecendo e o que fazer agora.** Cada fase tem um aviso claro (banner, contagem, legenda de sons ouvidos mas não vistos); quem espera (a Unice no esconder) sabe quanto falta mesmo de olhos fechados (a tela preta tem sua própria contagem); na rodada 1, antes disso, todo mundo vê junto o vídeo de abertura da história, quando ela tem um.
 4. **Controles previsíveis.** Toque: joystick à esquerda, botões de ação à direita, só os que servem naquele momento. Teclado/mouse: dicas de tecla na tela. Troca automática pelo último dispositivo usado (`InputMode`).
 5. **Fácil de voltar e de errar.** Todo sub-menu tem "Voltar"; o botão voltar do sistema volta uma página (`HomeMenu.Back`); sair/pausar nunca perde a partida sem aviso; erro de rede aparece na página onde a pessoa está (ex.: "Criar sala" volta para a página online).
 6. **Feedback imediato.** Todo toque/ação tem resposta visual ou sonora em até 100 ms (botões com `:hover/:active`, ondas de som, vibração visual); nada de espera sem indicação (estado "conectando…").
@@ -44,7 +43,6 @@ Critérios de aceite de usabilidade (verificação manual, em celular real e no 
 - Unity **6000.6.3f1**, C#, Universal Render Pipeline 17.6.0
 - Netcode for GameObjects 2.13.3 + Unity Services Multiplayer 2.3.3 (transporte/relay)
 - Firebase 13.17: Analytics (GA4) e Crashlytics integrados via `Core/Analytics/Metrics.cs` (catálogo de eventos em `docs/ANALYTICS.md`); App Check instalado, não usado no código
-- Vivox (Unity Services) para voz por proximidade — opcional, o jogo funciona sem
 - Google Play Games plugin for Unity 2.3.0 (`Assets/GooglePlayGames`): login automático no Android, com login anônimo de reserva
 - Unity Input System 1.20.0
 - Plataformas alvo: Android (prioridade, publicado no Google Play), iOS, Windows, macOS e Linux, mais WebGL. Ligadas em `.github/build-targets.yml`.
@@ -70,13 +68,13 @@ Assets/Unice/Scripts/Domain/  → regras puras, sem UnityEngine (assembly Unice.
               comandos dos outros jogadores, assumir como host), Character, Rules, Kit,
               GameEvent, RoundResult, DollState, Phase, PlayerAction, Achievements (conquistas/ranking Play Games)
     Bots/   → HiderBot, UniceBot (IA dos bots), BotBrain (memória do bot), BotGoal, BotPath (andar pelo caminho)
-  Maps/     → Map (geometria, colisão, linha de visão), Navigation (busca de caminho), MapParts, definições dos mapas, Stories (histórias = mapa + HQ)
-  Online/   → portas de rede/voz (INetBackend, IVoiceChat), Presence/PeerInfo, PresenceCodec, HostElection
+  Maps/     → Map (geometria, colisão, linha de visão), Navigation (busca de caminho), MapParts, definições dos mapas, Stories (histórias = mapa + vídeo de abertura)
+  Online/   → porta de rede (INetBackend), Presence/PeerInfo, PresenceCodec, HostElection
   Common/   → Point, Geometry, GameRandom, TextFormat
   Tests/    → testes Edit Mode do domínio (MapDefinitionsTests valida o layout de todo mapa)
 Assets/Unice/Scripts/Gameplay/ → regras da partida do lado do jogador, sem UnityEngine (assembly Unice.Gameplay, testado em Edit Mode)
                   Perspective (o que o jogador vê e sabe), PlayerController (movimento, barulho e ações E/Q/R),
-                  EventFeed (eventos → banners/sons/efeitos), HudModels (textos e medidores dos cartões do HUD), HideComic (quando e quanto da HQ aparece),
+                  EventFeed (eventos → banners/sons/efeitos), HudModels (textos e medidores dos cartões do HUD), HideComic (quando o vídeo de abertura aparece),
                   SoundMath (alcance, volume, pan e descrição de um som), Ports (IStage, IMatchContext: o que a UI,
                   o áudio e a analítica implementam; BannerStyle, RippleKind, StageColor)
   Tests/        → FakeStage (grava o que as regras pediram) e os testes do módulo
@@ -94,10 +92,10 @@ Assets/Unice/Scripts/Core/    → adapters Unity (assembly Unice.Core)
   Analytics/    → Metrics (Google Analytics + Crashlytics via Firebase)
   Ui/           → Ui (troca de telas), UiKit/UiPart (base), SettingToggles, KeyboardLift, CharacterPortrait
     Screens/    → HomeMenu, StoryPicker (escolha da história), CreditsScreen (créditos e homenagem), KidCustomizer, KitOptionPicker, LobbyScreen, MatchOptions, ResultScreen, PauseMenu
-    InGame/     → Hud, MatchCard, RoleCard, PlayerListPanel, MiniMap, Messages, HideComicView (a HQ da Unice), WorldLabels, SoundCues,
+    InGame/     → Hud, MatchCard, RoleCard, PlayerListPanel, MiniMap, Messages, HideComicView (o vídeo de abertura na tela da Unice), WorldLabels, SoundCues,
                   ScreenEffects, TouchControls, Joystick, ActionIcons, ActionHints
   Tests/        → testes Edit Mode do Core
-Assets/Unice/Scripts/Net/     → implementações Unity Services: NgoBackend (Netcode), VivoxVoice, NetPlayer,
+Assets/Unice/Scripts/Net/     → implementações Unity Services: NgoBackend (Netcode), NetPlayer,
                                 PlayerSignIn (login único: Google Play Games ou anônimo — docs/PLAY_GAMES.md),
                                 PlayGamesProgress (envio de conquistas/ranking e os IDs do Play Console)
 Assets/Unice/Scripts/Editor/  → utilitários de editor (incl. Net/Editor)
@@ -127,17 +125,17 @@ Convenções (o objetivo é que qualquer engenheiro entenda o código sem ajuda)
 - **Números mágicos viram constantes nomeadas** (`const float StunTime = 2.5f`), com comentário quando a unidade ou o motivo não é óbvio.
 - **Strings de estado viram enums** (`Phase`, `GameEventType`, `HiderMode`, `BannerStyle`, `RippleKind`, `UiScreen`).
 - `sealed class` para tipos que não serão herdados; `partial` só quando a divisão em arquivos não pode virar classes (ex.: `Game` e `Game.Snapshot`).
-- Sem regions, sem interfaces com uma implementação só (exceto as portas `INetBackend`/`IVoiceChat`, que existem para o jogo compilar sem os pacotes de rede).
+- Sem regions, sem interfaces com uma implementação só (exceto a porta `INetBackend`, que existe para o jogo compilar sem o pacote de rede).
 - **Nunca renomear** os campos de `ArtManifest.cs` (o `JsonUtility` casa pelo nome com `manifest.json`), as chaves de `PlayerPrefs` (`unice.name`, `unice.kit`, `unice.lang`, `unice.sound`) nem as chaves de `Localization.Strings`.
 - Mudou o formato de bytes do snapshot ou da presença? Suba `Game.SnapshotVersion` / `PresenceCodec.Version`.
 
 ## Testing Strategy
-- Testes Edit Mode (NUnit, Unity Test Framework) em `Domain/Tests` (regras, IA dos bots, snapshot, eleição de host, mapas, histórias), `Gameplay/Tests` (eventos, ações, HUD, HQ, som), `Audio/Tests` (síntese, mixagem, soundscape, batimento), `Core/Localization/Tests` (textos) e `Core/Tests` (perfil, conteúdo das histórias).
+- Testes Edit Mode (NUnit, Unity Test Framework) em `Domain/Tests` (regras, IA dos bots, snapshot, eleição de host, mapas, histórias), `Gameplay/Tests` (eventos, ações, HUD, vídeo de abertura, som), `Audio/Tests` (síntese, mixagem, soundscape, batimento), `Core/Localization/Tests` (textos) e `Core/Tests` (perfil, conteúdo das histórias).
 - Lógica nova de jogo vai para `Gameplay` ou `Audio` (sem Unity, atrás de `IStage`/`ISoundOutput`); o `Core` fica só com o que toca a Unity. É assim que ela ganha teste.
 - Rodar: `Unity -batchmode -projectPath . -runTests -testPlatform EditMode -testResults results.xml` (ou o Test Runner no Editor).
 - Os testes do `Game` são de caracterização: fixam o comportamento atual (paridade com a versão web). Se um falhar depois de uma mudança em `Game.cs`, a regra mudou — confirme se era a intenção.
 - Cobertura: o `tests.yml` falha se a cobertura de linhas do `Unice.Domain` ficar abaixo de 85% (o `Unice.Core` entra no relatório, mas não no gate). Medido localmente: `Unice.Domain` 95%, `Unice.Gameplay` 99%, `Unice.Audio` 100%, `Unice.Localization` 100%, `Unice.Core` <1% (UI Toolkit, mundo e `App`).
-- UI, rede e áudio não têm teste automatizado: verificar manualmente (Home→história→Lobby→Hide→Hunt→Result→Final; sala online com dois aparelhos). Conferir também a HQ (ser a Unice na rodada 1; tocar para pular) e os critérios de usabilidade acima.
+- UI, rede e áudio não têm teste automatizado: verificar manualmente (Home→história→Lobby→Hide→Hunt→Result→Final; sala online com dois aparelhos). Conferir também o vídeo de abertura (ser a Unice na rodada 1; tocar para pular) e os critérios de usabilidade acima.
 
 ## Boundaries
 - **Sempre fazer:** manter paridade com a versão web ao tocar em `Game.cs`/`Rules`/`Bots`; validar build Android (CI) antes de merge; seguir as convenções de Code Style (nomes descritivos, uma responsabilidade por classe, comentários); rodar os testes Edit Mode; atualizar `docs/ANALYTICS.md` ao mudar eventos e `docs/ARCHITECTURE_AUDIT.md`/Project Structure ao mudar a estrutura.
@@ -158,5 +156,4 @@ Convenções (o objetivo é que qualquer engenheiro entenda o código sem ajuda)
 1. Há plano para iOS, ou Android continua sendo a única plataforma alvo?
 2. O Firebase App Check (instalado) deve ser ativado?
 3. Vale investir num `INetBackend` falso para testar a troca de host em Edit Mode (hoje só manual)? Ver `docs/ARCHITECTURE_AUDIT.md`.
-4. Em solo, a HQ só aparece quando a Unice da rodada 1 é a pessoa. Vale garantir que a pessoa seja a primeira Unice, ou mostrar a HQ também antes da rodada 1?
-5. Quando uma história nova ganhar arte pintada, ela ganha também cordel próprio (hoje só `doll` tem a tela do cordel)?
+4. Quando uma história nova ganhar arte pintada, ela ganha também cordel próprio (hoje só `doll` tem a tela do cordel)?

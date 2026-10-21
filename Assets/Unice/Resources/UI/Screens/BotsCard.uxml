@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="../unice.uss" />
+    <!-- The "+3 bots" card of the waiting room. -->
+    <ui:VisualElement name="root" class="pcard pcard-bots">
+        <ui:Label name="plus" text="+3" class="pcard-plus" />
+        <ui:Label name="state" text="BOTS" class="pcard-st" />
+    </ui:VisualElement>
+</ui:UXML>

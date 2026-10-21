@@ -1,0 +1,16 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="../unice.uss" />
+    <!-- The pause sheet. Open in the UI Builder to move things; PauseMenu.cs finds the elements by name. -->
+    <ui:VisualElement name="root" class="overlay">
+        <ui:ScrollView name="scroll" class="sheet-scroll">
+            <ui:VisualElement name="sheet" class="sheet">
+                <ui:Label name="title" text="Pausado" class="title title-md" />
+                <ui:Label name="note" text="A partida está pausada." class="muted" />
+                <ui:Label name="room" text="Modo solo" class="roomline" />
+                <ui:Button name="continue" text="Continuar" class="btn gap" />
+                <ui:VisualElement name="settings" class="row gap wrap" />
+                <ui:Button name="leave" text="Sair da partida" class="btn btn-link gap" />
+            </ui:VisualElement>
+        </ui:ScrollView>
+    </ui:VisualElement>
+</ui:UXML>

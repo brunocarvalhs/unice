@@ -5,7 +5,7 @@ using static Unice.UiKit;
 namespace Unice
 {
     /// <summary>
-    /// The panel opened by the HUD's map button: the house plan and the list of players with their status and score.
+    /// The panel opened by the HUD's map button (always open under the match card with keyboard and mouse): the house plan and the list of players with their status and score.
     /// While spectating, tapping a player follows them.
     /// </summary>
     sealed class PlayerListPanel : UiPart
@@ -15,19 +15,21 @@ namespace Unice
         /// <summary>Everything the list shows, as text: the list is only rebuilt when this changes.</summary>
         string renderedSignature;
 
-        public PlayerListPanel(Ui ui, VisualElement parent) : base(ui)
+        /// <param name="plist">The panel's element, made in Hud.uxml.</param>
+        public PlayerListPanel(Ui ui, VisualElement plist) : base(ui)
         {
-            panel = IgnorePointer(AddElement(parent, "hud-card", "plist"));
-            LocalizedLabel(panel, "hud.house_plan", "hud-lbl");
-            miniMap = new MiniMap(ui, panel);
-            LocalizedLabel(panel, "hud.players", "hud-lbl").style.marginTop = 8;
-            rows = AddScroll(panel, "plist-rows", null);
+            panel = IgnorePointer(plist);
+            ui.Localize(panel.Q<Label>("plan-lbl"), "hud.house_plan");
+            miniMap = new MiniMap(ui, panel.Q("minimap-slot"));
+            ui.Localize(panel.Q<Label>("players-lbl"), "hud.players");
+            rows = panel.Q<ScrollView>("rows").contentContainer;
             Show(panel, false);
         }
 
         bool IsOpen => panel.style.display != DisplayStyle.None;
 
-        public void Toggle() { Show(panel, !IsOpen); renderedSignature = null; }
+        public void Toggle() => SetOpen(!IsOpen);
+        public void SetOpen(bool open) { Show(panel, open); renderedSignature = null; }
         public void Invalidate() => renderedSignature = null;
 
         public void Refresh()
@@ -37,7 +39,7 @@ namespace Unice
 
             var me = app.myCharacter; var holder = game.doll.holder; var perspective = app.perspective;
             bool teamInfo = perspective.ShowsTeamInfo, spectating = me == null || me.outOfRound;
-            string signature = string.Join("|", game.characters.Select(character => $"{character.playerId},{character.role},{character.outOfRound},{character.hidingSpot != null},{character.moving},{character.sneaking},{character == holder},{character.score},{Kit.Pack(character.kit)},{app.IsPlayerMuted(character.playerId)},{app.CanMutePlayer(character.playerId)}"))
+            string signature = string.Join("|", game.characters.Select(character => $"{character.playerId},{character.role},{character.outOfRound},{character.hidingSpot != null},{character.moving},{character.sneaking},{character == holder},{character.score},{Kit.Pack(character.kit)}"))
                              + me?.playerId + me?.role + game.phase + teamInfo + Localization.Current + spectating + perspective.spectateTargetId;
             if (signature == renderedSignature) return;
             renderedSignature = signature;
@@ -79,7 +81,6 @@ namespace Unice
                 var dollIcon = IgnorePointer(AddElement(row));
                 dollIcon.style.width = 18; dollIcon.style.height = 24; dollIcon.style.backgroundImage = new StyleBackground(Art.Centered("doll", 1));
             }
-            if (!character.isBot && character != me) MuteButton.Add(row, app, character.playerId, Invalidate);
             IgnorePointer(AddLabel(row, character.score.ToString(), "pts")).style.marginLeft = 8;
         }
     }

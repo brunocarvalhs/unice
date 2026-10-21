@@ -11,7 +11,7 @@ using GooglePlayGames.BasicApi;
 namespace Unice
 {
     /// <summary>
-    /// Signing in, in one place for every Unity Services user (rooms, voice). On Android, Google Play Games signs in by
+    /// Signing in, in one place for every Unity Services user (rooms). On Android, Google Play Games signs in by
     /// itself (silently) when the app opens; Unity Services then signs in with that account, otherwise anonymously — a
     /// missing, refused or failed Play Games sign-in never stops the game, solo or online. Its display name reaches Core
     /// through <see cref="AccountRegistry"/> (first-run profile name), and so do achievements and the leaderboard

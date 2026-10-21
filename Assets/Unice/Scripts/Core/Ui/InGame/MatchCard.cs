@@ -9,17 +9,15 @@ namespace Unice
         readonly Label roundLabel, clockLabel, phaseLabel, giggleNoteLabel;
         readonly VisualElement giggleMeter, giggleMeterFill;
 
-        public MatchCard(Ui ui, VisualElement parent) : base(ui)
+        /// <param name="card">The card's element, made in Hud.uxml.</param>
+        public MatchCard(Ui ui, VisualElement card) : base(ui)
         {
-            var card = IgnorePointer(AddElement(parent, "hud-card", "hud-tl"));
-            var top = AddElement(card, "row");
-            clockLabel = AddLabel(top, "0:30", "clock");
-            var side = AddElement(top, "hud-side");
-            var roundRow = AddElement(side, "row");
-            LocalizedLabel(roundRow, "hud.round", "hud-lbl"); roundLabel = AddLabel(roundRow, "", "hud-lbl");
-            phaseLabel = AddLabel(side, "", "phase");
-            giggleMeter = AddElement(card, "meter"); giggleMeterFill = AddElement(giggleMeter, "meter-fill");
-            giggleNoteLabel = AddLabel(card, "", "note");
+            IgnorePointer(card);
+            clockLabel = card.Q<Label>("clock");
+            ui.Localize(card.Q<Label>("round-lbl"), "hud.round"); roundLabel = card.Q<Label>("round"); roundLabel.text = "";
+            phaseLabel = card.Q<Label>("phase"); phaseLabel.text = "";
+            giggleMeter = card.Q("meter"); giggleMeterFill = card.Q("meter-fill");
+            giggleNoteLabel = card.Q<Label>("note");
             foreach (var label in card.Query<Label>().ToList()) IgnorePointer(label);
         }
 

@@ -19,14 +19,14 @@ namespace Unice
         string goalKey; float goalSince;
         readonly Label roleLabel, goalLabel, noiseLabel;
 
-        public RoleCard(Ui ui, VisualElement parent) : base(ui)
+        /// <param name="card">The card's element, made in Hud.uxml.</param>
+        public RoleCard(Ui ui, VisualElement card) : base(ui)
         {
-            card = IgnorePointer(AddElement(parent, "hud-card", "hud-tr"));
-            roleLabel = AddLabel(card, "", "role-t"); goalLabel = AddLabel(card, "", "role-g");
-            noiseBox = AddElement(card); noiseBox.style.marginTop = 8;
-            var noiseRow = AddElement(noiseBox, "row", "wrap");
-            LocalizedLabel(noiseRow, "hud.noise", "hud-lbl"); noiseLabel = AddLabel(noiseRow, "", "hud-lbl");
-            var noiseMeter = AddElement(noiseBox, "meter", "meter-noise"); noiseMeterFill = AddElement(noiseMeter, "meter-fill");
+            this.card = IgnorePointer(card);
+            roleLabel = card.Q<Label>("role"); roleLabel.text = ""; goalLabel = card.Q<Label>("goal"); goalLabel.text = "";
+            noiseBox = card.Q("noise-box");
+            ui.Localize(card.Q<Label>("noise-lbl"), "hud.noise"); noiseLabel = card.Q<Label>("noise"); noiseLabel.text = "";
+            noiseMeterFill = card.Q("noise-fill");
             foreach (var label in card.Query<Label>().ToList()) IgnorePointer(label);
         }
 
