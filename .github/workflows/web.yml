@@ -68,6 +68,9 @@ jobs:
       - name: Add privacy policy and landing page
         shell: bash
         run: |
+          # game-ci/unity-builder builds as root inside Docker, so the output dir is root-owned;
+          # hand it back to the runner user before writing into it.
+          sudo chown -R "$(id -u):$(id -g)" build/Web/WebGL/Unice
           cp docs/privacy.html docs/landing.html build/Web/WebGL/Unice/
           cp -r docs/store build/Web/WebGL/Unice/store
 
