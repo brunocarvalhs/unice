@@ -64,6 +64,7 @@ namespace Unice
         readonly ScreenEffects screenEffects;
         readonly WorldLabels worldLabels;
         readonly SoundCues soundCues;
+        readonly Music music;
         readonly Hud hud;
         readonly TouchControls controls;
         /// <summary>The cordel poster behind the main menu and the waiting room (not a match).</summary>
@@ -94,6 +95,7 @@ namespace Unice
             screenEffects = new ScreenEffects(this);
             worldLabels = new WorldLabels(this);
             soundCues = new SoundCues(this);
+            music = new Music(app.transform);
             safeArea = IgnorePointer(AddElement(root, "layer"));
             hud = new Hud(this);
             controls = new TouchControls(this);
@@ -228,6 +230,7 @@ namespace Unice
         // ---------- per frame: world text, cues, overlays ----------
         public void Frame(float dt, Camera camera)
         {
+            music.Tick(dt, !app.sfx.Enabled || currentScreen == UiScreen.Game ? MusicTrack.None : MusicTrack.Menu);
             if (root.panel == null) return;
             if (inputMode.Update()) ApplyInputMode();
             if (inputMode.Gamepad) KeepPadFocus();
