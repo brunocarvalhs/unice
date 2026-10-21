@@ -142,11 +142,14 @@ jobs:
           track: internal
           status: draft
 
-  # Web version (GitHub Pages) in its own pipeline, in parallel with the Android build, when targets.web.webgl is on.
+  # Landing page + privacy policy (GitHub Pages) in its own pipeline, in parallel with the Android build. Always
+  # runs — Play Console needs that public privacy-policy URL regardless of whether the WebGL game build is on.
+  # The game itself only builds and rides along when targets.web.webgl is true.
   web:
     needs: [targets, tests]
-    if: needs.targets.outputs.webgl == 'true'
     uses: ./.github/workflows/web.yml
+    with:
+      webgl: ${{ needs.targets.outputs.webgl == 'true' }}
     secrets: inherit
     permissions:
       contents: read

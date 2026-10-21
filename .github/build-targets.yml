@@ -10,7 +10,7 @@ targets:
     macos: true
     linux: true
   web:
-    webgl: true   # published to GitHub Pages (release.yml)
+    webgl: false  # game build off for now; the landing page/privacy policy still publish to GitHub Pages regardless (release.yml)
   console:
     playstation: false
     xbox: false
