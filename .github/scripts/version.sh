@@ -1,16 +1,16 @@
 #!/bin/bash
 
-# Versionamento automático (adaptado do cestou): lê a última tag vX.Y.Z, decide o bump
-# pelos Conventional Commits desde ela e registra os commits no CHANGELOG.md.
-# Não mexe no ProjectSettings: o release.yml (game-ci, versioning: Semantic) tira
-# versão e versionCode da tag. Imprime a nova versão (sem "v") no stdout, ou nada
-# se não houver o que versionar.
+# Versionamento automático: lê a última tag vX.Y.Z, decide o bump
+# pelos Conventional Commits desde ela, registra os commits no CHANGELOG.md
+# e atualiza o versionName e o versionCode (lendo o anterior do ProjectSettings.asset e somando +1)
+# no ProjectSettings/ProjectSettings.asset.
 
 set -euo pipefail
 
 cd "$(dirname "$0")/../.."
 
 CHANGELOG_FILE="CHANGELOG.md"
+PROJECT_SETTINGS="ProjectSettings/ProjectSettings.asset"
 
 # 1️⃣ Última tag (se houver)
 latest_tag=$(git describe --tags --abbrev=0 --match 'v[0-9]*' 2>/dev/null || echo "")
@@ -67,7 +67,7 @@ done
 
 >&2 echo "Tipo de incremento da versão: $version_bump"
 
-# 4️⃣ Incrementa
+# 4️⃣ Incrementa versionName
 IFS=. read -r major minor patch <<< "$current_version"
 case "$version_bump" in
   "major") major=$((major + 1)); minor=0; patch=0 ;;
@@ -76,10 +76,16 @@ case "$version_bump" in
 esac
 new_version="$major.$minor.$patch"
 
->&2 echo "Incrementando versão de $current_version para $new_version"
+# 4.5️⃣ Lê o versionCode anterior do ProjectSettings.asset e soma +1
+current_code=$(grep -E '^\s*AndroidBundleVersionCode:' "$PROJECT_SETTINGS" 2>/dev/null | awk '{print $2}' || echo "0")
+if ! [[ "$current_code" =~ ^[0-9]+$ ]]; then
+    current_code=0
+fi
+version_code=$((current_code + 1))
 
-# 5️⃣ CHANGELOG.md: a nova versão entra logo abaixo de "## [Unreleased]", com os commits,
-# e o que já estava escrito à mão em Unreleased passa a pertencer a ela.
+>&2 echo "Incrementando versão de $current_version para $new_version (versionCode: $current_code -> $version_code)"
+
+# 5️⃣ CHANGELOG.md
 today=$(date +%Y-%m-%d)
 changelog_body=$(printf "%s\n" "${commit_subjects_array[@]}" | sed 's/^/* /')
 entry=$(printf "## [%s] - %s\n\n### Commits\n%s\n" "$new_version" "$today" "$changelog_body")
@@ -97,7 +103,32 @@ else
 fi
 mv "$CHANGELOG_FILE.tmp" "$CHANGELOG_FILE"
 
+# 6️⃣ Atualiza ProjectSettings/ProjectSettings.asset (bundleVersion e AndroidBundleVersionCode / buildNumber)
+if [ -f "$PROJECT_SETTINGS" ]; then
+    >&2 echo "Atualizando ProjectSettings.asset com versionName=$new_version e versionCode=$version_code"
+    python3 -c "
+import re
+
+version = '$new_version'
+version_code = $version_code
+
+with open('$PROJECT_SETTINGS', 'r') as f:
+    content = f.read()
+
+content = re.sub(r'(bundleVersion:\s*).*', r'\1' + version, content)
+content = re.sub(r'(visionOSBundleVersion:\s*).*', r'\1' + version, content)
+content = re.sub(r'(tvOSBundleVersion:\s*).*', r'\1' + version, content)
+content = re.sub(r'(AndroidBundleVersionCode:\s*).*', r'\1' + str(version_code), content)
+content = re.sub(r'(iPhone:\s*).*', r'\1' + str(version_code), content)
+
+with open('$PROJECT_SETTINGS', 'w') as f:
+    f.write(content)
+"
+else
+    >&2 echo "Aviso: $PROJECT_SETTINGS não encontrado."
+fi
+
 >&2 echo "Versionamento completo."
 
-# 6️⃣ Nova versão para o workflow
+# 7️⃣ Nova versão para o workflow
 echo "$new_version"
