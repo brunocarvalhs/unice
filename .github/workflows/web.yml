@@ -96,6 +96,14 @@ jobs:
           # hand it back to the runner user before writing into it. Harmless when the dir was just
           # created above as this same user.
           sudo chown -R "$(id -u):$(id -g)" build/Web/WebGL/Unice
+          if [ "${{ inputs.webgl }}" = "true" ]; then
+            mkdir -p build/Web/WebGL/Unice_root/play
+            find build/Web/WebGL/Unice -mindepth 1 -maxdepth 1 -not -name play -exec mv {} build/Web/WebGL/Unice_root/play/ \;
+            cp docs/landing.html build/Web/WebGL/Unice_root/index.html
+            sed -i 's|href="./"|href="play/"|g' build/Web/WebGL/Unice_root/index.html
+            rm -rf build/Web/WebGL/Unice
+            mv build/Web/WebGL/Unice_root build/Web/WebGL/Unice
+          fi
           cp docs/privacy.html docs/landing.html build/Web/WebGL/Unice/
           cp -r docs/store build/Web/WebGL/Unice/store
 
