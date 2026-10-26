@@ -78,6 +78,42 @@ jobs:
             unity-release-${{ runner.os }}-
 
       - name: Build Android release AAB
+        id: build
+        continue-on-error: true   # a killed Unity (exit 137) gets one more try below
+        uses: game-ci/unity-builder@4423ee75828dff56037d1d1cfdac6b68e3a6ba00 # v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          unityVersion: 6000.6.3f1
+          targetPlatform: Android
+          buildName: Unice
+          buildsPath: build/Release
+          androidExportType: androidAppBundle
+          # versionCode = major*1000000 + minor*1000 + patch of the semantic version from the git tags (game-ci)
+          versioning: Semantic
+          androidKeystoreName: ${{ secrets.ANDROID_KEYSTORE_NAME }}
+          androidKeystoreBase64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          androidKeystorePass: ${{ secrets.ANDROID_KEYSTORE_PASS }}
+          androidKeyaliasName: ${{ secrets.ANDROID_KEYALIAS_NAME }}
+          androidKeyaliasPass: ${{ secrets.ANDROID_KEYALIAS_PASS }}
+          # symbols.zip for the IL2CPP native crash stacks (Play Console "native debug symbols")
+          androidSymbolType: public
+          allowDirtyBuild: true
+
+      # Tells whether the kernel killed Unity for lack of memory (look for "Out of memory" / "Killed process").
+      - name: Why the first build failed
+        if: steps.build.outcome == 'failure'
+        shell: bash
+        run: |
+          free -h
+          df -h /
+          sudo dmesg | grep -iE "out of memory|killed process|oom" | tail -n 10 || true
+
+      - name: Build Android release AAB (second try)
+        if: steps.build.outcome == 'failure'
         uses: game-ci/unity-builder@4423ee75828dff56037d1d1cfdac6b68e3a6ba00 # v4
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
