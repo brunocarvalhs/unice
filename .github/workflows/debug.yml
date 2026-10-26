@@ -51,6 +51,17 @@ jobs:
           sudo docker image prune --all --force > /dev/null
           df -h /
 
+      # Unity sometimes dies with exit code 137 (SIGKILL) right after starting; swap guards against the runner running out of memory.
+      - name: Add swap
+        shell: bash
+        run: |
+          sudo swapoff -a
+          sudo fallocate -l 8G /swapfile
+          sudo chmod 600 /swapfile
+          sudo mkswap /swapfile
+          sudo swapon /swapfile
+          free -h
+
       - name: Checkout repository
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
