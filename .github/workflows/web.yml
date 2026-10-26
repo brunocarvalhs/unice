@@ -48,6 +48,18 @@ jobs:
           sudo docker image prune --all --force > /dev/null
           df -h /
 
+      # Unity sometimes dies with exit code 137 (SIGKILL) right after starting; swap guards against the runner running out of memory.
+      - name: Add swap
+        if: inputs.webgl
+        shell: bash
+        run: |
+          sudo swapoff -a
+          sudo fallocate -l 8G /swapfile
+          sudo chmod 600 /swapfile
+          sudo mkswap /swapfile
+          sudo swapon /swapfile
+          free -h
+
       - name: Checkout repository
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -92,10 +104,11 @@ jobs:
       - name: Add privacy policy and landing page
         shell: bash
         run: |
-          # game-ci/unity-builder builds as root inside Docker, so the output dir is root-owned;
-          # hand it back to the runner user before writing into it. Harmless when the dir was just
-          # created above as this same user.
-          sudo chown -R "$(id -u):$(id -g)" build/Web/WebGL/Unice
+          # game-ci/unity-builder builds as root inside Docker, so the whole output tree
+          # (including the WebGL parent dir, not just Unice/) is root-owned; hand it back to
+          # the runner user before writing into it. Harmless when it was just created above
+          # as this same user.
+          sudo chown -R "$(id -u):$(id -g)" build/Web/WebGL
           if [ "${{ inputs.webgl }}" = "true" ]; then
             mkdir -p build/Web/WebGL/Unice_root/play
             find build/Web/WebGL/Unice -mindepth 1 -maxdepth 1 -not -name play -exec mv {} build/Web/WebGL/Unice_root/play/ \;
