@@ -101,12 +101,12 @@ jobs:
           path: build/Debug/**/*.apk
           if-no-files-found: error
 
-  # iOS and desktop builds, one Unity run at a time (a second concurrent run hits the Unity Personal activation limit).
-  # They start after the APK so a broken Android build stops the line early.
+  # iOS and desktop builds, in parallel with the Android APK above. Each matrix entry still runs on its own
+  # runner VM (own RAM/swap), so this doesn't reintroduce the OOM issue the swap step fixed.
   build-platforms:
     name: Debug build (${{ matrix.name }})
-    needs: [targets, tests, build-debug-apk]
-    if: ${{ !cancelled() && needs.tests.result == 'success' && needs.targets.outputs.platforms != '[]' && (needs.build-debug-apk.result == 'success' || needs.build-debug-apk.result == 'skipped') }}
+    needs: [targets, tests]
+    if: ${{ !cancelled() && needs.tests.result == 'success' && needs.targets.outputs.platforms != '[]' }}
     strategy:
       fail-fast: false
       max-parallel: 1
