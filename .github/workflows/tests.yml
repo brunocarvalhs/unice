@@ -57,6 +57,17 @@ jobs:
           sudo docker image prune --all --force > /dev/null
           df -h /
 
+      # Unity sometimes dies with exit code 137 (SIGKILL) right after starting; swap guards against the runner running out of memory.
+      - name: Add swap
+        shell: bash
+        run: |
+          sudo swapoff -a
+          sudo fallocate -l 8G /swapfile
+          sudo chmod 600 /swapfile
+          sudo mkswap /swapfile
+          sudo swapon /swapfile
+          free -h
+
       - name: Checkout repository
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -72,6 +83,34 @@ jobs:
 
       # game-ci already passes -batchmode -runTests -testPlatform and enables coverage; don't repeat them.
       - name: Run Edit Mode tests
+        id: run
+        continue-on-error: true   # a killed Unity (exit 137) gets one more try below
+        uses: game-ci/unity-test-runner@32e57712352b500e17974b245a6dce9e11a73213 # v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          unityVersion: 6000.6.3f1
+          testMode: EditMode
+          projectPath: .
+          artifactsPath: artifacts
+          coverageOptions: generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;assemblyFilters:+Unice.Domain,+Unice.Core
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          checkName: Edit Mode test results
+
+      # Tells whether the kernel killed Unity for lack of memory (look for "Out of memory" / "Killed process").
+      - name: Why the first test run failed
+        if: steps.run.outcome == 'failure'
+        shell: bash
+        run: |
+          free -h
+          df -h /
+          sudo dmesg | grep -iE "out of memory|killed process|oom" | tail -n 10 || true
+
+      - name: Run Edit Mode tests (second try)
+        if: steps.run.outcome == 'failure'
         uses: game-ci/unity-test-runner@32e57712352b500e17974b245a6dce9e11a73213 # v4
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
